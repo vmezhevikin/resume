@@ -15,6 +15,6 @@
 <body>
 	<h2 style="color:blue;">Your name: ${name}</h2>
 	<br />
-	<a href="search">Try again</a>
+	<a href="/search">Try again</a>
 </body>
 </html>

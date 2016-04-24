@@ -16,7 +16,7 @@
 	<c:if test="${invalid}">
 		<h5 style="color:red;">Please input correct value</h5>
 	</c:if>
-	<form action="search" method="post">
+	<form action="/search" method="post">
 		<input name="query" />
 		<input type="submit" value="Search" />
 	</form>
