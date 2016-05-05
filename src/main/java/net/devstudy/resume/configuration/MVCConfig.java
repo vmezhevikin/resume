@@ -30,6 +30,12 @@ public class MVCConfig extends WebMvcConfigurerAdapter
 	{
 		registry.addResourceHandler("/static/**").addResourceLocations("/static/");
 		registry.addResourceHandler("/media/**").addResourceLocations("/media/");
+		registry.addResourceHandler("/restore/static/**").addResourceLocations("/static/");
+		registry.addResourceHandler("/restore/media/**").addResourceLocations("/media/");
+		registry.addResourceHandler("/sign-up/static/**").addResourceLocations("/static/");
+		registry.addResourceHandler("/sign-up/media/**").addResourceLocations("/media/");
+		registry.addResourceHandler("/edit/static/**").addResourceLocations("/static/");
+		registry.addResourceHandler("/edit/media/**").addResourceLocations("/media/");
 		//registry.addResourceHandler("/favicon/**").addResourceLocations("/favicon.ico");
 	}
 }
