@@ -35,12 +35,14 @@ public class ResumeFilter extends AbstractFilter
 	{
 		if (production)
 		{
-			if ("/error".equals(requestUrl))
-				throw new ServletException(th);
-			else
-				response.sendRedirect("/error");
-		}
-		else
+			if (requestUrl.startsWith("/fragment") || "/error".equals(requestUrl))
+			{
+				response.reset();
+				response.getWriter().write("");
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			} else
+				response.sendRedirect("/error?url=" + requestUrl);
+		} else
 			throw new ServletException(th);
 	}
 }

@@ -10,12 +10,14 @@ public class RemoveProfileController
 	@RequestMapping(value = "/remove", method = RequestMethod.GET)
 	public String getRemove()
 	{
+		// TODO
 		return "remove";
 	}
 
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	public String postRemove()
 	{
+		// TODO
 		return "remove";
 	}
 }

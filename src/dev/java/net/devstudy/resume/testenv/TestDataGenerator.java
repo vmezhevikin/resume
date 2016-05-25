@@ -40,18 +40,15 @@ public class TestDataGenerator
 	private static final String[] CITIES = { "Kharkiv", "Kyiv", "Odessa", "Poltava" };
 	private static final String[] LANGUAGES = { "English", "German", "French" };
 	private static final String[] LANGUAGE_TYPE = { "All", "Writing", "Speaking" };
-	private static final String[] LANGUAGE_LEVEL = { "Beginner", "Elementary", "Pre-intrmediate", "Intermediate",
-			"Upper-Intermediate", "Advanced", "Proficiency" };
-	private static final String[] HOBBIES = { "Cycling", "Handball", "Football", "Basketball", "Bowling", "Boxing",
-			"Volleyball", "Baseball", "Skating", "Skiing", "Table tennis", "Tennis", "Weightlifting", "Automobiles",
-			"Book reading", "Cricket", "Photo", "Shopping", "Cooking", "Codding", "Animals", "Traveling", "Movie",
-			"Painting", "Darts", "Fishing", "Kayak slalom", "Games of chance", "Ice hockey", "Roller skating",
-			"Swimming", "Diving", "Golf", "Shooting", "Rowing", "Camping", "Archery", "Pubs", "Music", "Computer games",
+	private static final String[] LANGUAGE_LEVEL = { "Beginner", "Elementary", "Pre-intrmediate", "Intermediate", "Upper-Intermediate", "Advanced",
+			"Proficiency" };
+	private static final String[] HOBBIES = { "Cycling", "Handball", "Football", "Basketball", "Bowling", "Boxing", "Volleyball", "Baseball",
+			"Skating", "Skiing", "Table tennis", "Tennis", "Weightlifting", "Automobiles", "Book reading", "Cricket", "Photo", "Shopping", "Cooking",
+			"Codding", "Animals", "Traveling", "Movie", "Painting", "Darts", "Fishing", "Kayak slalom", "Games of chance", "Ice hockey",
+			"Roller skating", "Swimming", "Diving", "Golf", "Shooting", "Rowing", "Camping", "Archery", "Pubs", "Music", "Computer games",
 			"Authorship", "Singing", "Foreign lang", "Billiards", "Skateboarding", "Collecting", "Badminton", "Disco" };
-	private static final String[] SKILLS_CATEGORIES = { "Languages", "DBMS", "Web", "Java", "IDE", "CVS", "Web Servers",
-			"Build system", "Cloud" };
-	private static final String[] SKILLS_DESC = { "Java, SQL, PLSQL", "Mysql, Postgresql",
-			"HTML, CSS, JS, Foundation, JQuery, Bootstrap",
+	private static final String[] SKILLS_CATEGORIES = { "Languages", "DBMS", "Web", "Java", "IDE", "CVS", "Web Servers", "Build system", "Cloud" };
+	private static final String[] SKILLS_DESC = { "Java, SQL, PLSQL", "Mysql, Postgresql", "HTML, CSS, JS, Foundation, JQuery, Bootstrap",
 			"Threads, IO, JAXB, GSON, Servlets, Logback, JSP, JSTL, JDBC, Apache Commons, Google+ Social API, Spring MVC, Spring Data JPA, Spring Security, Hibernate JPA, Facebook Social API",
 			"Eclipse for JEE Developer", "Github", "Tomcat, Nginx", "Maven", "OpenShift, AWS" };
 	private static final String TEXT = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et "
@@ -66,17 +63,47 @@ public class TestDataGenerator
 			+ "mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices "
 			+ "posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed "
 			+ "aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy "
-			+ "metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut";
+			+ "metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut.";
 	private static final String[] OBJECTIVES = { "Junior java trainee position", "Junior java developer position" };
 	private static final String[] SUMMARIES = { "Java core course with developing one simple console application",
 			"One Java professional course with developing web application blog",
 			"Two Java professional courses with developing two web applications: blog and resume",
 			"Three Java professional courses with developing one console application and two web applications: blog and resume" };
-	private static final String[] COMPANIES = { "TeamDev", "INSART", "NIXSolutions", "DataArt", "EPAMSystems",
-			"GlobalLogic" };
+	private static final String[] COMPANIES = { "TeamDev", "INSART", "NIXSolutions", "DataArt", "EPAMSystems", "GlobalLogic" };
 	private static final String[] POSITIONS = { "Junior java developer", "Java trainee" };
-	private static final String[] UNIVERSITIES = { "National Technical University", "Karazin Kharkiv National University", "Kharkiv National University of Radioelectronics" };
-	private static final String[] DEPARTMENTS = { "Computer-driven system and network", "Programming systems", "Intelligence system of problem-solving" };
+	private static final String[] UNIVERSITIES = { "National Technical University", "Karazin Kharkiv National University",
+			"Kharkiv National University of Radioelectronics" };
+	private static final String[] DEPARTMENTS = { "Computer-driven system and network", "Programming systems",
+			"Intelligence system of problem-solving" };
+	private static final String[] HOBBY_ICONS = { "<i class='fa fa-paw' aria-hidden='true'></i>", "<i class='fa fa-bullseye' aria-hidden='true'></i>",
+			"<i class='fa fa-pencil-square-o' aria-hidden='true'></i>", "<i class='fa fa-car' aria-hidden='true'></i>",
+			"<i class='fa fa-futbol-o' aria-hidden='true'></i>", "<i class='fa fa-futbol-o' aria-hidden='true'></i>",
+			"<i class='fa fa-futbol-o' aria-hidden='true'></i>", "<i class='fa fa-futbol-o' aria-hidden='true'></i>",
+			"<i class='fa fa-book' aria-hidden='true'></i>", "<i class='fa fa-futbol-o' aria-hidden='true'></i>",
+			"<i class='fa fa-futbol-o' aria-hidden='true'></i>", "<i class='fa fa-leaf' aria-hidden='true'></i>",
+			"<i class='fa fa-code' aria-hidden='true'></i>", "<i class='fa fa-star' aria-hidden='true'></i>",
+			"<i class='fa fa-gamepad' aria-hidden='true'></i>", "<i class='fa fa-cutlery' aria-hidden='true'></i>",
+			"<i class='fa fa-futbol-o' aria-hidden='true'></i>", "<i class='fa fa-bicycle' aria-hidden='true'></i>",
+			"<i class='fa fa-bullseye' aria-hidden='true'></i>", "<i class='fa fa-users' aria-hidden='true'></i>",
+			"<i class='fa fa-tint' aria-hidden='true'></i>", "<i class='fa fa-life-ring' aria-hidden='true'></i>",
+			"<i class='fa fa-futbol-o' aria-hidden='true'></i>", "<i class='fa fa-language' aria-hidden='true'></i>",
+			"<i class='fa fa-list-alt' aria-hidden='true'></i>", "<i class='fa fa-futbol-o' aria-hidden='true'></i>",
+			"<i class='fa fa-futbol-o' aria-hidden='true'></i>", "<i class='fa fa-futbol-o' aria-hidden='true'></i>",
+			"<i class='fa fa-tint' aria-hidden='true'></i>", "<i class='fa fa-film' aria-hidden='true'></i>",
+			"<i class='fa fa-music' aria-hidden='true'></i>", "<i class='fa fa-paint-brush' aria-hidden='true'></i>",
+			"<i class='fa fa-camera' aria-hidden='true'></i>", "<i class='fa fa-beer' aria-hidden='true'></i>",
+			"<i class='fa fa-star' aria-hidden='true'></i>", "<i class='fa fa-futbol-o' aria-hidden='true'></i>",
+			"<i class='fa fa-crosshairs' aria-hidden='true'></i>", "<i class='fa fa-shopping-basket' aria-hidden='true'></i>",
+			"<i class='fa fa-microphone' aria-hidden='true'></i>", "<i class='fa fa-star' aria-hidden='true'></i>",
+			"<i class='fa fa-star' aria-hidden='true'></i>", "<i class='fa fa-star' aria-hidden='true'></i>",
+			"<i class='fa fa-tint' aria-hidden='true'></i>", "<i class='fa fa-futbol-o' aria-hidden='true'></i>",
+			"<i class='fa fa-futbol-o' aria-hidden='true'></i>", "<i class='fa fa-map' aria-hidden='true'></i>",
+			"<i class='fa fa-futbol-o' aria-hidden='true'></i>", "<i class='fa fa-star' aria-hidden='true'></i>" };
+	private static final String[] HOBBY_NAMES = { "Animals", "Archery", "Authorship", "Automobiles", "Badminton", "Baseball", "Basketball",
+			"Billiards", "Book reading", "Bowling", "Boxing", "Camping", "Coding", "Collecting", "Computer games", "Cooking", "Cricket", "Cycling",
+			"Darts", "Disco", "Diving", "Fishing", "Football", "Foreign language", "Games of chance", "Golf", "Handball", "Ice hockey",
+			"Kayak slalom", "Movie", "Music", "Painting", "Photo", "Pubs", "Roller skating", "Rowing", "Shooting", "Shopping", "Singing",
+			"Skateboarding", "Skating", "Skiing", "Swimming", "Table tennis", "Tennis", "Traveling", "Volleyball", "Weightlifting" };
 
 	private static final Random rand = new Random();
 	private static List<Profile> profiles;
@@ -118,6 +145,7 @@ public class TestDataGenerator
 		// cascade deleting rows in all tables
 		statement.executeUpdate("delete from profile");
 		statement.executeUpdate("delete from skill_category");
+		statement.executeUpdate("delete from hobby_name");
 		// initializing sequences
 		statement.executeQuery("select setval('certificate_seq', 1, false)");
 		statement.executeQuery("select setval('course_seq', 1, false)");
@@ -128,6 +156,7 @@ public class TestDataGenerator
 		statement.executeQuery("select setval('skill_category_seq', 1, false)");
 		statement.executeQuery("select setval('skill_seq', 1, false)");
 		statement.executeQuery("select setval('hobby_seq', 1, false)");
+		statement.executeQuery("select setval('hobby_name_seq', 1, false)");
 
 		System.out.println("DB cleared");
 	}
@@ -160,7 +189,9 @@ public class TestDataGenerator
 			certificates.add(certificate);
 		}
 
-		sentences = Arrays.asList(TEXT.split(". "));
+		sentences = Arrays.asList(TEXT.split("[.][^,]"));
+		// for(String line : sentences)
+		// System.out.println(line);
 	}
 
 	private static void insertData(Connection connection) throws SQLException, IOException
@@ -168,6 +199,7 @@ public class TestDataGenerator
 		System.out.println("Inserting data");
 
 		insertSkillCategory(connection);
+		insertHobbyName(connection);
 		insertProfiles(connection);
 
 		int profileNumber = profiles.size();
@@ -187,8 +219,7 @@ public class TestDataGenerator
 
 	private static void insertProfiles(Connection connection) throws SQLException, IOException
 	{
-		String sql = "insert into profile "
-				+ "(id, uid, password, active, first_name, last_name, country, city, birthday, "
+		String sql = "insert into profile " + "(id, uid, password, active, first_name, last_name, country, city, birthday, "
 				+ "email, phone, skype, vkontakte, facebook, linkedin, github, stackoverflow, "
 				+ "additional_info, objective, summary, photo, photo_small) "
 				+ "values (nextval('profile_seq'),?,?,true,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -209,27 +240,27 @@ public class TestDataGenerator
 			statement.setString(10, (profile.firstName + "." + profile.lastName).toLowerCase());
 
 			if (rand.nextBoolean())
-				statement.setString(11, ("vk.com/" + profile.lastName).toLowerCase());
+				statement.setString(11, ("http://vk.com/" + profile.lastName).toLowerCase());
 			else
 				statement.setNull(11, Types.VARCHAR);
 
 			if (rand.nextBoolean())
-				statement.setString(12, ("facebook.com/" + profile.lastName).toLowerCase());
+				statement.setString(12, ("http://facebook.com/" + profile.lastName).toLowerCase());
 			else
 				statement.setNull(12, Types.VARCHAR);
 
 			if (rand.nextBoolean())
-				statement.setString(13, ("linkedin.com/" + profile.lastName).toLowerCase());
+				statement.setString(13, ("http://linkedin.com/" + profile.lastName).toLowerCase());
 			else
 				statement.setNull(13, Types.VARCHAR);
 
 			if (rand.nextBoolean())
-				statement.setString(14, ("github.com/" + profile.lastName).toLowerCase());
+				statement.setString(14, ("http://github.com/" + profile.lastName).toLowerCase());
 			else
 				statement.setNull(14, Types.VARCHAR);
 
 			if (rand.nextBoolean())
-				statement.setString(15, ("stackoverflow.com/" + profile.lastName).toLowerCase());
+				statement.setString(15, ("http://stackoverflow.com/" + profile.lastName).toLowerCase());
 			else
 				statement.setNull(15, Types.VARCHAR);
 
@@ -301,6 +332,24 @@ public class TestDataGenerator
 		statement.close();
 	}
 
+	private static void insertHobbyName(Connection connection) throws SQLException
+	{
+		String sql = "insert into hobby_name (id, icon, name) values (nextval('hobby_name_seq'),?,?)";
+
+		PreparedStatement statement = connection.prepareStatement(sql);
+
+		for (int i = 0; i < HOBBY_ICONS.length; i++)
+		{
+			statement.setString(1, HOBBY_ICONS[i]);
+			statement.setString(2, HOBBY_NAMES[i]);
+			//System.out.println(statement);
+			statement.addBatch();
+		}
+
+		statement.executeBatch();
+		statement.close();
+	}
+
 	private static void insertSkill(Connection connection, int id) throws SQLException
 	{
 		String sql = "insert into skill (id, id_profile, category, description) values (nextval('skill_seq'),?,?,?)";
@@ -358,7 +407,7 @@ public class TestDataGenerator
 		cl.set(Calendar.YEAR, year - rand.nextInt(10));
 		return new Date(cl.getTimeInMillis());
 	}
-	
+
 	private static int generateYear()
 	{
 		Calendar cl = Calendar.getInstance();
@@ -368,8 +417,7 @@ public class TestDataGenerator
 
 	private static void insertCertificate(Connection connection, int id) throws SQLException, IOException
 	{
-		String sql = "insert into certificate " + "(id, id_profile, description, img, img_small) "
-				+ "values (nextval('certificate_seq'),?,?,?,?)";
+		String sql = "insert into certificate " + "(id, id_profile, description, img, img_small) " + "values (nextval('certificate_seq'),?,?,?,?)";
 
 		PreparedStatement statement = connection.prepareStatement(sql);
 
@@ -404,8 +452,7 @@ public class TestDataGenerator
 
 	private static void insertCourse(Connection connection, int id) throws SQLException
 	{
-		String sql = "insert into course (id, id_profile, description, school, completion_date) "
-				+ "values (nextval('course_seq'),?,?,?,?)";
+		String sql = "insert into course (id, id_profile, description, school, completion_date) " + "values (nextval('course_seq'),?,?,?,?)";
 
 		PreparedStatement statement = connection.prepareStatement(sql);
 
@@ -416,7 +463,7 @@ public class TestDataGenerator
 			statement.setDate(4, generateDate());
 		else
 			statement.setNull(4, Types.DATE);
-		System.out.println(statement);
+		// System.out.println(statement);
 
 		statement.execute();
 		statement.close();
@@ -424,21 +471,22 @@ public class TestDataGenerator
 
 	private static void insertEducation(Connection connection, int id) throws SQLException
 	{
-		String sql = "insert into education (id, id_profile, university, department, starting_year, completion_year) "
-				+ "values (nextval('education_seq'),?,?,?,?,?)";
+		String sql = "insert into education (id, id_profile, speciality, university, department, starting_year, completion_year) "
+				+ "values (nextval('education_seq'),?,?,?,?,?,?)";
 
 		PreparedStatement statement = connection.prepareStatement(sql);
 
 		statement.setLong(1, id);
-		statement.setString(2, UNIVERSITIES[rand.nextInt(UNIVERSITIES.length)]);
-		statement.setString(3, DEPARTMENTS[rand.nextInt(DEPARTMENTS.length)]);
+		statement.setString(2, "Specialist of computer systems");
+		statement.setString(3, UNIVERSITIES[rand.nextInt(UNIVERSITIES.length)]);
+		statement.setString(4, DEPARTMENTS[rand.nextInt(DEPARTMENTS.length)]);
 		int year = generateYear();
-		statement.setInt(4, year);
+		statement.setInt(5, year);
 		if (rand.nextBoolean())
-			statement.setInt(5, year + 3);
+			statement.setInt(6, year + 3);
 		else
-			statement.setNull(5, Types.INTEGER);
-		//System.out.println(statement);
+			statement.setNull(6, Types.INTEGER);
+		// System.out.println(statement);
 
 		statement.execute();
 		statement.close();

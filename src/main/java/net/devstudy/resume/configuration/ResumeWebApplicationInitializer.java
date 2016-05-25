@@ -16,6 +16,8 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.DelegatingFilterProxy;
+import org.springframework.web.filter.RequestContextFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import net.devstudy.resume.filter.ResumeFilter;
@@ -50,6 +52,8 @@ public class ResumeWebApplicationInitializer implements WebApplicationInitialize
 		registerFilter(container, context.getBean(ResumeFilter.class));
 		registerFilter(container, new CharacterEncodingFilter("UTF-8", true));
 		registerFilter(container, new OpenEntityManagerInViewFilter());
+		registerFilter(container, new RequestContextFilter());
+		registerFilter(container, new DelegatingFilterProxy("springSecurityFilterChain"), "springSecurityFilterChain");
 		registerFilter(container, buildConfigurableSiteMeshFilter(), "sitemesh");
 	}
 
@@ -58,7 +62,7 @@ public class ResumeWebApplicationInitializer implements WebApplicationInitialize
 		String filterName = filterNames.length > 0 ? filterNames[0] : filter.getClass().getSimpleName();
 		container.addFilter(filterName, filter).addMappingForUrlPatterns(null, true, "/*");
 	}
-	
+
 	private void registerSpribngMVCDispathcerServlet(ServletContext container, WebApplicationContext context)
 	{
 		ServletRegistration.Dynamic servlet = container.addServlet("dispatcher", new DispatcherServlet(context));
@@ -74,6 +78,10 @@ public class ResumeWebApplicationInitializer implements WebApplicationInitialize
 			protected void applyCustomConfiguration(SiteMeshFilterBuilder builder)
 			{
 				builder.addDecoratorPath("/*", "/WEB-INF/template/template-resume.jsp");
+				builder.addDecoratorPath("/edit/password*", "/WEB-INF/template/template-resume.jsp");
+				builder.addDecoratorPath("/edit/*", "/WEB-INF/template/template-edit.jsp");
+				builder.addDecoratorPath("/add/*", "/WEB-INF/template/template-edit.jsp");
+				builder.addDecoratorPath("/fragment/*", "/WEB-INF/template/template-fragment.jsp");
 			}
 		};
 	}
