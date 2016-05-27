@@ -12,7 +12,7 @@ import org.springframework.core.io.Resource;
 
 @Configuration
 // @EnableScheduling
-@ComponentScan({ "net.devstudy.resume.service.impl", "net.devstudy.resume.controller", "net.devstudy.resume.filter", "net.devstudy.resume.listener", "net.devstudy.resume.util" })
+@ComponentScan({ "net.devstudy.resume.service.impl", "net.devstudy.resume.controller", "net.devstudy.resume.filter", "net.devstudy.resume.listener", "net.devstudy.resume.scheduler", "net.devstudy.resume.component.impl" })
 public class ServiceConfig
 {
 	/**
@@ -36,6 +36,6 @@ public class ServiceConfig
 
 	private static Resource[] getResources()
 	{
-		return new Resource[] { new ClassPathResource("application.properties"), new ClassPathResource("logic.properties") };
+		return new Resource[] { new ClassPathResource("application.properties"), new ClassPathResource("logic.properties"), new ClassPathResource("email.properties") };
 	}
 }

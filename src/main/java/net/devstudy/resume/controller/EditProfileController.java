@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import net.devstudy.resume.Constants;
 import net.devstudy.resume.entity.Certificate;
 import net.devstudy.resume.entity.Contact;
 import net.devstudy.resume.entity.Course;
@@ -53,8 +54,6 @@ public class EditProfileController
 			
 	@Value("${education.years.ago}")
 	private int educationYearsAgo;
-	
-	private static final String[] MONTH_NAME = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
 	@RequestMapping(value = "/my-profile", method = RequestMethod.GET)
 	public String getMyProfile(@AuthenticationPrincipal CurrentProfile currentProfile)
@@ -453,6 +452,6 @@ public class EditProfileController
 	
 	private void setMonthName(Model model)
 	{
-		model.addAttribute("monthName", MONTH_NAME);
+		model.addAttribute("monthName", Constants.MONTH_NAMES);
 	}
 }

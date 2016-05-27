@@ -1,6 +1,8 @@
 package net.devstudy.resume.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,8 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-//import org.springframework.transaction.support.TransactionSynchronizationAdapter;
-//import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 
 import net.devstudy.resume.entity.Certificate;
@@ -39,9 +39,10 @@ import net.devstudy.resume.form.HobbyForm;
 import net.devstudy.resume.form.LanguageForm;
 import net.devstudy.resume.form.SignUpForm;
 import net.devstudy.resume.form.SkillForm;
+import net.devstudy.resume.repository.storage.CourseRepository;
+import net.devstudy.resume.repository.storage.EducationRepository;
+import net.devstudy.resume.repository.storage.ExperienceRepository;
 import net.devstudy.resume.repository.search.ProfileSearchRepository;
-//import net.devstudy.resume.repository.search.ProfileSearchRepository;
-//import net.devstudy.resume.repository.search.ProfileSearchRepository;
 import net.devstudy.resume.repository.storage.HobbyNameRepository;
 import net.devstudy.resume.repository.storage.ProfileRepository;
 import net.devstudy.resume.repository.storage.SkillCategoryRepository;
@@ -65,6 +66,15 @@ public class EditProfileServiceImpl implements EditProfileService
 
 	@Autowired
 	private HobbyNameRepository hobbyNameRepository;
+	
+	@Autowired
+	private CourseRepository courseRepository;
+
+	@Autowired
+	private EducationRepository educationRepository;
+
+	@Autowired
+	private ExperienceRepository experienceRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -77,6 +87,15 @@ public class EditProfileServiceImpl implements EditProfileService
 
 	@Value("${generate.uid.max.try.count}")
 	private int generateUidMaxTryCount;
+	
+	@Value("${webapp.folder}")
+	private String dirWebapp;
+	
+	@Value("${avatar.folder}")
+	private String dirAvatar;
+
+	@Value("${certificate.folder}")
+	private String dirCertificate;
 
 	@Override
 	@Transactional
@@ -123,6 +142,7 @@ public class EditProfileServiceImpl implements EditProfileService
 				profile.getHobby().clear();
 				profile.getLanguage().clear();
 				profile.getSkill().clear();
+				profileSearchRepository.save(profile);
 				LOGGER.info("New profile index created: {}", profile.getUid());
 			}
 		});
@@ -481,11 +501,11 @@ public class EditProfileServiceImpl implements EditProfileService
 				if (certificate.getImg() == null && certificate.getFile() != null)
 				{
 					String oldImage = certificate.getImg();
-					String newImage = ImageUtil.getInstance().saveFileToCertificates(certificate.getFile());
-					String newImageSmall = ImageUtil.getInstance().getSmallPhotoPath(newImage);
+					String newImage = ImageUtil.saveFile(dirWebapp, dirCertificate, certificate.getFile());
+					String newImageSmall = ImageUtil.getSmallPhotoPath(newImage);
 					if (newImage != null && newImageSmall != null)
 					{
-						ImageUtil.getInstance().removeFileFromImages(oldImage);
+						ImageUtil.removeFile(dirWebapp, oldImage);
 						certificate.setImg(newImage);
 						certificate.setImgSmall(newImageSmall);
 					}
@@ -508,11 +528,11 @@ public class EditProfileServiceImpl implements EditProfileService
 		if (form.getImg() == null && form.getFile() != null)
 		{
 			String oldImage = form.getImg();
-			String newImage = ImageUtil.getInstance().saveFileToCertificates(form.getFile());
-			String newImageSmall = ImageUtil.getInstance().getSmallPhotoPath(newImage);
+			String newImage = ImageUtil.saveFile(dirWebapp, dirCertificate, form.getFile());
+			String newImageSmall = ImageUtil.getSmallPhotoPath(newImage);
 			if (newImage != null && newImageSmall != null)
 			{
-				ImageUtil.getInstance().removeFileFromImages(oldImage);
+				ImageUtil.removeFile(dirWebapp, oldImage);
 				form.setImg(newImage);
 				form.setImgSmall(newImageSmall);
 				
@@ -564,12 +584,12 @@ public class EditProfileServiceImpl implements EditProfileService
 			{
 				String oldImage = profile.getPhoto();
 				String oldImageSmall = profile.getPhotoSmall();
-				String newImage = ImageUtil.getInstance().saveFileToAvatars(form.getFile());
-				String newImageSmall = ImageUtil.getInstance().getSmallPhotoPath(newImage);
+				String newImage = ImageUtil.saveFile(dirWebapp, dirAvatar, form.getFile());
+				String newImageSmall = ImageUtil.getSmallPhotoPath(newImage);
 				if (newImage != null && newImageSmall != null)
 				{
-					ImageUtil.getInstance().removeFileFromImages(oldImage);
-					ImageUtil.getInstance().removeFileFromImages(oldImageSmall);
+					ImageUtil.removeFile(dirWebapp, oldImage);
+					ImageUtil.removeFile(dirWebapp, oldImageSmall);
 					profile.setPhoto(newImage);
 					profile.setPhotoSmall(newImageSmall);
 				}
@@ -788,5 +808,139 @@ public class EditProfileServiceImpl implements EditProfileService
 		}
 		
 		return listHobby;
+	}
+
+	@Override
+	public List<Profile> notCompletedProfilesCreatedBefore(Timestamp date)
+	{
+		return profileRepository.findByActiveFalseAndCreatedBefore(date);
+	}
+
+	@Override
+	@Transactional
+	public void removeProfile(long idProfile)
+	{
+		LOGGER.info("Removing profile {}", idProfile);
+		
+		Profile profile = profileRepository.findById(idProfile);
+		profileRepository.delete(profile);
+		registerRemoveIndexProfileIfTrancationSuccess(idProfile);
+	}
+	
+	private void registerRemoveIndexProfileIfTrancationSuccess(final long idProfile)
+	{
+		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
+		{
+			@Override
+			public void afterCommit()
+			{
+				LOGGER.info("Profile removed: {}", idProfile);
+				Profile profile = profileSearchRepository.findOne(idProfile);
+				profileSearchRepository.delete(profile);
+				LOGGER.info("Profile index removed: {}", idProfile);
+			}
+		});
+	}
+
+	@Override
+	public List<Course> coursesBefore(Date date)
+	{
+		return courseRepository.findByCompletionDateBefore(date);
+	}
+
+	@Override
+	@Transactional
+	public void removeCourse(long idProfile, Course removingCourse)
+	{
+		LOGGER.info("Removing course {}", removingCourse.getId());
+		
+		Profile profile = profileRepository.findById(idProfile);
+		profile.getCourse().remove(removingCourse);
+		profileRepository.save(profile);
+		registerRemoveCourseIndexProfileIfTrancationSuccess(idProfile, removingCourse);
+	}
+	
+	private void registerRemoveCourseIndexProfileIfTrancationSuccess(final long idProfile, final Course removingCourse)
+	{
+		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
+		{
+			@Override
+			public void afterCommit()
+			{
+				LOGGER.info("Profile updated: {}", idProfile);
+				Profile profile = profileSearchRepository.findOne(idProfile);
+				profile.getCourse().remove(removingCourse);
+				profileSearchRepository.save(profile);
+				LOGGER.info("Profile index updated: {}", profile.getUid());
+			}
+		});
+	}
+
+	@Override
+	public List<Education> educationBefore(int year)
+	{
+		return educationRepository.findByCompletionYearLessThan(year);
+	}
+
+	@Override
+	@Transactional
+	public void removeEducation(long idProfile, Education removingEducation)
+	{
+		LOGGER.info("Removing education {}", removingEducation.getId());
+		
+		Profile profile = profileRepository.findById(idProfile);
+		profile.getEducation().remove(removingEducation);
+		profileRepository.save(profile);
+		registerRemoveEducationIndexProfileIfTrancationSuccess(idProfile, removingEducation);
+	}
+	
+	private void registerRemoveEducationIndexProfileIfTrancationSuccess(final long idProfile, final Education removingEducation)
+	{
+		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
+		{
+			@Override
+			public void afterCommit()
+			{
+				LOGGER.info("Profile updated: {}", idProfile);
+				Profile profile = profileSearchRepository.findOne(idProfile);
+				profile.getEducation().remove(removingEducation);
+				profileSearchRepository.save(profile);
+				LOGGER.info("Profile index updated: {}", profile.getUid());
+			}
+		});
+	}
+
+	@Override
+	public List<Experience> experienceBefore(Date date)
+	{
+		return experienceRepository.findByCompletionDateBefore(date);
+	}
+
+	@Override
+	@Transactional
+	public void removeExperience(long idProfile, Experience removingExperience)
+	{
+		LOGGER.info("Removing experience {}", removingExperience.getId());
+		
+		Profile profile = profileRepository.findById(idProfile);
+		profile.getExperience().remove(removingExperience);
+		profileRepository.save(profile);
+		registerRemoveExperienceIndexProfileIfTrancationSuccess(idProfile, removingExperience);
+	}
+	
+	private void registerRemoveExperienceIndexProfileIfTrancationSuccess(final long idProfile, final Experience removingExperience)
+	{
+		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
+		{
+			@Override
+			public void afterCommit()
+			{
+				LOGGER.info("Profile updated: {}", idProfile);
+				Profile profile = profileSearchRepository.findOne(idProfile);
+				profile.getExperience().remove(removingExperience);
+				profileSearchRepository.save(profile);
+				LOGGER.info("Profile index updated: {}", profile.getUid());
+			}
+		});
 	}
 }

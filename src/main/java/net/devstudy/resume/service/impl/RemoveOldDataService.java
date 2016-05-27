@@ -15,9 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import net.devstudy.resume.entity.Course;
 import net.devstudy.resume.entity.Education;
 import net.devstudy.resume.entity.Experience;
-import net.devstudy.resume.repository.storage.CourseRepository;
-import net.devstudy.resume.repository.storage.EducationRepository;
-import net.devstudy.resume.repository.storage.ExperienceRepository;
+import net.devstudy.resume.service.EditProfileService;
 
 @Service
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -26,13 +24,7 @@ public class RemoveOldDataService
 	private static final Logger LOGGER = LoggerFactory.getLogger(RemoveOldDataService.class);
 
 	@Autowired
-	private CourseRepository courseRepository;
-
-	@Autowired
-	private EducationRepository educationRepository;
-
-	@Autowired
-	private ExperienceRepository experienceRepository;
+	private EditProfileService editProfileService;
 
 	@Value("${course.years.ago}")
 	private int courseYearsAgo;
@@ -44,50 +36,47 @@ public class RemoveOldDataService
 	private int practicYearsAgo;
 
 	@Transactional
-	// @Scheduled(cron = "${remove.old.data.shedule.expression}")
 	public void removeOldCourses()
 	{
 		LOGGER.debug("Scheduled : removing old courses");
-
+		
 		LocalDate today = new LocalDate();
 		LocalDate date = today.minusYears(courseYearsAgo);
-		List<Course> coursesToRemove = courseRepository.findByCompletionDateBefore(date.toDate());
+		List<Course> coursesToRemove = editProfileService.coursesBefore(date.toDate());
 		for (Course course : coursesToRemove)
 		{
-			LOGGER.debug("Scheduled : removing course " + course.getId());
-			courseRepository.delete(course);
+			long idProfile = course.getProfile().getId();
+			editProfileService.removeCourse(idProfile, course);
 		}
 	}
-
+	
 	@Transactional
-	// @Scheduled(cron = "${remove.old.data.shedule.expression}")
-	public void removeOldEducation()
+	public void removeOldEducations()
 	{
 		LOGGER.debug("Scheduled : removing old educations");
 
 		LocalDate today = new LocalDate();
 		int year = today.minusYears(educationYearsAgo).getYear();
-		List<Education> educationsToRemove = educationRepository.findByCompletionYearLessThan(year);
+		List<Education> educationsToRemove = editProfileService.educationBefore(year);
 		for (Education education : educationsToRemove)
 		{
-			LOGGER.debug("Scheduled : removing educations " + education.getId());
-			educationRepository.delete(education);
+			long idProfile = education.getProfile().getId();
+			editProfileService.removeEducation(idProfile, education);
 		}
 	}
-
+	
 	@Transactional
-	// @Scheduled(cron = "${remove.old.data.shedule.expression}")
-	public void removeOldExperience()
+	public void removeOldExperiences()
 	{
 		LOGGER.debug("Scheduled : removing old experiences");
 
 		LocalDate today = new LocalDate();
 		LocalDate date = today.minusYears(practicYearsAgo);
-		List<Experience> experiencesToRemove = experienceRepository.findByCompletionDateBefore(date.toDate());
+		List<Experience> experiencesToRemove = editProfileService.experienceBefore(date.toDate());
 		for (Experience experience : experiencesToRemove)
 		{
-			LOGGER.debug("Scheduled : removing experience " + experience.getId());
-			experienceRepository.delete(experience);
+			long idProfile = experience.getProfile().getId();
+			editProfileService.removeExperience(idProfile, experience);
 		}
 	}
 }

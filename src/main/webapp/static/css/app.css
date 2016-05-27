@@ -12,3 +12,19 @@
 {
 	
 }
+
+.dropdown-menu-aitem {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.42857143;
+  color: #333;
+  white-space: nowrap;
+}
+.dropdown-menu-aitem:hover,
+.dropdown-menu-aitem:focus {
+  color: #262626;
+  text-decoration: none;
+  background-color: #f5f5f5;
+}

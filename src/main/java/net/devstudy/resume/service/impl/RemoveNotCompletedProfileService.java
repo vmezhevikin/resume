@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.devstudy.resume.entity.Profile;
-import net.devstudy.resume.repository.storage.ProfileRepository;
+import net.devstudy.resume.service.EditProfileService;
 
 @Service
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -23,13 +23,12 @@ public class RemoveNotCompletedProfileService
 	private static final Logger LOGGER = LoggerFactory.getLogger(RemoveNotCompletedProfileService.class);
 
 	@Autowired
-	private ProfileRepository profileRepository;
-
+	private EditProfileService editProfileService;
+	
 	@Value("${remove.not.completed.profiles.interval}")
 	private int removeNotCompletedProfilesInterval;
 	
 	@Transactional
-	//@Scheduled(cron = "${remove.not.completed.profiles.schedule.expression}")
 	public void removeNotCompletedProfiles()
 	{
 		LOGGER.debug("Scheduled : removing not complited profiles");
@@ -38,8 +37,8 @@ public class RemoveNotCompletedProfileService
 		today.minusDays(removeNotCompletedProfilesInterval);
 		Timestamp date = new Timestamp(today.toDate().getTime());
 
-		List<Profile> profilesToRemove = profileRepository.findByActiveFalseAndCreatedBefore(date);
+		List<Profile> profilesToRemove = editProfileService.notCompletedProfilesCreatedBefore(date);
 		for (Profile profile : profilesToRemove)
-			profileRepository.delete(profile);
+			editProfileService.removeProfile(profile.getId());
 	}
 }

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <header class="navbar navbar-default" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
@@ -17,16 +17,18 @@
 						</div>
 					</form>
 				</li>
-				<li>
-					<a href="/sign-in">Sign in</a>
-				</li>
-				<li>
-					<a href="/sign-up">Sign up</a>
-				</li>
+				<sec:authorize access="!hasAuthority('USER')">
+					<li>
+						<a href="/sign-in">Sign in</a>
+					</li>
+					<li>
+						<a href="/sign-up">Sign up</a>
+					</li>
+				</sec:authorize>
 				<sec:authorize access="hasAuthority('USER')">
 					<li class="dropdown">
-						<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
-							<sec:authentication property="principal.fullName"/>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<sec:authentication property="principal.fullName" />
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
@@ -56,10 +58,12 @@
 							</li>
 							<li role="separator" class="divider"></li>
 							<li>
-								<a href="/sign-out">
-									<i class="fa fa-sign-out" aria-hidden="true"></i>
-									Sign out
-								</a>
+								<form:form action="/sign-out" method="post" id="signoutForm" style="none">
+									<a href="#" class="dropdown-menu-aitem" onclick="document.getElementById('signoutForm').submit()">
+										<i class="fa fa-sign-out" aria-hidden="true"></i>
+										Sign out
+									</a>
+								</form:form>
 							</li>
 						</ul>
 					</li>

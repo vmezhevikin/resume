@@ -21,7 +21,7 @@ public class RemoveOldDataServiceJob implements Job
 	{
 		LOGGER.debug("Scheduled: RemoveOldDataServiceJob");
 		jobService.removeOldCourses();
-		jobService.removeOldEducation();
-		jobService.removeOldExperience();
+		jobService.removeOldEducations();
+		jobService.removeOldExperiences();
 	}
 }

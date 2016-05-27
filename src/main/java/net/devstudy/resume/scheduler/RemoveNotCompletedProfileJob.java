@@ -12,14 +12,14 @@ import net.devstudy.resume.service.impl.RemoveNotCompletedProfileService;
 public class RemoveNotCompletedProfileJob implements Job
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RemoveNotCompletedProfileJob.class);
-	
+
 	@Autowired
 	private RemoveNotCompletedProfileService jobService;
-	
+
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException
 	{
-		LOGGER.debug("Scheduled: RemoveNotCompletedProfileJob");	
+		LOGGER.debug("Scheduled: RemoveNotCompletedProfileJob");
 		jobService.removeNotCompletedProfiles();
 	}
 }

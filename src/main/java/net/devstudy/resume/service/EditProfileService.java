@@ -1,5 +1,7 @@
 package net.devstudy.resume.service;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import net.devstudy.resume.entity.Certificate;
@@ -25,56 +27,72 @@ import net.devstudy.resume.form.SkillForm;
 public interface EditProfileService
 {
 	Profile createNewProfile(SignUpForm form);
-	
+
 	List<HobbyName> listHobbyName();
-	
+
 	List<SkillCategory> listSkillCategory();
-	
+
 	List<Skill> listSkill(long idProfile);
-	
+
 	void updateSkill(long idProfile, SkillForm form);
-	
+
 	void addSkill(long idProfile, Skill form);
-	
+
 	List<Language> listLanguage(long idProfile);
-	
+
 	void updateLanguage(long idProfile, LanguageForm form);
-	
+
 	void addLanguage(long idProfile, Language form);
-	
+
 	List<Experience> listExperience(long idProfile);
-	
+
 	void updateExperience(long idProfile, ExperienceForm form);
-	
+
 	void addExperience(long idProfile, Experience form);
-	
+
 	List<Education> listEducation(long idProfile);
-	
+
 	void updateEducation(long idProfile, EducationForm form);
-	
+
 	void addEducation(long idProfile, Education form);
-	
+
 	List<Course> listCourse(long idProfile);
-	
+
 	void updateCourse(long idProfile, CourseForm form);
-	
+
 	void addCourse(long idProfile, Course form);
-	
+
 	List<Certificate> listCertificate(long idProfile);
-	
+
 	void updateCertificate(long idProfile, CertificateForm form);
-	
+
 	void addCertificate(long idProfile, Certificate form);
-	
+
 	void updateGeneralInfo(long idProfile, Profile form);
-	
+
 	void updateAdditionalInfo(long idProfile, Profile form);
-	
+
 	Contact contact(long idProfile);
-	
+
 	void updateContact(long idProfile, Contact form);
-	
+
 	List<Hobby> listHobby(long idProfile);
-	
+
 	void updateHobby(long idProfile, HobbyForm form);
+
+	List<Profile> notCompletedProfilesCreatedBefore(Timestamp date);
+
+	void removeProfile(long idProfile);
+
+	List<Course> coursesBefore(Date date);
+
+	void removeCourse(long idProfile, Course removingCourse);
+
+	List<Education> educationBefore(int year);
+
+	void removeEducation(long idProfile, Education removingEducation);
+
+	List<Experience> experienceBefore(Date date);
+
+	void removeExperience(long idProfile, Experience removingExperience);
 }
