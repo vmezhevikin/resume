@@ -39,10 +39,10 @@ import net.devstudy.resume.form.HobbyForm;
 import net.devstudy.resume.form.LanguageForm;
 import net.devstudy.resume.form.SignUpForm;
 import net.devstudy.resume.form.SkillForm;
+import net.devstudy.resume.repository.search.ProfileSearchRepository;
 import net.devstudy.resume.repository.storage.CourseRepository;
 import net.devstudy.resume.repository.storage.EducationRepository;
 import net.devstudy.resume.repository.storage.ExperienceRepository;
-import net.devstudy.resume.repository.search.ProfileSearchRepository;
 import net.devstudy.resume.repository.storage.HobbyNameRepository;
 import net.devstudy.resume.repository.storage.ProfileRepository;
 import net.devstudy.resume.repository.storage.SkillCategoryRepository;
@@ -855,25 +855,10 @@ public class EditProfileServiceImpl implements EditProfileService
 		LOGGER.info("Removing course {}", removingCourse.getId());
 		
 		Profile profile = profileRepository.findById(idProfile);
+		
 		profile.getCourse().remove(removingCourse);
 		profileRepository.save(profile);
-		registerRemoveCourseIndexProfileIfTrancationSuccess(idProfile, removingCourse);
-	}
-	
-	private void registerRemoveCourseIndexProfileIfTrancationSuccess(final long idProfile, final Course removingCourse)
-	{
-		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
-		{
-			@Override
-			public void afterCommit()
-			{
-				LOGGER.info("Profile updated: {}", idProfile);
-				Profile profile = profileSearchRepository.findOne(idProfile);
-				profile.getCourse().remove(removingCourse);
-				profileSearchRepository.save(profile);
-				LOGGER.info("Profile index updated: {}", profile.getUid());
-			}
-		});
+		registerUpdateIndexProfileCourseIfTransactionSuccess(idProfile, profile.getCourse());
 	}
 
 	@Override
@@ -891,23 +876,7 @@ public class EditProfileServiceImpl implements EditProfileService
 		Profile profile = profileRepository.findById(idProfile);
 		profile.getEducation().remove(removingEducation);
 		profileRepository.save(profile);
-		registerRemoveEducationIndexProfileIfTrancationSuccess(idProfile, removingEducation);
-	}
-	
-	private void registerRemoveEducationIndexProfileIfTrancationSuccess(final long idProfile, final Education removingEducation)
-	{
-		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
-		{
-			@Override
-			public void afterCommit()
-			{
-				LOGGER.info("Profile updated: {}", idProfile);
-				Profile profile = profileSearchRepository.findOne(idProfile);
-				profile.getEducation().remove(removingEducation);
-				profileSearchRepository.save(profile);
-				LOGGER.info("Profile index updated: {}", profile.getUid());
-			}
-		});
+		LOGGER.info("Education {} removed", removingEducation.getId());
 	}
 
 	@Override
@@ -925,22 +894,6 @@ public class EditProfileServiceImpl implements EditProfileService
 		Profile profile = profileRepository.findById(idProfile);
 		profile.getExperience().remove(removingExperience);
 		profileRepository.save(profile);
-		registerRemoveExperienceIndexProfileIfTrancationSuccess(idProfile, removingExperience);
-	}
-	
-	private void registerRemoveExperienceIndexProfileIfTrancationSuccess(final long idProfile, final Experience removingExperience)
-	{
-		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
-		{
-			@Override
-			public void afterCommit()
-			{
-				LOGGER.info("Profile updated: {}", idProfile);
-				Profile profile = profileSearchRepository.findOne(idProfile);
-				profile.getExperience().remove(removingExperience);
-				profileSearchRepository.save(profile);
-				LOGGER.info("Profile index updated: {}", profile.getUid());
-			}
-		});
+		registerUpdateIndexProfileExperienceIfTransactionSuccess(idProfile, profile.getExperience());
 	}
 }

@@ -71,13 +71,11 @@ public class PublicDataController
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public String getSearch(@ModelAttribute("query") String query, Model model)
 	{
-		/*
-		 * PageRequest pageable = new PageRequest(0,
-		 * Constants.MAX_PROFILES_PER_PAGE, new Sort("id")); Page<Profile>
-		 * profiles = findProfileService.findBySearchQuery(query, pageable);
-		 * model.addAttribute("profiles", profiles.getContent());
-		 * model.addAttribute("page", profiles);
-		 */
+		PageRequest pageable = new PageRequest(0, Constants.MAX_PROFILES_PER_PAGE, new Sort("id"));
+		Page<Profile> profiles = findProfileService.findBySearchQuery(query, pageable);
+		model.addAttribute("profiles", profiles.getContent());
+		model.addAttribute("page", profiles);
+
 		return "search";
 	}
 
@@ -85,10 +83,9 @@ public class PublicDataController
 	public String getMoreSearch(@ModelAttribute("query") String query, Model model,
 			@PageableDefault(size = Constants.MAX_PROFILES_PER_PAGE) @SortDefault(sort = "id") Pageable pageable)
 	{
-		/*
-		 * Page<Profile> profiles = findProfileService.findBySearchQuery(query,
-		 * pageable); model.addAttribute("profiles", profiles.getContent());
-		 */
+		Page<Profile> profiles = findProfileService.findBySearchQuery(query, pageable);
+		model.addAttribute("profiles", profiles.getContent());
+
 		return "fragment/search-more";
 	}
 
