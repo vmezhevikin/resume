@@ -8,26 +8,29 @@
 					<div class="media-left">
 						<a href="${profile.uid}">
 							<c:if test="${profile.photoSmall != null}">
-								<img class="media-object img-rounded" src="${profile.photoSmall}" alt="photo small">
+								<img class="media-object img-rounded" src="${profile.photoSmall}" alt="${profile.uid}">
 							</c:if>
 							<c:if test="${profile.photoSmall == null}">
-								<img class="media-object img-rounded" src="/static/img/blank-photo-sm.jpg" alt="photo small">
+								<img class="media-object img-rounded" src="/static/img/blank-photo-sm.jpg" alt="${profile.uid}">
 							</c:if>
 						</a>
 					</div>
 					<div class="media-body">
 						<p class="text-primary">
-							<span>${profile.fullName} (${profile.getAge()})</span>
+							<span>${profile.fullName} </span>
+							<c:if test="${profile.active}">(${profile.getAge()})</c:if>
 						</p>
-						<h5>${profile.objective}</h5>
-						<p>
-							<strong>
-								<small>${profile.city}, ${profile.country}</small>
-							</strong>
-						</p>
-						<p>
-							<small>${profile.summary}</small>
-						</p>
+						<c:if test="${profile.active}">
+							<h5>${profile.objective}</h5>
+							<p>
+								<strong>
+									<small>${profile.city}, ${profile.country}</small>
+								</strong>
+							</p>
+							<p>
+								<small>${profile.summary}</small>
+							</p>
+						</c:if>
 					</div>
 				</div>
 			</div>

@@ -67,6 +67,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 			.rememberMeParameter("remember-me")
 			.key("resume-online")
 			.tokenRepository(persistentTokenRepository());
-		//http.csrf().disable();
 	}
 }

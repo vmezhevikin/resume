@@ -6,6 +6,8 @@ import java.util.Random;
 import org.apache.commons.lang.WordUtils;
 import org.joda.time.LocalDate;
 
+import com.restfb.types.User;
+
 import net.devstudy.resume.form.SignUpForm;
 
 public class DataUtil
@@ -53,5 +55,10 @@ public class DataUtil
 		int day = Integer.parseInt(part[2]);
 
 		return new LocalDate(year, month, day).toDate();
+	}
+
+	public static String generateProfileUid(User user)
+	{
+		return normailizeName(user.getFirstName()) + UID_DELIMITER + normailizeName(user.getLastName());
 	}
 }

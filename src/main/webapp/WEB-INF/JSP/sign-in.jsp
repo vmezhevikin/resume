@@ -5,10 +5,10 @@
 		<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
 			<div class="panel panel-info">
 				<div class="panel-heading">
-					<h3 class="panel-title">
+					<div class="panel-title">
 						<i class="fa fa-sign-in" aria-hidden="true"></i>
 						Sign in
-					</h3>
+					</div>
 				</div>
 				<div class="panel-body">
 					<p>You can use your UID or Email or Phone number as login.</p>
@@ -36,9 +36,15 @@
 								Remember me
 							</label>
 						</div>
-						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-						<button type="submit" class="btn btn-primary pull-left">Sign in</button>
-						<a href="#" class="pull-right">Recover access</a>
+						<div class="form-group" style="display: table; width: 100%;">
+							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+							<button type="submit" class="btn btn-primary pull-left">Sign in</button>
+							<a href="/restore" class="pull-right">Restore access</a>
+						</div>
+						<hr />
+						<div class="form-group" style="text-align: center;">
+							<a href="/fbLogin" class="btn btn-success pull-center">Sign in via Facebook</a>
+						</div>
 					</form>
 				</div>
 			</div>

@@ -15,6 +15,9 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.SafeHtml;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
+
 import net.devstudy.resume.annotation.constraints.EnglishLanguage;
 import net.devstudy.resume.annotation.constraints.FirstFieldLessThanSecond;
 
@@ -38,16 +41,19 @@ public class Education extends AbstractEntity<Long> implements Serializable, Pro
 	@Column(nullable = false, length = 100)
 	@EnglishLanguage
 	@Size(min = 1, message = "Don't leave it empty")
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String speciality;
 
 	@Column(nullable = false, length = 100)
 	@EnglishLanguage
 	@Size(min = 1, message = "Don't leave it empty")
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String university;
 
 	@Column(nullable = false, length = 100)
 	@EnglishLanguage
 	@Size(min = 1, message = "Don't leave it empty")
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String department;
 
 	@Column(name = "starting_year", nullable = false)

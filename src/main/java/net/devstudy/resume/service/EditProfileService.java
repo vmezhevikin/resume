@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import com.restfb.types.User;
+
 import net.devstudy.resume.entity.Certificate;
 import net.devstudy.resume.entity.Contact;
 import net.devstudy.resume.entity.Course;
@@ -16,6 +18,7 @@ import net.devstudy.resume.entity.Profile;
 import net.devstudy.resume.entity.Skill;
 import net.devstudy.resume.entity.SkillCategory;
 import net.devstudy.resume.form.CertificateForm;
+import net.devstudy.resume.form.ChangePasswordForm;
 import net.devstudy.resume.form.CourseForm;
 import net.devstudy.resume.form.EducationForm;
 import net.devstudy.resume.form.ExperienceForm;
@@ -81,18 +84,26 @@ public interface EditProfileService
 	void updateHobby(long idProfile, HobbyForm form);
 
 	List<Profile> notCompletedProfilesCreatedBefore(Timestamp date);
-
+	
 	void removeProfile(long idProfile);
 
 	List<Course> coursesBefore(Date date);
 
-	void removeCourse(long idProfile, Course removingCourse);
+	void removeCourse(long idCourse);
 
-	List<Education> educationBefore(int year);
+	List<Education> educationsBefore(int year);
 
-	void removeEducation(long idProfile, Education removingEducation);
+	void removeEducation(long idEducation);
 
-	List<Experience> experienceBefore(Date date);
+	List<Experience> experiencesBefore(Date date);
 
-	void removeExperience(long idProfile, Experience removingExperience);
+	void removeExperience(long idExperience);
+	
+	void addRestoreToken(long idProfile, String token);
+	
+	void removeRestoreToken(long idProfile);
+	
+	void updatePassword(long idProfile, ChangePasswordForm form);
+	
+	Profile createNewProfileViaFacebook(User user);
 }

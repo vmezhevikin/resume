@@ -3,8 +3,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="resume" tagdir="/WEB-INF/tags"%>
 <form:form action="/add/course" method="post" commandName="courseForm">
-	<div class="container" style="background-color: white;">
-		<h2 class="text-center">Courses</h2>
+	<div class="container resume-edit-block">
+		<div class="text-center">Courses</div>
 		<table class="table" id="table">
 			<tr>
 				<td>

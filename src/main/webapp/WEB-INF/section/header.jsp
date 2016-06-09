@@ -5,7 +5,9 @@
 <header class="navbar navbar-default" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<div class="navbar-brand">My Resume</div>
+			<div class="navbar-brand">
+				<a href="/welcome">My Resume</a>
+			</div>
 		</div>
 		<div class="collapse navbar-collapse">
 			<ul class="nav navbar-nav navbar-right">

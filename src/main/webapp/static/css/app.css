@@ -1,16 +1,50 @@
-.table-borderless tbody tr td, .table-borderless tbody tr th, .table-borderless thead tr th
-{
+.table-borderless tbody tr td, .table-borderless tbody tr th, .table-borderless thead tr th {
 	border: none;
 }
 
-.resume-body
-{
+.resume-body {
 	background: #EAE7E6;
 }
 
-.resume-main
-{
+.resume-main {
 	
+}
+
+.resume-edit-block {
+	background-color: white;
+}
+
+.resume-search-text {
+	color: #777;
+	font-size: 75%;
+}
+
+.panel-padding {
+	padding: 15px;
+}
+
+.resume-footer {
+  position: relative;
+  bottom: 0;
+  margin: 20px;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.resume-footer > p {
+	color: #777;
+	text-align: center;
+	vertical-align: middle;
+	padding: 5px;
+}
+
+.navbar-brand > a {
+	
+}
+.navbar-brand > a:hover,
+.navbar-brand > a:focus {
+	color: #262626;
+	text-decoration: none;
 }
 
 .dropdown-menu-aitem {

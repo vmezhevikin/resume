@@ -3,6 +3,16 @@ function deleteRow(r) {
 	document.getElementById("table").deleteRow(i);
 }
 
+var onloadCallback = function() {
+	grecaptcha.render('g-recaptcha', {
+		'sitekey' : 'sitekey',
+		'callback' : function(response) {
+			document.getElementById('recaptchaResponse').value = response;
+		},
+		'theme' : 'light'
+	});
+}
+
 var resume = {
 
 	alert : function(message) {
@@ -40,7 +50,7 @@ var resume = {
 			}
 		});
 	},
-	
+
 	searchMore : function(query) {
 		var page = parseInt($('#profileContainer').attr('data-profile-number')) + 1;
 		var total = parseInt($('#profileContainer').attr('data-profile-total'));

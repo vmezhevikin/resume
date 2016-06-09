@@ -4,10 +4,10 @@
 		<div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
 			<div class="panel panel-danger">
 				<div class="panel-heading">
-					<h3 class="panel-title">
+					<div class="panel-title">
 						<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
 						Error
-					</h3>
+					</div>
 				</div>
 				<div class="panel-body">
 					<p class="text-danger">Unexpected error</p>

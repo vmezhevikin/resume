@@ -3,15 +3,18 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <div class="panel panel-primary">
 	<div class="panel-heading">
-		<h3 class="panel-title">
+		<div class="panel-title">
 			<i class="fa fa-language" aria-hidden="true"></i>
 			Foreign languages
 			<sec:authorize access="hasAuthority('USER')">
-				<a class="pull-right" href="/edit/language">
-					<i class="fa fa-cog" aria-hidden="true"></i>
-				</a>
-			</sec:authorize>${principal.name}
-		</h3>
+				<sec:authentication var="currProfilieUid" property="principal.username" />
+				<c:if test="${currProfilieUid == profile.uid}">
+					<a class="pull-right" href="/edit/language">
+						<i class="fa fa-cog" aria-hidden="true"></i>
+					</a>
+				</c:if>
+			</sec:authorize>
+		</div>
 	</div>
 	<div class="panel-body">
 		<c:forEach var="language" items="${profile.language}">

@@ -13,23 +13,28 @@ import net.coobird.thumbnailator.Thumbnails;
 
 public class ImageUtil
 {
-	public static String saveFile(String dirWebapp, String destDir, MultipartFile file)
+	public static String saveFile(String webappFolder, String destinationFolder, MultipartFile file)
 	{
 		try
 		{
 			String uuid = UUID.randomUUID().toString() + ".jpg";
 			String smallUuid = uuid.replace(".jpg", "-sm.jpg");
 
-			File destFile = new File(dirWebapp + destDir, uuid);
-			File destFileSmall = new File(dirWebapp + destDir, smallUuid);
+			File tempFile = new File(webappFolder + destinationFolder, "temp");
+			File destFile = new File(webappFolder + destinationFolder, uuid);
+			File destFileSmall = new File(webappFolder + destinationFolder, smallUuid);
 
-			if (!destFile.getParentFile().exists())
-				destFile.getParentFile().mkdirs();
-			file.transferTo(destFile);
+			if (!tempFile.getParentFile().exists())
+				tempFile.getParentFile().mkdirs();
+			file.transferTo(tempFile);
 
-			Thumbnails.of(destFile).size(100, 100).toFile(destFileSmall);
+			Thumbnails.of(tempFile).size(400, 400).toFile(destFile);
+			Thumbnails.of(tempFile).size(100, 100).toFile(destFileSmall);
+			
+			Path tempPath = Paths.get(tempFile.getAbsolutePath());
+			Files.delete(tempPath);
 
-			return destFile.toString().replace(dirWebapp, "");
+			return destFile.toString().replace(webappFolder, "");
 		} catch (Exception e)
 		{
 			return null;
@@ -44,13 +49,13 @@ public class ImageUtil
 			return uuid.replace(".jpg", "-sm.jpg");
 	}
 
-	public static void removeFile(String dirWebapp, String oldImage)
+	public static void removeFile(String webappFolder, String oldImage)
 	{
 		if (oldImage != null && !oldImage.contains("blank-photo"))
 		{
 			try
 			{
-				Path destFile = Paths.get(dirWebapp + oldImage);
+				Path destFile = Paths.get(webappFolder + oldImage);
 				Files.delete(destFile);
 			} catch (IOException e)
 			{

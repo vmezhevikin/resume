@@ -19,7 +19,7 @@ public class EmailConfig
 	public JavaMailSender javaMailSender()
 	{
 		JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
-		javaMailSender.setHost("email.smtp.server");
+		javaMailSender.setHost(environment.getRequiredProperty("email.smtp.server"));
 		if (environment.containsProperty("email.smtp.username"))
 		{
 			javaMailSender.setUsername(environment.resolveRequiredPlaceholders(environment.getRequiredProperty("email.smtp.username")));

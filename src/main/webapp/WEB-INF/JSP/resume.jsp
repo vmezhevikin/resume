@@ -7,10 +7,10 @@
 			<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
 				<resume:resume-general />
 				<div class="hidden-sm hidden-xs">
-					<c:if test="${profile.language.size() != 0}">
+					<c:if test="${!profile.language.isEmpty()}">
 						<resume:resume-language />
 					</c:if>
-					<c:if test="${profile.hobby.size() != 0}">
+					<c:if test="${!profile.hobby.isEmpty()}">
 						<resume:resume-hobby />
 					</c:if>
 					<c:if test="${profile.additionalInfo != null}">
@@ -22,27 +22,27 @@
 				<c:if test="${profile.objective != null}">
 					<resume:resume-objective />
 				</c:if>
-				<c:if test="${profile.skill.size() != 0}">
+				<c:if test="${!profile.skill.isEmpty()}">
 					<resume:resume-skill />
 				</c:if>
-				<c:if test="${profile.experience.size() != 0}">
+				<c:if test="${!profile.experience.isEmpty()}">
 					<resume:resume-experience />
 				</c:if>
-				<c:if test="${profile.certificate.size() != 0}">
+				<c:if test="${!profile.certificate.isEmpty()}">
 					<resume:resume-certificate />
 				</c:if>
-				<c:if test="${profile.course.size() != 0}">
+				<c:if test="${!profile.course.isEmpty()}">
 					<resume:resume-course />
 				</c:if>
-				<c:if test="${profile.education.size() != 0}">
+				<c:if test="${!profile.education.isEmpty()}">
 					<resume:resume-education />
 				</c:if>
 			</div>
 			<div class="col-sm-12 col-xs-12 visible-sm visible-xs">
-				<c:if test="${profile.language.size() != 0}">
+				<c:if test="${!profile.language.isEmpty()}">
 					<resume:resume-language />
 				</c:if>
-				<c:if test="${profile.hobby.size() != 0}">
+				<c:if test="${!profile.hobby.isEmpty()}">
 					<resume:resume-hobby />
 				</c:if>
 				<c:if test="${profile.additionalInfo != null}">

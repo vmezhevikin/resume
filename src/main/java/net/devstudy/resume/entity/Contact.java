@@ -7,7 +7,9 @@ import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.URL;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 
 import net.devstudy.resume.annotation.constraints.EnglishLanguage;
 
@@ -19,31 +21,37 @@ public class Contact implements Serializable
 
 	@Column(name = "skype", length=50)
 	@EnglishLanguage
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String skype;
 	
 	@Column(name = "vkontakte", length=255)
 	@EnglishLanguage
 	@URL(message = "Not a URL address")
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String vkontakte;
 	
 	@Column(name = "facebook", length=255)
 	@EnglishLanguage
 	@URL(message = "Not a URL address")
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String facebook;
 	
 	@Column(name = "linkedin", length=255)
 	@EnglishLanguage
 	@URL(message = "Not a URL address")
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String linkedin;
 	
 	@Column(name = "github", length=255)
 	@EnglishLanguage
 	@URL(message = "Not a URL address")
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String github;
 	
 	@Column(name = "stackoverflow", length=255)
 	@EnglishLanguage
 	@URL(message = "Not a URL address")
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String stackoverflow;
 
 	public String getSkype()

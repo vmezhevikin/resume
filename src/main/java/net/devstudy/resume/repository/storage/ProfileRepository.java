@@ -25,4 +25,6 @@ public interface ProfileRepository extends PagingAndSortingRepository<Profile, L
 	int countByUid(String uid);
 	
 	List<Profile> findByActiveFalseAndCreatedBefore(Timestamp date);
+	
+	Profile findByProfileRestoreToken(String token);
 }

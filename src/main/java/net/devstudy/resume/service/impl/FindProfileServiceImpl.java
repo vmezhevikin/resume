@@ -41,6 +41,12 @@ public class FindProfileServiceImpl implements FindProfileService, UserDetailsSe
 	}
 
 	@Override
+	public Profile findByEmail(String email)
+	{
+		return profileRepository.findByEmail(email);
+	}
+
+	@Override
 	public Page<Profile> findAll(Pageable pageable)
 	{
 		return profileRepository.findAll(pageable);
@@ -71,7 +77,7 @@ public class FindProfileServiceImpl implements FindProfileService, UserDetailsSe
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
 	{
-		Profile profile = findProfile(username);
+		Profile profile = findByUniqueId(username);
 		if (profile != null)
 			return new CurrentProfile(profile);
 		else
@@ -81,7 +87,8 @@ public class FindProfileServiceImpl implements FindProfileService, UserDetailsSe
 		}
 	}
 
-	private Profile findProfile(String anyUniqueId)
+	@Override
+	public Profile findByUniqueId(String anyUniqueId)
 	{
 		Profile profile = profileRepository.findByUid(anyUniqueId);
 		if (profile == null)
@@ -91,5 +98,11 @@ public class FindProfileServiceImpl implements FindProfileService, UserDetailsSe
 				profile = profileRepository.findByPhone(anyUniqueId);
 		}
 		return profile;
+	}
+
+	@Override
+	public Profile findByToken(String token)
+	{
+		return profileRepository.findByProfileRestoreToken(token);
 	}
 }

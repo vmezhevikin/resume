@@ -3,7 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <form:form action="/edit/hobby" method="post" commandName="hobbyForm">
 	<input type="hidden" name="maxSize" value="${hobbyForm.maxSize}" />
-	<div class="container" style="background-color: white;">
+	<div class="container resume-edit-block">
 		<h2 class="text-center">Hobbies.</h2>
 		<div class="form-group">
 			<table class="table">

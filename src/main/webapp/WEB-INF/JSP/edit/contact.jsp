@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <form:form action="/edit/contact" method="post" commandName="contact">
-	<div class="container" style="background-color: white;">
+	<div class="container resume-edit-block">
 		<h2 class="text-center">Additional contacts: skype, social networks, etc.</h2>
 		<table class="table">
 			<tr>

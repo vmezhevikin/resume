@@ -2,7 +2,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <form:form action="/edit/general?${_csrf.parameterName}=${_csrf.token}" method="post" commandName="profile" enctype="multipart/form-data">
-	<div class="container" style="background-color: white;">
+	<div class="container resume-edit-block">
 		<h2 class="text-center">${profile.fullName}</h2>
 		<input type="hidden" name="fullName" value="${profile.fullName}" />
 		<table class="table">

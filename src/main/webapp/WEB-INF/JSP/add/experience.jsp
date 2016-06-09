@@ -2,8 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <form:form action="/add/experience" method="post" commandName="experienceForm">
-	<div class="container" style="background-color: white;">
-		<h2 class="text-center">Practical experience</h2>
+	<div class="container resume-edit-block">
+		<div class="text-center">Practical experience</div>
 		<table class="table" id="table">
 			<tr>
 				<td>

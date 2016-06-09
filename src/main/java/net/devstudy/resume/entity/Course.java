@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.SafeHtml;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
@@ -43,11 +45,13 @@ public class Course extends AbstractEntity<Long> implements Serializable, Profil
 	@Column(nullable = false, length = 100)
 	@EnglishLanguage
 	@Size(min = 1, message = "Don't leave it empty")
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String description;
 
 	@Column(nullable = false, length = 100)
 	@EnglishLanguage
 	@Size(min = 1, message = "Don't leave it empty")
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	@JsonIgnore
 	private String school;
 

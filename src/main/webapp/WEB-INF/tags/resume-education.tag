@@ -3,18 +3,24 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <div class="panel panel-primary">
 	<div class="panel-heading">
-		<h3 class="panel-title">
+		<div class="panel-title">
 			<i class="fa fa-university" aria-hidden="true"></i>
 			Education
 			<sec:authorize access="hasAuthority('USER')">
-				<a class="pull-right" href="/edit/education">
-					<i class="fa fa-cog" aria-hidden="true"></i>
-				</a>
+				<sec:authentication var="currProfilieUid" property="principal.username" />
+				<c:if test="${currProfilieUid == profile.uid}">
+					<a class="pull-right" href="/edit/education">
+						<i class="fa fa-cog" aria-hidden="true"></i>
+					</a>
+				</c:if>
 			</sec:authorize>
-		</h3>
+		</div>
 	</div>
 	<div class="panel-body">
 		<c:forEach var="education" items="${profile.education}">
+			<c:if test="${profile.education.size() > 1}">
+				<hr />
+			</c:if>
 			<h4>${education.speciality}</h4>
 			<p>
 				<i class="fa fa-calendar" aria-hidden="true"></i>
@@ -26,7 +32,9 @@
 				</c:if>
 			</p>
 			<p>${education.department}<span>, </span>${education.university}</p>
-			<hr />
+			<c:if test="${profile.education.size() > 1}">
+				<hr />
+			</c:if>
 		</c:forEach>
 	</div>
 </div>

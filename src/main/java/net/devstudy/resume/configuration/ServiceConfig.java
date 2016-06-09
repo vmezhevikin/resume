@@ -8,11 +8,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-// import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
-// @EnableScheduling
-@ComponentScan({ "net.devstudy.resume.service.impl", "net.devstudy.resume.controller", "net.devstudy.resume.filter", "net.devstudy.resume.listener", "net.devstudy.resume.scheduler", "net.devstudy.resume.component.impl" })
+@ComponentScan({ "net.devstudy.resume.service.impl", "net.devstudy.resume.controller", "net.devstudy.resume.filter", "net.devstudy.resume.listener", "net.devstudy.resume.scheduler", "net.devstudy.resume.component.impl", "net.devstudy.resume.validator" })
 public class ServiceConfig
 {
 	/**
@@ -36,6 +34,6 @@ public class ServiceConfig
 
 	private static Resource[] getResources()
 	{
-		return new Resource[] { new ClassPathResource("application.properties"), new ClassPathResource("logic.properties"), new ClassPathResource("email.properties") };
+		return new Resource[] { new ClassPathResource("application.properties"), new ClassPathResource("logic.properties") };
 	}
 }

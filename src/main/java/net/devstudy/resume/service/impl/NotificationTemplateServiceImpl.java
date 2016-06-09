@@ -1,10 +1,15 @@
 package net.devstudy.resume.service.impl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +34,9 @@ public class NotificationTemplateServiceImpl implements NotificationTemplateServ
 	@Value("${notification.config.path}")
 	private String notificationConfigPath;
 
+	@Value("${notification.email.templates.path}")
+	private String notificationEmailTemplatesPath;
+
 	@Autowired
 	private NotificationContentResolver notificationContentResolver;
 
@@ -45,7 +53,44 @@ public class NotificationTemplateServiceImpl implements NotificationTemplateServ
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
 		reader.setValidating(false);
 		reader.loadBeanDefinitions(new PathResource(notificationConfigPath));
-		return beanFactory.getBeansOfType(NotificationMessage.class);
+		return getConfiguredTemplates(beanFactory.getBeansOfType(NotificationMessage.class));
+	}
+	
+	private Map<String, NotificationMessage> getConfiguredTemplates(Map<String, NotificationMessage> notificationTemplates)
+	{
+		Map<String, NotificationMessage> configuredTemplates = new HashMap<>();
+		for (Map.Entry<String, NotificationMessage> entry : notificationTemplates.entrySet())
+		{
+			NotificationMessage messageTemplate = entry.getValue();
+			String htmlContent = readHtmlTemplate(notificationEmailTemplatesPath + messageTemplate.getContent());
+			if (StringUtils.isNotBlank(htmlContent))
+			{
+				messageTemplate.setContent(htmlContent);
+				configuredTemplates.put(entry.getKey(), messageTemplate);
+			}
+		}	
+		return configuredTemplates;
+	}
+
+	private String readHtmlTemplate(String filePath)
+	{
+		StringBuilder htmlTemplate = new StringBuilder();
+		Scanner scanner = null;
+		try
+		{
+			scanner = new Scanner(new File(filePath));
+			while (scanner.hasNext())
+				htmlTemplate.append(scanner.nextLine().replace("\t", ""));
+			 return htmlTemplate.toString();
+		} catch (FileNotFoundException e)
+		{
+			LOGGER.error("Can't find email template file " + filePath);
+			return null;
+		} finally
+		{
+			if (scanner != null)
+				scanner.close();
+		}
 	}
 
 	@Override

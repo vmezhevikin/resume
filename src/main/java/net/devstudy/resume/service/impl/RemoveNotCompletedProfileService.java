@@ -8,16 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import net.devstudy.resume.entity.Profile;
 import net.devstudy.resume.service.EditProfileService;
 
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class RemoveNotCompletedProfileService
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RemoveNotCompletedProfileService.class);
@@ -28,7 +24,6 @@ public class RemoveNotCompletedProfileService
 	@Value("${remove.not.completed.profiles.interval}")
 	private int removeNotCompletedProfilesInterval;
 	
-	@Transactional
 	public void removeNotCompletedProfiles()
 	{
 		LOGGER.debug("Scheduled : removing not complited profiles");

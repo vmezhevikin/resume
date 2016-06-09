@@ -3,8 +3,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="resume" tagdir="/WEB-INF/tags"%>
 <form:form action="/add/skill" method="post" commandName="skillForm">
-	<div class="container" style="background-color: white;">
-		<h2 class="text-center">Technical skills in the frameworks and technologies.</h2>
+	<div class="container resume-edit-block">
+		<div class="text-center">Technical skills in the frameworks and technologies.</div>
 		<table class="table" id="table">
 			<tr>
 				<th>Category</th>

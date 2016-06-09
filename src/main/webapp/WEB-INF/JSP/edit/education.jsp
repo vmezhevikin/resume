@@ -3,7 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="resume" tagdir="/WEB-INF/tags"%>
 <form:form action="/edit/education" method="post" commandName="educationForm">
-	<div class="container" style="background-color: white;">
+	<div class="container resume-edit-block">
 		<h2 class="text-center">Education</h2>
 		<table class="table" id="table">
 			<c:forEach var="education" items="${educationForm.items}" varStatus="status">

@@ -3,15 +3,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div class="panel panel-primary">
 	<div class="panel-heading">
-		<h3 class="panel-title">
+		<div class="panel-title">
 			<i class="fa fa-code" aria-hidden="true"></i>
 			Skills
 			<sec:authorize access="hasAuthority('USER')">
-				<a class="pull-right" href="/edit/skill">
-					<i class="fa fa-cog" aria-hidden="true"></i>
-				</a>
+				<sec:authentication var="currProfilieUid" property="principal.username" />
+				<c:if test="${currProfilieUid == profile.uid}">
+					<a class="pull-right" href="/edit/skill">
+						<i class="fa fa-cog" aria-hidden="true"></i>
+					</a>
+				</c:if>
 			</sec:authorize>
-		</h3>
+		</div>
 	</div>
 	<div class="panel-body">
 		<table class="table table-bordered table-striped">

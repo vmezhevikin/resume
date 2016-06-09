@@ -69,7 +69,7 @@ public class TestDataGenerator
 			"One Java professional course with developing web application blog",
 			"Two Java professional courses with developing two web applications: blog and resume",
 			"Three Java professional courses with developing one console application and two web applications: blog and resume" };
-	private static final String[] COMPANIES = { "TeamDev", "INSART", "NIXSolutions", "DataArt", "EPAMSystems", "GlobalLogic" };
+	private static final String[] COMPANIES = { "Lorem ipsum", "Aenean commodo", "Etiam rhoncus", "Duis arcu tortor", "Praesent adipiscing", "Aenean vulputate" };
 	private static final String[] POSITIONS = { "Junior java developer", "Java trainee" };
 	private static final String[] UNIVERSITIES = { "National Technical University", "Karazin Kharkiv National University",
 			"Kharkiv National University of Radioelectronics" };
@@ -458,7 +458,7 @@ public class TestDataGenerator
 
 		statement.setLong(1, id);
 		statement.setString(2, "Java basic");
-		statement.setString(3, "SourceIt");
+		statement.setString(3, "Vivamus");
 		if (rand.nextBoolean())
 			statement.setDate(4, generateDate());
 		else

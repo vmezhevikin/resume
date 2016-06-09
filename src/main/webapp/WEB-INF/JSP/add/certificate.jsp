@@ -3,8 +3,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="resume" tagdir="/WEB-INF/tags"%>
 <form:form action="/add/certificate?${_csrf.parameterName}=${_csrf.token}" method="post" commandName="certificateForm" enctype="multipart/form-data">
-	<div class="container" style="background-color: white;">
-		<h2 class="text-center">Certificates</h2>
+	<div class="container resume-edit-block">
+		<div class="text-center">Certificates</div>
 		<table class="table">
 			<tr>
 				<td>

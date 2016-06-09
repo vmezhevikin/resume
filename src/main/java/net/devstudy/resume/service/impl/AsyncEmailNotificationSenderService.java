@@ -72,7 +72,7 @@ public class AsyncEmailNotificationSenderService implements NotificationSenderSe
 				messageHelper.setSubject(notificationMessage.getSubject());
 				messageHelper.setTo(new InternetAddress(notificationMessage.getDestinationAddress(), notificationMessage.getDestinationName()));
 				messageHelper.setFrom(fromEmail, fromEmail);
-				messageHelper.setText(notificationMessage.getContent());
+				messageHelper.setText(notificationMessage.getContent(), true);
 				MimeMailMessage message = new MimeMailMessage(messageHelper);
 				javaMailSender.send(message.getMimeMessage());
 				LOGGER.debug("Email to {} successfully sent", notificationMessage.getDestinationAddress());

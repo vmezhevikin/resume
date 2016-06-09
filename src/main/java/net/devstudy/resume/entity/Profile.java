@@ -12,14 +12,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
-// import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.SafeHtml;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -40,8 +42,6 @@ public class Profile extends AbstractEntity<Long>
 
 	@Id
 	@Column(unique = true, nullable = false)
-	// @GeneratedValue(strategy = GenerationType.SEQUENCE, generator =
-	// "profile_seq")
 	@SequenceGenerator(name = "PROFILE_ID_GENERATOR", sequenceName = "profile_seq", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROFILE_ID_GENERATOR")
 	private Long id;
@@ -70,11 +70,13 @@ public class Profile extends AbstractEntity<Long>
 	@Column(length = 50)
 	@Size(min = 1, message = "Don't leave it empty")
 	@EnglishLanguage
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String country;
 
 	@Column(length = 50)
 	@Size(min = 1, message = "Don't leave it empty")
 	@EnglishLanguage
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String city;
 
 	@Column
@@ -91,24 +93,29 @@ public class Profile extends AbstractEntity<Long>
 	@EnglishLanguage
 	@Email(message = "Not an email address")
 	@JsonIgnore
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String email;
 
 	@Column(length = 20)
 	@Size(min = 1, message = "Don't leave it empty")
 	@Phone
 	@JsonIgnore
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String phone;
 
 	@Column(name = "additional_info", length = 2147483647)
 	@EnglishLanguage
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String additionalInfo;
 
 	@Column(length = 2147483647)
 	@EnglishLanguage
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String objective;
 
 	@Column(length = 2147483647)
 	@EnglishLanguage
+	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String summary;
 
 	@Column(length = 255)
@@ -150,9 +157,9 @@ public class Profile extends AbstractEntity<Long>
 	@OrderBy("id")
 	private List<Skill> skill;
 
-	// @OneToOne(targetEntity = ProfileRestore.class, cascade = CascadeType.ALL,
-	// mappedBy = "profile")
-	// private ProfileRestore profileRestore;
+	@OneToOne(targetEntity = ProfileRestore.class, cascade = { CascadeType.MERGE, CascadeType.PERSIST }, mappedBy = "profile", orphanRemoval = true)
+	@JsonIgnore
+	private ProfileRestore profileRestore;
 
 	@Embedded
 	@JsonIgnore
@@ -454,6 +461,16 @@ public class Profile extends AbstractEntity<Long>
 	public void setSkill(List<Skill> skill)
 	{
 		this.skill = skill;
+	}
+
+	public ProfileRestore getProfileRestore()
+	{
+		return profileRestore;
+	}
+
+	public void setProfileRestore(ProfileRestore profileRestore)
+	{
+		this.profileRestore = profileRestore;
 	}
 
 	public Contact getContact()

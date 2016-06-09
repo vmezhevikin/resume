@@ -7,12 +7,12 @@
 			<td>
 				<div class="row">
 					<div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
-						<div class="panel panel-default" style="padding: 15px;">
+						<div class="panel panel-default panel-padding">
 							<h4 class="text-center">
 								Search results for:
 								<strong>${query}</strong>
 							</h4>
-							<div class="text-muted" style="font-size: 75%;">
+							<div class="resume-search-text">
 								Searched in:
 								<ul>
 									<li>Objective</li>

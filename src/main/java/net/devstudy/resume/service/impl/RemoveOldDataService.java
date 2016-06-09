@@ -7,10 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import net.devstudy.resume.entity.Course;
 import net.devstudy.resume.entity.Education;
@@ -18,7 +15,6 @@ import net.devstudy.resume.entity.Experience;
 import net.devstudy.resume.service.EditProfileService;
 
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class RemoveOldDataService
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RemoveOldDataService.class);
@@ -35,7 +31,6 @@ public class RemoveOldDataService
 	@Value("${practic.years.ago}")
 	private int practicYearsAgo;
 
-	@Transactional
 	public void removeOldCourses()
 	{
 		LOGGER.debug("Scheduled : removing old courses");
@@ -44,39 +39,28 @@ public class RemoveOldDataService
 		LocalDate date = today.minusYears(courseYearsAgo);
 		List<Course> coursesToRemove = editProfileService.coursesBefore(date.toDate());
 		for (Course course : coursesToRemove)
-		{
-			long idProfile = course.getProfile().getId();
-			editProfileService.removeCourse(idProfile, course);
-		}
+			editProfileService.removeCourse(course.getId());
 	}
 	
-	@Transactional
 	public void removeOldEducations()
 	{
 		LOGGER.debug("Scheduled : removing old educations");
 
 		LocalDate today = new LocalDate();
 		int year = today.minusYears(educationYearsAgo).getYear();
-		List<Education> educationsToRemove = editProfileService.educationBefore(year);
+		List<Education> educationsToRemove = editProfileService.educationsBefore(year);
 		for (Education education : educationsToRemove)
-		{
-			long idProfile = education.getProfile().getId();
-			editProfileService.removeEducation(idProfile, education);
-		}
+			editProfileService.removeEducation(education.getId());
 	}
 	
-	@Transactional
 	public void removeOldExperiences()
 	{
 		LOGGER.debug("Scheduled : removing old experiences");
 
 		LocalDate today = new LocalDate();
 		LocalDate date = today.minusYears(practicYearsAgo);
-		List<Experience> experiencesToRemove = editProfileService.experienceBefore(date.toDate());
+		List<Experience> experiencesToRemove = editProfileService.experiencesBefore(date.toDate());
 		for (Experience experience : experiencesToRemove)
-		{
-			long idProfile = experience.getProfile().getId();
-			editProfileService.removeExperience(idProfile, experience);
-		}
+			editProfileService.removeExperience(experience.getId());
 	}
 }

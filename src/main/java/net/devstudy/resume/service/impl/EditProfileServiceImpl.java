@@ -2,11 +2,14 @@ package net.devstudy.resume.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,8 @@ import org.springframework.transaction.support.TransactionSynchronizationAdapter
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.restfb.types.User;
+
 import net.devstudy.resume.entity.Certificate;
 import net.devstudy.resume.entity.Contact;
 import net.devstudy.resume.entity.Course;
@@ -28,10 +33,12 @@ import net.devstudy.resume.entity.Hobby;
 import net.devstudy.resume.entity.HobbyName;
 import net.devstudy.resume.entity.Language;
 import net.devstudy.resume.entity.Profile;
+import net.devstudy.resume.entity.ProfileRestore;
 import net.devstudy.resume.entity.Skill;
 import net.devstudy.resume.entity.SkillCategory;
 import net.devstudy.resume.exception.CantCompleteClientRequestException;
 import net.devstudy.resume.form.CertificateForm;
+import net.devstudy.resume.form.ChangePasswordForm;
 import net.devstudy.resume.form.CourseForm;
 import net.devstudy.resume.form.EducationForm;
 import net.devstudy.resume.form.ExperienceForm;
@@ -47,8 +54,10 @@ import net.devstudy.resume.repository.storage.HobbyNameRepository;
 import net.devstudy.resume.repository.storage.ProfileRepository;
 import net.devstudy.resume.repository.storage.SkillCategoryRepository;
 import net.devstudy.resume.service.EditProfileService;
+import net.devstudy.resume.service.NotificationManagerService;
 import net.devstudy.resume.util.DataUtil;
 import net.devstudy.resume.util.ImageUtil;
+import net.devstudy.resume.util.SecurityUtil;
 
 @Service
 public class EditProfileServiceImpl implements EditProfileService
@@ -78,6 +87,9 @@ public class EditProfileServiceImpl implements EditProfileService
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private NotificationManagerService notificationManagerService;
 
 	@Value("${generate.uid.alphabet}")
 	private String generateUidAlphabet;
@@ -89,13 +101,16 @@ public class EditProfileServiceImpl implements EditProfileService
 	private int generateUidMaxTryCount;
 	
 	@Value("${webapp.folder}")
-	private String dirWebapp;
+	private String webappFolder;
 	
 	@Value("${avatar.folder}")
-	private String dirAvatar;
+	private String avatarFolder;
 
 	@Value("${certificate.folder}")
-	private String dirCertificate;
+	private String certificateFolder;
+	
+	@Value("${email.restorelink.address}")
+	private String emailRestorelinkAddress;
 
 	@Override
 	@Transactional
@@ -109,7 +124,7 @@ public class EditProfileServiceImpl implements EditProfileService
 		profile.setPassword(passwordEncoder.encode(form.getPassword()));
 		profile.setActive(false);
 		profileRepository.save(profile);
-		registerCreateIndexProfileIfTrancationSuccess(profile);
+		registerIndexAfterCreateProfile(profile);
 		return profile;
 	}
 
@@ -127,21 +142,22 @@ public class EditProfileServiceImpl implements EditProfileService
 		return uid;
 	}
 
-	private void registerCreateIndexProfileIfTrancationSuccess(final Profile profile)
+	private void registerIndexAfterCreateProfile(final Profile profile)
 	{
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
 		{
+			@SuppressWarnings("unchecked")
 			@Override
 			public void afterCommit()
 			{
 				LOGGER.info("New profile created: {}", profile.getUid());
-				profile.getCertificate().clear();
-				profile.getCourse().clear();
-				profile.getEducation().clear();
-				profile.getExperience().clear();
-				profile.getHobby().clear();
-				profile.getLanguage().clear();
-				profile.getSkill().clear();
+				profile.setCertificate(Collections.EMPTY_LIST);
+				profile.setCourse(Collections.EMPTY_LIST);
+				profile.setEducation(Collections.EMPTY_LIST);
+				profile.setExperience(Collections.EMPTY_LIST);
+				profile.setHobby(Collections.EMPTY_LIST);
+				profile.setLanguage(Collections.EMPTY_LIST);
+				profile.setSkill(Collections.EMPTY_LIST);
 				profileSearchRepository.save(profile);
 				LOGGER.info("New profile index created: {}", profile.getUid());
 			}
@@ -191,7 +207,7 @@ public class EditProfileServiceImpl implements EditProfileService
 			profile.getSkill().clear();
 			profile.getSkill().addAll(listFromForm);
 			profileRepository.save(profile);
-			registerUpdateIndexProfileSkillIfTransactionSuccess(idProfile, listFromForm);
+			updateIndexAfterEditSkill(idProfile, listFromForm);
 		}
 	}
 
@@ -205,10 +221,10 @@ public class EditProfileServiceImpl implements EditProfileService
 		form.setProfile(profile);
 		profile.getSkill().add(form);
 		profileRepository.save(profile);		
-		registerUpdateIndexProfileSkillIfTransactionSuccess(idProfile, profile.getSkill());
+		updateIndexAfterEditSkill(idProfile, profile.getSkill());
 	}
 
-	private void registerUpdateIndexProfileSkillIfTransactionSuccess(final long idProfile, final List<Skill> updatedSkill)
+	private void updateIndexAfterEditSkill(final long idProfile, final List<Skill> updatedSkill)
 	{
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
 		{
@@ -256,7 +272,7 @@ public class EditProfileServiceImpl implements EditProfileService
 			profile.getLanguage().clear();
 			profile.getLanguage().addAll(listFromForm);
 			profileRepository.save(profile);
-			registerUpdateIndexProfileLanguageIfTransactionSuccess(idProfile, listFromForm);
+			updateIndexAfterEditLanguage(idProfile, listFromForm);
 		}
 	}
 
@@ -270,10 +286,10 @@ public class EditProfileServiceImpl implements EditProfileService
 		form.setProfile(profile);
 		profile.getLanguage().add(form);
 		profileRepository.save(profile);
-		registerUpdateIndexProfileLanguageIfTransactionSuccess(idProfile, profile.getLanguage());		
+		updateIndexAfterEditLanguage(idProfile, profile.getLanguage());		
 	}
 
-	private void registerUpdateIndexProfileLanguageIfTransactionSuccess(final long idProfile, final List<Language> updatedLanguage)
+	private void updateIndexAfterEditLanguage(final long idProfile, final List<Language> updatedLanguage)
 	{
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
 		{
@@ -321,7 +337,7 @@ public class EditProfileServiceImpl implements EditProfileService
 			profile.getExperience().clear();
 			profile.getExperience().addAll(listFromForm);
 			profileRepository.save(profile);
-			registerUpdateIndexProfileExperienceIfTransactionSuccess(idProfile, listFromForm);
+			updateIndexAfterEditExperience(idProfile, listFromForm);
 		}
 	}
 	
@@ -335,10 +351,10 @@ public class EditProfileServiceImpl implements EditProfileService
 		form.setProfile(profile);
 		profile.getExperience().add(form);
 		profileRepository.save(profile);
-		registerUpdateIndexProfileExperienceIfTransactionSuccess(idProfile, profile.getExperience());		
+		updateIndexAfterEditExperience(idProfile, profile.getExperience());		
 	}
 
-	private void registerUpdateIndexProfileExperienceIfTransactionSuccess(final long idProfile, final List<Experience> updatedExperience)
+	private void updateIndexAfterEditExperience(final long idProfile, final List<Experience> updatedExperience)
 	{
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
 		{
@@ -436,7 +452,7 @@ public class EditProfileServiceImpl implements EditProfileService
 			profile.getCourse().clear();
 			profile.getCourse().addAll(listFromForm);
 			profileRepository.save(profile);
-			registerUpdateIndexProfileCourseIfTransactionSuccess(idProfile, listFromForm);
+			updateIndexAfterEditCourse(idProfile, listFromForm);
 		}
 	}
 
@@ -450,10 +466,10 @@ public class EditProfileServiceImpl implements EditProfileService
 		form.setProfile(profile);
 		profile.getCourse().add(form);
 		profileRepository.save(profile);
-		registerUpdateIndexProfileCourseIfTransactionSuccess(idProfile, profile.getCourse());
+		updateIndexAfterEditCourse(idProfile, profile.getCourse());
 	}
 
-	private void registerUpdateIndexProfileCourseIfTransactionSuccess(final long idProfile, final List<Course> updatedCourse)
+	private void updateIndexAfterEditCourse(final long idProfile, final List<Course> updatedCourse)
 	{
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
 		{
@@ -501,11 +517,11 @@ public class EditProfileServiceImpl implements EditProfileService
 				if (certificate.getImg() == null && certificate.getFile() != null)
 				{
 					String oldImage = certificate.getImg();
-					String newImage = ImageUtil.saveFile(dirWebapp, dirCertificate, certificate.getFile());
+					String newImage = ImageUtil.saveFile(webappFolder, certificateFolder, certificate.getFile());
 					String newImageSmall = ImageUtil.getSmallPhotoPath(newImage);
 					if (newImage != null && newImageSmall != null)
 					{
-						ImageUtil.removeFile(dirWebapp, oldImage);
+						ImageUtil.removeFile(webappFolder, oldImage);
 						certificate.setImg(newImage);
 						certificate.setImgSmall(newImageSmall);
 					}
@@ -515,7 +531,7 @@ public class EditProfileServiceImpl implements EditProfileService
 			profile.getCertificate().clear();
 			profile.getCertificate().addAll(listFromForm);
 			profileRepository.save(profile);
-			registerUpdateIndexProfileCertificateIfTransactionSuccess(idProfile, listFromForm);
+			updateIndexAfterEditCertificate(idProfile, listFromForm);
 		}
 	}
 
@@ -528,11 +544,11 @@ public class EditProfileServiceImpl implements EditProfileService
 		if (form.getImg() == null && form.getFile() != null)
 		{
 			String oldImage = form.getImg();
-			String newImage = ImageUtil.saveFile(dirWebapp, dirCertificate, form.getFile());
+			String newImage = ImageUtil.saveFile(webappFolder, certificateFolder, form.getFile());
 			String newImageSmall = ImageUtil.getSmallPhotoPath(newImage);
 			if (newImage != null && newImageSmall != null)
 			{
-				ImageUtil.removeFile(dirWebapp, oldImage);
+				ImageUtil.removeFile(webappFolder, oldImage);
 				form.setImg(newImage);
 				form.setImgSmall(newImageSmall);
 				
@@ -542,14 +558,14 @@ public class EditProfileServiceImpl implements EditProfileService
 				form.setProfile(profile);
 				profile.getCertificate().add(form);
 				profileRepository.save(profile);
-				registerUpdateIndexProfileCertificateIfTransactionSuccess(idProfile, profile.getCertificate());
+				updateIndexAfterEditCertificate(idProfile, profile.getCertificate());
 			}
 		}
 		else
 			LOGGER.info("Updating profile certificates: no file uploaded");		
 	}
 
-	private void registerUpdateIndexProfileCertificateIfTransactionSuccess(final long idProfile, final List<Certificate> updatedCertificate)
+	private void updateIndexAfterEditCertificate(final long idProfile, final List<Certificate> updatedCertificate)
 	{
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
 		{
@@ -584,12 +600,12 @@ public class EditProfileServiceImpl implements EditProfileService
 			{
 				String oldImage = profile.getPhoto();
 				String oldImageSmall = profile.getPhotoSmall();
-				String newImage = ImageUtil.saveFile(dirWebapp, dirAvatar, form.getFile());
+				String newImage = ImageUtil.saveFile(webappFolder, avatarFolder, form.getFile());
 				String newImageSmall = ImageUtil.getSmallPhotoPath(newImage);
 				if (newImage != null && newImageSmall != null)
 				{
-					ImageUtil.removeFile(dirWebapp, oldImage);
-					ImageUtil.removeFile(dirWebapp, oldImageSmall);
+					ImageUtil.removeFile(webappFolder, oldImage);
+					ImageUtil.removeFile(webappFolder, oldImageSmall);
 					profile.setPhoto(newImage);
 					profile.setPhotoSmall(newImageSmall);
 				}
@@ -603,7 +619,7 @@ public class EditProfileServiceImpl implements EditProfileService
 			profile.setSummary(form.getSummary());
 			profile.setActive(true);
 			profileRepository.save(profile);
-			registerUpdateIndexProfileGeneralIfTransactionSuccess(idProfile, profile);
+			updateIndexAfterEditGeneralInfo(idProfile, profile);
 		}
 	}
 
@@ -628,7 +644,7 @@ public class EditProfileServiceImpl implements EditProfileService
 		return false;
 	}
 
-	private void registerUpdateIndexProfileGeneralIfTransactionSuccess(final long idProfile, final Profile updatedProfile)
+	private void updateIndexAfterEditGeneralInfo(final long idProfile, final Profile updatedProfile)
 	{
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
 		{
@@ -668,7 +684,7 @@ public class EditProfileServiceImpl implements EditProfileService
 	{
 		if (form != null)
 		{
-			if ("".equals(form.getAdditionalInfo()))
+			if (StringUtils.isBlank(form.getAdditionalInfo()))
 				form.setAdditionalInfo(null);
 		}
 	}
@@ -714,17 +730,17 @@ public class EditProfileServiceImpl implements EditProfileService
 	{
 		if (form != null)
 		{
-			if ("".equals(form.getSkype()))
+			if (StringUtils.isBlank(form.getSkype()))
 				form.setSkype(null);
-			if ("".equals(form.getVkontakte()))
+			if (StringUtils.isBlank(form.getVkontakte()))
 				form.setVkontakte(null);
-			if ("".equals(form.getFacebook()))
+			if (StringUtils.isBlank(form.getFacebook()))
 				form.setFacebook(null);
-			if ("".equals(form.getLinkedin()))
+			if (StringUtils.isBlank(form.getLinkedin()))
 				form.setLinkedin(null);
-			if ("".equals(form.getGithub()))
+			if (StringUtils.isBlank(form.getGithub()))
 				form.setGithub(null);
-			if ("".equals(form.getStackoverflow()))
+			if (StringUtils.isBlank(form.getStackoverflow()))
 				form.setStackoverflow(null);
 		}
 	}
@@ -761,7 +777,7 @@ public class EditProfileServiceImpl implements EditProfileService
 		{
 			LOGGER.debug("Updating profile hobbies: profile hobbies have been changed");
 
-			List<Hobby> listHobby = updateListFromSource(listCurrent, listFromForm);
+			List<Hobby> listHobby = updateListOfHobbiesFromSource(listCurrent, listFromForm);
 
 			profile.updateListProfile(listHobby);
 			profile.getHobby().clear();
@@ -789,7 +805,7 @@ public class EditProfileServiceImpl implements EditProfileService
 		return false;
 	}
 	
-	private List<Hobby> updateListFromSource(List<Hobby> listCurrent, List<String> listFromForm)
+	private List<Hobby> updateListOfHobbiesFromSource(List<Hobby> listCurrent, List<String> listFromForm)
 	{
 		List<Hobby> listHobby = new ArrayList<>();
 		
@@ -824,10 +840,10 @@ public class EditProfileServiceImpl implements EditProfileService
 		
 		Profile profile = profileRepository.findById(idProfile);
 		profileRepository.delete(profile);
-		registerRemoveIndexProfileIfTrancationSuccess(idProfile);
+		updateIndexAfterRemoveProfile(idProfile);
 	}
 	
-	private void registerRemoveIndexProfileIfTrancationSuccess(final long idProfile)
+	private void updateIndexAfterRemoveProfile(final long idProfile)
 	{
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
 		{
@@ -850,50 +866,237 @@ public class EditProfileServiceImpl implements EditProfileService
 
 	@Override
 	@Transactional
-	public void removeCourse(long idProfile, Course removingCourse)
+	public void removeCourse(long idCourse)
 	{
-		LOGGER.info("Removing course {}", removingCourse.getId());
+		LOGGER.info("Removing course {}", idCourse);
 		
-		Profile profile = profileRepository.findById(idProfile);
+		Course removingCourse = courseRepository.findOne(idCourse);
+		Profile profile = removingCourse.getProfile();
 		
 		profile.getCourse().remove(removingCourse);
 		profileRepository.save(profile);
-		registerUpdateIndexProfileCourseIfTransactionSuccess(idProfile, profile.getCourse());
+		updateIndexAfterEditCourse(profile.getId(), profile.getCourse());
 	}
 
 	@Override
-	public List<Education> educationBefore(int year)
+	public List<Education> educationsBefore(int year)
 	{
 		return educationRepository.findByCompletionYearLessThan(year);
 	}
 
 	@Override
 	@Transactional
-	public void removeEducation(long idProfile, Education removingEducation)
+	public void removeEducation(long idEducation)
 	{
-		LOGGER.info("Removing education {}", removingEducation.getId());
+		LOGGER.info("Removing education {}", idEducation);
 		
-		Profile profile = profileRepository.findById(idProfile);
+		Education removingEducation = educationRepository.findOne(idEducation);
+		Profile profile = removingEducation.getProfile();
+		
 		profile.getEducation().remove(removingEducation);
 		profileRepository.save(profile);
-		LOGGER.info("Education {} removed", removingEducation.getId());
+		LOGGER.info("Education {} removed", idEducation);
 	}
 
 	@Override
-	public List<Experience> experienceBefore(Date date)
+	public List<Experience> experiencesBefore(Date date)
 	{
 		return experienceRepository.findByCompletionDateBefore(date);
 	}
 
 	@Override
 	@Transactional
-	public void removeExperience(long idProfile, Experience removingExperience)
+	public void removeExperience(long idExperience)
 	{
-		LOGGER.info("Removing experience {}", removingExperience.getId());
+		LOGGER.info("Removing experience {}", idExperience);
 		
-		Profile profile = profileRepository.findById(idProfile);
+		Experience removingExperience = experienceRepository.findOne(idExperience);
+		Profile profile = removingExperience.getProfile();
+		
 		profile.getExperience().remove(removingExperience);
 		profileRepository.save(profile);
-		registerUpdateIndexProfileExperienceIfTransactionSuccess(idProfile, profile.getExperience());
+		updateIndexAfterEditExperience(profile.getId(), profile.getExperience());
+	}
+
+	@Override
+	@Transactional
+	public void addRestoreToken(long idProfile, String token)
+	{
+		LOGGER.info("Creating restore token for profile {}", idProfile);
+		
+		Profile profile = profileRepository.findById(idProfile);
+		ProfileRestore restore = new ProfileRestore();
+		restore.setId(profile.getId());
+		restore.setProfile(profile);
+		restore.setToken(token);
+		profile.setProfileRestore(restore);
+		profileRepository.save(profile);
+		
+		notificationManagerService.sendRestoreAccessLink(profile, emailRestorelinkAddress + token);
+	}
+
+	@Override
+	@Transactional
+	public void removeRestoreToken(long idProfile)
+	{
+		LOGGER.info("Removing restore token for profile {}", idProfile);
+		
+		Profile profile = profileRepository.findById(idProfile);
+		profile.setProfileRestore(null);
+		profileRepository.save(profile);
+	}
+
+	@Override
+	@Transactional
+	public void updatePassword(long idProfile, ChangePasswordForm form)
+	{
+		LOGGER.info("Updating password for profile {}", idProfile);
+		
+		Profile profile = profileRepository.findById(idProfile);
+		profile.setPassword(passwordEncoder.encode(form.getPassword()));
+		profileRepository.save(profile);
+		
+		notificationManagerService.sendPasswordChanged(profile);
+	}
+
+	@Override
+	@Transactional
+	public Profile createNewProfileViaFacebook(User user)
+	{
+		LOGGER.info("Creating new profile via Facebook");
+
+		Profile profile = new Profile();
+		profile.setUid(generateProfileUid(user));
+		profile.setFirstName(DataUtil.capitailizeName(user.getFirstName()));
+		profile.setLastName(DataUtil.capitailizeName(user.getLastName()));
+		profile.setPassword(passwordEncoder.encode(SecurityUtil.generatePassword()));
+		profile.setActive(false);
+		if (user.getHometown() != null)
+		{
+			String[] location = user.getHometown().getName().split(",");
+			profile.setCountry(location[1].trim());
+			profile.setCity(location[0].trim());
+		}
+		profile.setBirthday(user.getBirthdayAsDate());
+		profile.setEmail(user.getEmail());
+		profile.setAdditionalInfo(user.getRelationshipStatus());
+		
+		List<Education> educationsFromFacebook = new ArrayList<>();
+		for (com.restfb.types.User.Education educationFacebook : user.getEducation())
+		{
+			Education education = createEducationFromFacebook(educationFacebook);
+			education.setProfile(profile);
+			educationsFromFacebook.add(education);
+		}
+		if (!educationsFromFacebook.isEmpty())
+			profile.setEducation(educationsFromFacebook);
+		
+		List<Experience> worksFromFacebook = new ArrayList<>();
+		for (com.restfb.types.User.Work workFacebook : user.getWork())
+		{
+			Experience experience = createExperienceFromFacebook(workFacebook);
+			experience.setProfile(profile);
+			worksFromFacebook.add(experience);
+		}
+		if (!worksFromFacebook.isEmpty())
+			profile.setExperience(worksFromFacebook);
+	
+		profileRepository.save(profile);
+		registerIndexAfterCreateProfileViaFacebook(profile);
+		return profile;
+	}
+
+	private String generateProfileUid(User user)
+	{
+		String baseUid = DataUtil.generateProfileUid(user);
+		String uid = baseUid;
+		for (int i = 0; profileRepository.countByUid(uid) > 0; i++)
+		{
+			uid = DataUtil.regenerateUidWithRandomSuffix(baseUid, generateUidAlphabet, generateUidSuffixlength);
+			if (i >= generateUidMaxTryCount)
+				throw new CantCompleteClientRequestException(
+						"Can't generate unique uid for profile: " + baseUid + ": maxTryCountToGenerateUid detected");
+		}
+		return uid;
+	}
+	
+	private Education createEducationFromFacebook(com.restfb.types.User.Education educationFacebook)
+	{
+		Education education = new Education();
+		education.setDepartment("From FB");
+		education.setSpeciality("From FB");		
+		if (educationFacebook.getSchool() != null)
+			education.setUniversity(educationFacebook.getSchool().getName());
+		else
+			education.setUniversity("From FB");		
+		if (educationFacebook.getDegree() != null)
+			education.setSpeciality(educationFacebook.getDegree().getName());
+		else
+			education.setSpeciality("From FB");
+		if (educationFacebook.getYear() != null)
+		{
+			education.setStartingYear(Integer.parseInt(educationFacebook.getYear().getName()));
+			education.setCompletionYear(Integer.parseInt(educationFacebook.getYear().getName()));
+		}
+		else
+		{
+			LocalDate today = new LocalDate();
+			education.setStartingYear(today.getYear());
+			education.setCompletionYear(today.getYear());
+		}
+		
+		return education;
+	}
+	
+	private Experience createExperienceFromFacebook(com.restfb.types.User.Work workFacebook)
+	{
+		Experience experience = new Experience();
+
+		if (workFacebook.getEmployer() != null)
+			experience.setCompany(workFacebook.getEmployer().getName());
+		else
+			experience.setCompany("From FB");
+		if (workFacebook.getStartDate() != null)
+			experience.setStartingDate(workFacebook.getStartDate());
+		else
+			experience.setStartingDate(new LocalDate().toDate());
+		if (workFacebook.getEndDate() != null)
+			experience.setCompletionDate(workFacebook.getEndDate());
+		else
+			experience.setCompletionDate(new LocalDate().toDate());
+		if (workFacebook.getPosition() != null)
+			experience.setPosition(workFacebook.getPosition().getName());
+		else
+			experience.setPosition("From FB");
+		if (workFacebook.getDescription() != null)
+			experience.setResponsibility(workFacebook.getDescription());
+		else
+			experience.setResponsibility("From FB");
+		
+		return experience;
+	}
+	
+	private void registerIndexAfterCreateProfileViaFacebook(final Profile profile)
+	{
+		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
+		{
+			@SuppressWarnings("unchecked")
+			@Override
+			public void afterCommit()
+			{
+				LOGGER.info("New profile via Facebook created: {}", profile.getUid());
+				profile.setCertificate(Collections.EMPTY_LIST);
+				profile.setCourse(Collections.EMPTY_LIST);
+				if (profile.getEducation() == null)
+					profile.setEducation(Collections.EMPTY_LIST);
+				if (profile.getExperience() == null)
+					profile.setExperience(Collections.EMPTY_LIST);
+				profile.setHobby(Collections.EMPTY_LIST);
+				profile.setLanguage(Collections.EMPTY_LIST);
+				profile.setSkill(Collections.EMPTY_LIST);
+				profileSearchRepository.save(profile);
+				LOGGER.info("New profile index created: {}", profile.getUid());
+			}
+		});
 	}
 }
