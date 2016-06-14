@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import org.joda.time.LocalDate;
+
 import net.coobird.thumbnailator.Thumbnails;
 
 public class TestDataGenerator
@@ -306,8 +308,8 @@ public class TestDataGenerator
 
 	private static String generatePhone()
 	{
-		StringBuilder phone = new StringBuilder("+38050");
-		for (int i = 0; i < 7; i++)
+		StringBuilder phone = new StringBuilder("+38");
+		for (int i = 0; i < 10; i++)
 		{
 			int code = '0' + rand.nextInt(10);
 			phone.append(((char) code));
@@ -382,9 +384,10 @@ public class TestDataGenerator
 			statement.setLong(1, id);
 			statement.setString(2, COMPANIES[rand.nextInt(COMPANIES.length)]);
 			statement.setString(3, POSITIONS[rand.nextInt(POSITIONS.length)]);
-			statement.setDate(4, generateDate());
+			Date completionDate = generateDate();
+			statement.setDate(4, generateDateBefore(completionDate));
 			if (rand.nextBoolean())
-				statement.setDate(5, generateDate());
+				statement.setDate(5, completionDate);
 			else
 				statement.setNull(5, Types.DATE);
 			statement.setString(6, sentences.get(rand.nextInt(sentences.size())));
@@ -406,6 +409,13 @@ public class TestDataGenerator
 		int year = cl.get(Calendar.YEAR);
 		cl.set(Calendar.YEAR, year - rand.nextInt(10));
 		return new Date(cl.getTimeInMillis());
+	}
+
+	private static Date generateDateBefore(Date laterDate)
+	{
+		LocalDate date = new LocalDate(laterDate.getTime());
+		date.minusMonths(rand.nextInt(48) + 12);
+		return new Date(date.toDate().getTime());
 	}
 
 	private static int generateYear()
@@ -483,7 +493,7 @@ public class TestDataGenerator
 		int year = generateYear();
 		statement.setInt(5, year);
 		if (rand.nextBoolean())
-			statement.setInt(6, year + 3);
+			statement.setInt(6, year + rand.nextInt(3) + 1);
 		else
 			statement.setNull(6, Types.INTEGER);
 		// System.out.println(statement);

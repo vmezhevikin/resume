@@ -7,4 +7,6 @@ public interface NotificationManagerService
 	void sendRestoreAccessLink(Profile profile, String restoreLink);
 	
 	void sendPasswordChanged(Profile profile);
+	
+	void sendProfileActive(Profile profile);
 }

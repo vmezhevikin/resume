@@ -9,7 +9,7 @@
 	<url>http://maven.apache.org</url>
 
 	<build>
-		<finalName>resume</finalName>
+		<finalName>ROOT</finalName>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -30,6 +30,8 @@
 					<configuration>
 						<warSourceDirectory>src/main/webapp</warSourceDirectory>
 						<failOnMissingWebXml>false</failOnMissingWebXml>
+						<warSourceExcludes>/media/**, /static/css/style.min.css,
+							/static/css/script.min.js</warSourceExcludes>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -39,7 +41,6 @@
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>1.8</version>
 				<executions>
-					<!-- clean -->
 					<execution>
 						<id>clean-lib</id>
 						<phase>clean</phase>
@@ -52,7 +53,6 @@
 							<goal>run</goal>
 						</goals>
 					</execution>
-					<!-- build -->
 					<execution>
 						<id>copy-lib</id>
 						<phase>package</phase>
@@ -63,10 +63,48 @@
 									<fileset
 										dir="${basedir}/target/${project.build.finalName}/WEB-INF/lib" />
 								</copy>
+								<delete file="${basedir}/src/main/webapp/static/css/style.min.css" />
+								<copy
+									file="${basedir}/target/${project.build.finalName}/static/css/style.min.css"
+									tofile="${basedir}/src/main/webapp/static/css/style.min.css" />
+								<delete file="${basedir}/src/main/webapp/static/js/script.min.js" />
+								<copy
+									file="${basedir}/target/${project.build.finalName}/static/js/script.min.js"
+									tofile="${basedir}/src/main/webapp/static/js/script.min.js" />
 							</tasks>
 						</configuration>
 						<goals>
 							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.samaxes.maven</groupId>
+				<artifactId>minify-maven-plugin</artifactId>
+				<version>1.7.4</version>
+				<executions>
+					<execution>
+						<id>minify-js</id>
+						<phase>process-resources</phase>
+						<configuration>
+							<charset>utf-8</charset>
+							<cssSourceDir>/static/css</cssSourceDir>
+							<cssSourceFiles>
+								<cssSourceFile>bootstrap.css</cssSourceFile>
+								<cssSourceFile>bootstrap-theme.css</cssSourceFile>
+								<cssSourceFile>font-awesome.css</cssSourceFile>
+								<cssSourceFile>app.css</cssSourceFile>
+							</cssSourceFiles>
+							<jsSourceDir>/static/js</jsSourceDir>
+							<jsSourceFiles>
+								<jsSourceFile>bootstrap.js</jsSourceFile>
+								<jsSourceFile>app.js</jsSourceFile>
+							</jsSourceFiles>
+							<verbose>false</verbose>
+						</configuration>
+						<goals>
+							<goal>minify</goal>
 						</goals>
 					</execution>
 				</executions>

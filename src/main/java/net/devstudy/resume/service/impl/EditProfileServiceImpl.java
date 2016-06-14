@@ -37,15 +37,8 @@ import net.devstudy.resume.entity.ProfileRestore;
 import net.devstudy.resume.entity.Skill;
 import net.devstudy.resume.entity.SkillCategory;
 import net.devstudy.resume.exception.CantCompleteClientRequestException;
-import net.devstudy.resume.form.CertificateForm;
 import net.devstudy.resume.form.ChangePasswordForm;
-import net.devstudy.resume.form.CourseForm;
-import net.devstudy.resume.form.EducationForm;
-import net.devstudy.resume.form.ExperienceForm;
-import net.devstudy.resume.form.HobbyForm;
-import net.devstudy.resume.form.LanguageForm;
 import net.devstudy.resume.form.SignUpForm;
-import net.devstudy.resume.form.SkillForm;
 import net.devstudy.resume.repository.search.ProfileSearchRepository;
 import net.devstudy.resume.repository.storage.CourseRepository;
 import net.devstudy.resume.repository.storage.EducationRepository;
@@ -100,8 +93,8 @@ public class EditProfileServiceImpl implements EditProfileService
 	@Value("${generate.uid.max.try.count}")
 	private int generateUidMaxTryCount;
 	
-	@Value("${webapp.folder}")
-	private String webappFolder;
+	@Value("${media.folder}")
+	private String mediaFolder;
 	
 	@Value("${avatar.folder}")
 	private String avatarFolder;
@@ -165,398 +158,392 @@ public class EditProfileServiceImpl implements EditProfileService
 	}
 
 	@Override
-	public List<HobbyName> listHobbyName()
+	public List<HobbyName> findListHobbyName()
 	{
 		return hobbyNameRepository.findAll(new Sort("id"));
 	}
 
 	@Override
-	public List<SkillCategory> listSkillCategory()
+	public List<SkillCategory> findListSkillCategory()
 	{
 		return skillCategoryRepository.findAll(new Sort("id"));
 	}
 
 	@Override
-	public List<Skill> listSkill(long idProfile)
+	public List<Skill> findListSkill(long idProfile)
 	{
 		return profileRepository.findById(idProfile).getSkill();
 	}
 
 	@Override
 	@Transactional
-	public void updateSkill(long idProfile, SkillForm skillForm)
+	public void updateSkill(long idProfile, List<Skill> editedList)
 	{
-		LOGGER.info("Updating profile skills");
+		LOGGER.info("Updating profile skills {}", idProfile);
 
 		Profile profile = profileRepository.findById(idProfile);
-		List<Skill> listCurrent = profile.getSkill();
-		List<Skill> listFromForm = skillForm.getItems();
+		List<Skill> currentList = profile.getSkill();
 
-		if (CollectionUtils.isEqualCollection(listFromForm, listCurrent))
+		if (CollectionUtils.isEqualCollection(editedList, currentList))
 			LOGGER.info("Updating profile skills: nothing to update");
 		else
 		{
 			LOGGER.info("Updating profile skills: profile skills have been changed");
 
-			Iterator<Skill> iterator = listFromForm.iterator();
+			Iterator<Skill> iterator = editedList.iterator();
 			while (iterator.hasNext())
 				if (iterator.next().hasAllNullFields())
 					iterator.remove();
 			
-			profile.updateListProfile(listFromForm);
+			profile.updateListProfile(editedList);
 			profile.getSkill().clear();
-			profile.getSkill().addAll(listFromForm);
+			profile.getSkill().addAll(editedList);
 			profileRepository.save(profile);
-			updateIndexAfterEditSkill(idProfile, listFromForm);
+			updateIndexAfterEditSkill(idProfile, editedList);
 		}
 	}
 
 	@Override
 	@Transactional
-	public void addSkill(long idProfile, Skill form)
+	public void addSkill(long idProfile, Skill newSkill)
 	{
-		LOGGER.info("Updating profile skills: adding");
+		LOGGER.info("Updating profile skills, adding: {}", idProfile);
 		
 		Profile profile = profileRepository.findById(idProfile);
-		form.setProfile(profile);
-		profile.getSkill().add(form);
+		newSkill.setProfile(profile);
+		profile.getSkill().add(newSkill);
 		profileRepository.save(profile);		
 		updateIndexAfterEditSkill(idProfile, profile.getSkill());
 	}
 
-	private void updateIndexAfterEditSkill(final long idProfile, final List<Skill> updatedSkill)
+	private void updateIndexAfterEditSkill(final long idProfile, final List<Skill> updatedList)
 	{
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
 		{
 			@Override
 			public void afterCommit()
 			{
-				LOGGER.info("Profile skills updated");
+				LOGGER.info("Profile skills updated: {}", idProfile);
 				Profile profile = profileSearchRepository.findOne(idProfile);
 				profile.getSkill().clear();
-				profile.getSkill().addAll(updatedSkill);
+				profile.getSkill().addAll(updatedList);
 				profileSearchRepository.save(profile);
-				LOGGER.info("Profile skills index updated");
+				LOGGER.info("Profile skills index updated: {}", idProfile);
 			}
 		});
 	}
 
 	@Override
-	public List<Language> listLanguage(long idProfile)
+	public List<Language> findListLanguage(long idProfile)
 	{
 		return profileRepository.findById(idProfile).getLanguage();
 	}
 
 	@Override
 	@Transactional
-	public void updateLanguage(long idProfile, LanguageForm form)
+	public void updateLanguage(long idProfile, List<Language> editedList)
 	{
-		LOGGER.info("Updating profile languages");
+		LOGGER.info("Updating profile languages: {}", idProfile);
 
 		Profile profile = profileRepository.findById(idProfile);
-		List<Language> listCurrent = profile.getLanguage();
-		List<Language> listFromForm = form.getItems();
+		List<Language> currentList = profile.getLanguage();
 
-		if (CollectionUtils.isEqualCollection(listFromForm, listCurrent))
+		if (CollectionUtils.isEqualCollection(editedList, currentList))
 			LOGGER.info("Updating profile languages: nothing to update");
 		else
 		{
 			LOGGER.info("Updating profile languages: profile languages have been changed");
 
-			Iterator<Language> iterator = listFromForm.iterator();
+			Iterator<Language> iterator = editedList.iterator();
 			while (iterator.hasNext())
 				if (iterator.next().hasAllNullFields())
 					iterator.remove();
 
-			profile.updateListProfile(listFromForm);
+			profile.updateListProfile(editedList);
 			profile.getLanguage().clear();
-			profile.getLanguage().addAll(listFromForm);
+			profile.getLanguage().addAll(editedList);
 			profileRepository.save(profile);
-			updateIndexAfterEditLanguage(idProfile, listFromForm);
+			updateIndexAfterEditLanguage(idProfile, editedList);
 		}
 	}
 
 	@Override
 	@Transactional
-	public void addLanguage(long idProfile, Language form)
+	public void addLanguage(long idProfile, Language newLanguage)
 	{
-		LOGGER.info("Updating profile languages: adding");
+		LOGGER.info("Updating profile languages, adding: {}", idProfile);
 		
 		Profile profile = profileRepository.findById(idProfile);
-		form.setProfile(profile);
-		profile.getLanguage().add(form);
+		newLanguage.setProfile(profile);
+		profile.getLanguage().add(newLanguage);
 		profileRepository.save(profile);
 		updateIndexAfterEditLanguage(idProfile, profile.getLanguage());		
 	}
 
-	private void updateIndexAfterEditLanguage(final long idProfile, final List<Language> updatedLanguage)
+	private void updateIndexAfterEditLanguage(final long idProfile, final List<Language> updatedList)
 	{
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
 		{
 			@Override
 			public void afterCommit()
 			{
-				LOGGER.info("Profile languages updated");
+				LOGGER.info("Profile languages updated: {}", idProfile);
 				Profile profile = profileSearchRepository.findOne(idProfile);
 				profile.getLanguage().clear();
-				profile.getLanguage().addAll(updatedLanguage);
+				profile.getLanguage().addAll(updatedList);
 				profileSearchRepository.save(profile);
-				LOGGER.info("Profile languages index updated");
+				LOGGER.info("Profile languages index updated: {}", idProfile);
 			}
 		});
 	}
 
 	@Override
-	public List<Experience> listExperience(long idProfile)
+	public List<Experience> findListExperience(long idProfile)
 	{
 		return profileRepository.findById(idProfile).getExperience();
 	}
 
 	@Override
 	@Transactional
-	public void updateExperience(long idProfile, ExperienceForm form)
+	public void updateExperience(long idProfile, List<Experience> editedList)
 	{
-		LOGGER.debug("Updating profile experience");
+		LOGGER.debug("Updating profile experience: {}", idProfile);
 
 		Profile profile = profileRepository.findById(idProfile);
-		List<Experience> listCurrent = profile.getExperience();
-		List<Experience> listFromForm = form.getItems();
+		List<Experience> currentList = profile.getExperience();
 
-		if (CollectionUtils.isEqualCollection(listFromForm, listCurrent))
+		if (CollectionUtils.isEqualCollection(editedList, currentList))
 			LOGGER.debug("Updating profile experience: nothing to update");
 		else
 		{
 			LOGGER.debug("Updating profile experience: profile experience has been changed");
 
-			Iterator<Experience> iterator = listFromForm.iterator();
+			Iterator<Experience> iterator = editedList.iterator();
 			while (iterator.hasNext())
 				if (iterator.next().hasAllNullFields())
 					iterator.remove();
 
-			profile.updateListProfile(listFromForm);
+			profile.updateListProfile(editedList);
 			profile.getExperience().clear();
-			profile.getExperience().addAll(listFromForm);
+			profile.getExperience().addAll(editedList);
 			profileRepository.save(profile);
-			updateIndexAfterEditExperience(idProfile, listFromForm);
+			updateIndexAfterEditExperience(idProfile, editedList);
 		}
 	}
 	
 	@Override
 	@Transactional
-	public void addExperience(long idProfile, Experience form)
+	public void addExperience(long idProfile, Experience newExperience)
 	{
-		LOGGER.debug("Updating profile experience: adding");
+		LOGGER.debug("Updating profile experience, adding: {}", idProfile);
 		
 		Profile profile = profileRepository.findById(idProfile);
-		form.setProfile(profile);
-		profile.getExperience().add(form);
+		newExperience.setProfile(profile);
+		profile.getExperience().add(newExperience);
 		profileRepository.save(profile);
 		updateIndexAfterEditExperience(idProfile, profile.getExperience());		
 	}
 
-	private void updateIndexAfterEditExperience(final long idProfile, final List<Experience> updatedExperience)
+	private void updateIndexAfterEditExperience(final long idProfile, final List<Experience> updatedList)
 	{
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
 		{
 			@Override
 			public void afterCommit()
 			{
-				LOGGER.info("Profile experience updated");
+				LOGGER.info("Profile experience updated: {}", idProfile);
 				Profile profile = profileSearchRepository.findOne(idProfile);
 				profile.getExperience().clear();
-				profile.getExperience().addAll(updatedExperience);
+				profile.getExperience().addAll(updatedList);
 				profileSearchRepository.save(profile);
-				LOGGER.info("Profile experience index updated");
+				LOGGER.info("Profile experience index updated: {}", idProfile);
 			}
 		});
 	}
 
 	@Override
-	public List<Education> listEducation(long idProfile)
+	public List<Education> findListEducation(long idProfile)
 	{
 		return profileRepository.findById(idProfile).getEducation();
 	}
 
 	@Override
 	@Transactional
-	public void updateEducation(long idProfile, EducationForm form)
+	public void updateEducation(long idProfile, List<Education> editedList)
 	{
 		LOGGER.info("Updating profile education");
 
 		Profile profile = profileRepository.findById(idProfile);
-		List<Education> listCurrent = profile.getEducation();
-		List<Education> listFromForm = form.getItems();
+		List<Education> currentList = profile.getEducation();
 
-		if (CollectionUtils.isEqualCollection(listFromForm, listCurrent))
+		if (CollectionUtils.isEqualCollection(editedList, currentList))
 			LOGGER.info("Updating profile education: nothing to update");
 		else
 		{
 			LOGGER.info("Updating profile education: profile education has been changed");
 
-			Iterator<Education> iterator = listFromForm.iterator();
+			Iterator<Education> iterator = editedList.iterator();
 			while (iterator.hasNext())
 				if (iterator.next().hasAllNullFields())
 					iterator.remove();
 
-			profile.updateListProfile(listFromForm);
+			profile.updateListProfile(editedList);
 			profile.getEducation().clear();
-			profile.getEducation().addAll(listFromForm);
+			profile.getEducation().addAll(editedList);
 			profileRepository.save(profile);
 			
-			LOGGER.info("Profile education updated");
+			LOGGER.info("Profile education updated: {}", idProfile);
 		}
 	}
 
 	@Override
 	@Transactional
-	public void addEducation(long idProfile, Education form)
+	public void addEducation(long idProfile, Education newEducation)
 	{
-		LOGGER.info("Updating profile education: adding");
+		LOGGER.info("Updating profile education, adding: {}", idProfile);
 		
 		Profile profile = profileRepository.findById(idProfile);
-		form.setProfile(profile);
-		profile.getEducation().add(form);
+		newEducation.setProfile(profile);
+		profile.getEducation().add(newEducation);
 		profileRepository.save(profile);
 		
-		LOGGER.info("Profile education updated");
+		LOGGER.info("Profile education updated: {}", idProfile);
 	}
 
 	@Override
-	public List<Course> listCourse(long idProfile)
+	public List<Course> findListCourse(long idProfile)
 	{
 		return profileRepository.findById(idProfile).getCourse();
 	}
 
 	@Override
 	@Transactional
-	public void updateCourse(long idProfile, CourseForm form)
+	public void updateCourse(long idProfile, List<Course> editedList)
 	{
-		LOGGER.info("Updating profile courses");
+		LOGGER.info("Updating profile courses: {}", idProfile);
 
 		Profile profile = profileRepository.findById(idProfile);
-		List<Course> listCurrent = profile.getCourse();
-		List<Course> listFromForm = form.getItems();
+		List<Course> currentList = profile.getCourse();
 
-		if (CollectionUtils.isEqualCollection(listFromForm, listCurrent))
+		if (CollectionUtils.isEqualCollection(editedList, currentList))
 			LOGGER.info("Updating profile courses: nothing to update");
 		else
 		{
 			LOGGER.info("Updating profile courses: profile courses have been changed");
 
-			Iterator<Course> iterator = listFromForm.iterator();
+			Iterator<Course> iterator = editedList.iterator();
 			while (iterator.hasNext())
 				if (iterator.next().hasAllNullFields())
 					iterator.remove();
 
-			profile.updateListProfile(listFromForm);
+			profile.updateListProfile(editedList);
 			profile.getCourse().clear();
-			profile.getCourse().addAll(listFromForm);
+			profile.getCourse().addAll(editedList);
 			profileRepository.save(profile);
-			updateIndexAfterEditCourse(idProfile, listFromForm);
+			updateIndexAfterEditCourse(idProfile, editedList);
 		}
 	}
 
 	@Override
 	@Transactional
-	public void addCourse(long idProfile, Course form)
+	public void addCourse(long idProfile, Course newCourse)
 	{
-		LOGGER.info("Updating profile courses: adding");
+		LOGGER.info("Updating profile courses, adding: {}", idProfile);
 		
 		Profile profile = profileRepository.findById(idProfile);
-		form.setProfile(profile);
-		profile.getCourse().add(form);
+		newCourse.setProfile(profile);
+		profile.getCourse().add(newCourse);
 		profileRepository.save(profile);
 		updateIndexAfterEditCourse(idProfile, profile.getCourse());
 	}
 
-	private void updateIndexAfterEditCourse(final long idProfile, final List<Course> updatedCourse)
+	private void updateIndexAfterEditCourse(final long idProfile, final List<Course> updatedList)
 	{
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
 		{
 			@Override
 			public void afterCommit()
 			{
-				LOGGER.info("Profile courses updated");
+				LOGGER.info("Profile courses updated: {}", idProfile);
 				Profile profile = profileSearchRepository.findOne(idProfile);
 				profile.getCourse().clear();
-				profile.getCourse().addAll(updatedCourse);
+				profile.getCourse().addAll(updatedList);
 				profileSearchRepository.save(profile);
-				LOGGER.info("Profile courses index updated");
+				LOGGER.info("Profile courses index updated: {}", idProfile);
 			}
 		});
 	}
 
 	@Override
-	public List<Certificate> listCertificate(long idProfile)
+	public List<Certificate> findListCertificate(long idProfile)
 	{
 		return profileRepository.findById(idProfile).getCertificate();
 	}
 
 	@Override
 	@Transactional
-	public void updateCertificate(long idProfile, CertificateForm form)
+	public void updateCertificate(long idProfile, List<Certificate> editedList)
 	{
-		LOGGER.info("Updating profile certificates: updating");
+		LOGGER.info("Updating profile certificates: {}", idProfile);
 
 		Profile profile = profileRepository.findById(idProfile);
-		List<Certificate> listCurrent = profile.getCertificate();
-		List<Certificate> listFromForm = form.getItems();
+		List<Certificate> currentList = profile.getCertificate();
 
-		if (CollectionUtils.isEqualCollection(listFromForm, listCurrent))
+		if (CollectionUtils.isEqualCollection(editedList, currentList))
 			LOGGER.info("Updating profile certificates: nothing to update");
 		else
 		{
 			LOGGER.info("Updating profile certificates: profile certificates have been changed, updating certificates");
 
-			Iterator<Certificate> iterator = listFromForm.iterator();
+			Iterator<Certificate> iterator = editedList.iterator();
 			while (iterator.hasNext())
 				if (iterator.next().hasAllNullFields())
 					iterator.remove();
 			
-			for (Certificate certificate : listFromForm)
+			for (Certificate certificate : editedList)
 				if (certificate.getImg() == null && certificate.getFile() != null)
 				{
 					String oldImage = certificate.getImg();
-					String newImage = ImageUtil.saveFile(webappFolder, certificateFolder, certificate.getFile());
+					String newImage = ImageUtil.saveFile(mediaFolder, certificateFolder, certificate.getFile());
 					String newImageSmall = ImageUtil.getSmallPhotoPath(newImage);
 					if (newImage != null && newImageSmall != null)
 					{
-						ImageUtil.removeFile(webappFolder, oldImage);
+						ImageUtil.removeFile(mediaFolder, oldImage);
 						certificate.setImg(newImage);
 						certificate.setImgSmall(newImageSmall);
 					}
 				}
 
-			profile.updateListProfile(listFromForm);
+			profile.updateListProfile(editedList);
 			profile.getCertificate().clear();
-			profile.getCertificate().addAll(listFromForm);
+			profile.getCertificate().addAll(editedList);
 			profileRepository.save(profile);
-			updateIndexAfterEditCertificate(idProfile, listFromForm);
+			updateIndexAfterEditCertificate(idProfile, editedList);
 		}
 	}
 
 	@Override
 	@Transactional
-	public void addCertificate(long idProfile, Certificate form)
+	public void addCertificate(long idProfile, Certificate newCertificate)
 	{
-		LOGGER.info("Updating profile certificates: adding");
+		LOGGER.info("Updating profile certificates, adding: {}", idProfile);
 		
-		if (form.getImg() == null && form.getFile() != null)
+		if (newCertificate.getImg() == null && newCertificate.getFile() != null)
 		{
-			String oldImage = form.getImg();
-			String newImage = ImageUtil.saveFile(webappFolder, certificateFolder, form.getFile());
+			String oldImage = newCertificate.getImg();
+			String newImage = ImageUtil.saveFile(mediaFolder, certificateFolder, newCertificate.getFile());
 			String newImageSmall = ImageUtil.getSmallPhotoPath(newImage);
 			if (newImage != null && newImageSmall != null)
 			{
-				ImageUtil.removeFile(webappFolder, oldImage);
-				form.setImg(newImage);
-				form.setImgSmall(newImageSmall);
+				ImageUtil.removeFile(mediaFolder, oldImage);
+				newCertificate.setImg(newImage);
+				newCertificate.setImgSmall(newImageSmall);
 				
 				LOGGER.info("Updating profile certificates: updating");
 				
 				Profile profile = profileRepository.findById(idProfile);
-				form.setProfile(profile);
-				profile.getCertificate().add(form);
+				newCertificate.setProfile(profile);
+				profile.getCertificate().add(newCertificate);
 				profileRepository.save(profile);
 				updateIndexAfterEditCertificate(idProfile, profile.getCertificate());
 			}
@@ -565,81 +552,85 @@ public class EditProfileServiceImpl implements EditProfileService
 			LOGGER.info("Updating profile certificates: no file uploaded");		
 	}
 
-	private void updateIndexAfterEditCertificate(final long idProfile, final List<Certificate> updatedCertificate)
+	private void updateIndexAfterEditCertificate(final long idProfile, final List<Certificate> updatedList)
 	{
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
 		{
 			@Override
 			public void afterCommit()
 			{
-				LOGGER.info("Profile certificates updated");
+				LOGGER.info("Profile certificates updated: {}", idProfile);
 				Profile profile = profileSearchRepository.findOne(idProfile);
 				profile.getCertificate().clear();
-				profile.getCertificate().addAll(updatedCertificate);
+				profile.getCertificate().addAll(updatedList);
 				profileSearchRepository.save(profile);
-				LOGGER.info("Profile certificates index updated");
+				LOGGER.info("Profile certificates index updated: {}", idProfile);
 			}
 		});
 	}
 
 	@Override
 	@Transactional
-	public void updateGeneralInfo(long idProfile, Profile form)
+	public void updateGeneralInfo(long idProfile, Profile editedProfile)
 	{
-		LOGGER.info("Updating profile general");
+		LOGGER.info("Updating profile general: {}", idProfile);
 
 		Profile profile = profileRepository.findById(idProfile);
-		if (!hasDifference(profile, form))
+		boolean profileWasActiveBeforeEdit = profile.getActive();
+		if (!profileShouldBeUpdated(profile, editedProfile))
 			LOGGER.info("Updating profile general: nothing to update");
 		else
 		{
 			LOGGER.info("Updating profile general: profile has been changed");
 
-			MultipartFile file = form.getFile();
+			MultipartFile file = editedProfile.getFile();
 			if (file != null)
 			{
 				String oldImage = profile.getPhoto();
 				String oldImageSmall = profile.getPhotoSmall();
-				String newImage = ImageUtil.saveFile(webappFolder, avatarFolder, form.getFile());
+				String newImage = ImageUtil.saveFile(mediaFolder, avatarFolder, editedProfile.getFile());
 				String newImageSmall = ImageUtil.getSmallPhotoPath(newImage);
 				if (newImage != null && newImageSmall != null)
 				{
-					ImageUtil.removeFile(webappFolder, oldImage);
-					ImageUtil.removeFile(webappFolder, oldImageSmall);
+					ImageUtil.removeFile(mediaFolder, oldImage);
+					ImageUtil.removeFile(mediaFolder, oldImageSmall);
 					profile.setPhoto(newImage);
 					profile.setPhotoSmall(newImageSmall);
 				}
 			}
-			profile.setBirthday(DataUtil.generateDateFromString(form.getBirthdayString()));
-			profile.setCountry(form.getCountry());
-			profile.setCity(form.getCity());
-			profile.setEmail(form.getEmail());
-			profile.setPhone(form.getPhone());
-			profile.setObjective(form.getObjective());
-			profile.setSummary(form.getSummary());
+			profile.setBirthday(DataUtil.generateDateFromString(editedProfile.getBirthdayString()));
+			profile.setCountry(editedProfile.getCountry());
+			profile.setCity(editedProfile.getCity());
+			profile.setEmail(editedProfile.getEmail());
+			profile.setPhone(editedProfile.getPhone());
+			profile.setObjective(editedProfile.getObjective());
+			profile.setSummary(editedProfile.getSummary());
 			profile.setActive(true);
 			profileRepository.save(profile);
+			
 			updateIndexAfterEditGeneralInfo(idProfile, profile);
+			if (!profileWasActiveBeforeEdit)
+				sendProfileActivatedNotification(profile);
 		}
 	}
 
-	private boolean hasDifference(Profile profile, Profile form)
+	private boolean profileShouldBeUpdated(Profile profile, Profile editedProfile)
 	{
-		if (form.getFile() != null)
+		if (editedProfile.getFile() != null)
 			return true;
-		if (!profile.getBirthday().equals(form.getBirthday()))
+		if (!profile.getBirthday().equals(editedProfile.getBirthday()))
 			return true;
-		if (!profile.getCountry().equals(form.getCountry()))
+		if (!profile.getCountry().equals(editedProfile.getCountry()))
 			return true;
-		if (!profile.getCity().equals(form.getCity()))
+		if (!profile.getCity().equals(editedProfile.getCity()))
 			return true;
-		if (!profile.getEmail().equals(form.getEmail()))
+		if (!profile.getEmail().equals(editedProfile.getEmail()))
 			return true;
-		if (!profile.getPhone().equals(form.getPhone()))
+		if (!profile.getPhone().equals(editedProfile.getPhone()))
 			return true;
-		if (!profile.getObjective().equals(form.getObjective()))
+		if (!profile.getObjective().equals(editedProfile.getObjective()))
 			return true;
-		if (!profile.getSummary().equals(form.getSummary()))
+		if (!profile.getSummary().equals(editedProfile.getSummary()))
 			return true;
 		return false;
 	}
@@ -651,33 +642,46 @@ public class EditProfileServiceImpl implements EditProfileService
 			@Override
 			public void afterCommit()
 			{
-				LOGGER.info("Profile general updated");
+				LOGGER.info("Profile general updated: {}", idProfile);
 				Profile profile = profileSearchRepository.findOne(idProfile);
 				profileSearchRepository.delete(profile);
 				profileSearchRepository.save(updatedProfile);
-				LOGGER.info("Profile general index updated");
+				LOGGER.info("Profile general index updated: {}", idProfile);
+			}
+		});
+	}
+
+	private void sendProfileActivatedNotification(final Profile profile)
+	{
+		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter()
+		{
+			@Override
+			public void afterCommit()
+			{
+				LOGGER.info("Profile was activated {}", profile.getId());
+				notificationManagerService.sendProfileActive(profile);
 			}
 		});
 	}
 
 	@Override
 	@Transactional
-	public void updateAdditionalInfo(long idProfile, Profile form)
+	public void updateAdditionalInfo(long idProfile, Profile editedProfile)
 	{
-		LOGGER.info("Updating profile additional");
+		LOGGER.info("Updating profile additional: {}", idProfile);
 
 		Profile profile = profileRepository.findById(idProfile);
-		makeEmptyAdditionalNulls(form);
-		if (!hasDifference(profile.getAdditionalInfo(), form.getAdditionalInfo()))
+		makeEmptyAdditionalNulls(editedProfile);
+		if (!profileShouldBeUpdated(profile.getAdditionalInfo(), editedProfile.getAdditionalInfo()))
 			LOGGER.info("Updating profile additional: nothing to update");
 		else
 		{
 			LOGGER.info("Updating profile additional: profile has been changed");
 
-			profile.setAdditionalInfo(form.getAdditionalInfo());
+			profile.setAdditionalInfo(editedProfile.getAdditionalInfo());
 			profileRepository.save(profile);
 		}
-		LOGGER.info("Profile additional updated");
+		LOGGER.info("Profile additional updated: {}", idProfile);
 	}
 	
 	private void makeEmptyAdditionalNulls(Profile form)
@@ -689,41 +693,41 @@ public class EditProfileServiceImpl implements EditProfileService
 		}
 	}
 
-	private boolean hasDifference(String current, String fromForm)
+	private boolean profileShouldBeUpdated(String currentAdditionalInfo, String editedAdditionalInfo)
 	{
-		if (current == null && fromForm == null)
+		if (currentAdditionalInfo == null && editedAdditionalInfo == null)
 			return false;
-		else if (current == null || fromForm == null)
+		else if (currentAdditionalInfo == null || editedAdditionalInfo == null)
 			return true;
 		else
-			return !current.equals(fromForm);
+			return !currentAdditionalInfo.equals(editedAdditionalInfo);
 	}
 
 	@Override
-	public Contact contact(long idProfile)
+	public Contact findContact(long idProfile)
 	{
 		return profileRepository.findById(idProfile).getContact();
 	}
 
 	@Override
 	@Transactional
-	public void updateContact(long idProfile, Contact form)
+	public void updateContact(long idProfile, Contact newContact)
 	{
-		LOGGER.info("Updating profile contacts");
+		LOGGER.info("Updating profile contacts: {}", idProfile);
 
 		Profile profile = profileRepository.findById(idProfile);
 		Contact contact = profile.getContact();
-		makeEmptyFieldsNulls(form);
-		if (!hasDifference(contact, form))
+		makeEmptyFieldsNulls(newContact);
+		if (!profileShouldBeUpdated(contact, newContact))
 			LOGGER.info("Updating profile contacts: nothing to update");
 		else
 		{
 			LOGGER.info("Updating profile contacts: contacts have been changed");
 
-			profile.setContact(form);
+			profile.setContact(newContact);
 			profileRepository.save(profile);
 		}
-		LOGGER.info("Profile contacts updated");
+		LOGGER.info("Profile contacts updated: {}", idProfile);
 	}
 	
 	private void makeEmptyFieldsNulls(Contact form)
@@ -745,74 +749,73 @@ public class EditProfileServiceImpl implements EditProfileService
 		}
 	}
 
-	private boolean hasDifference(Contact current, Contact fromForm)
+	private boolean profileShouldBeUpdated(Contact currentContact, Contact editedContact)
 	{
-		if (current == null && fromForm == null)
+		if (currentContact == null && editedContact == null)
 			return false;
-		else if (current == null || fromForm == null)
+		else if (currentContact == null || editedContact == null)
 			return true;
 		else
-			return !current.equals(fromForm);
+			return !currentContact.equals(editedContact);
 	}
 
 	@Override
-	public List<Hobby> listHobby(long idProfile)
+	public List<Hobby> findListHobby(long idProfile)
 	{
 		return profileRepository.findById(idProfile).getHobby();
 	}
 
 	@Override
 	@Transactional
-	public void updateHobby(long idProfile, HobbyForm form)
+	public void updateHobby(long idProfile, List<String> editedList)
 	{
-		LOGGER.info("Updating profile hobbies");
+		LOGGER.info("Updating profile hobbies: {}", idProfile);
 
 		Profile profile = profileRepository.findById(idProfile);
-		List<Hobby> listCurrent = profile.getHobby();
-		List<String> listFromForm = form.getCheckedItems();
+		List<Hobby> currentList = profile.getHobby();
 
-		if (!hasDifference(listCurrent, listFromForm))
+		if (!profileShouldBeUpdated(currentList, editedList))
 			LOGGER.info("Updating profile hobbies: nothing to update");
 		else
 		{
 			LOGGER.debug("Updating profile hobbies: profile hobbies have been changed");
 
-			List<Hobby> listHobby = updateListOfHobbiesFromSource(listCurrent, listFromForm);
+			List<Hobby> listHobby = updateListOfHobbiesFromSource(currentList, editedList);
 
 			profile.updateListProfile(listHobby);
 			profile.getHobby().clear();
 			profile.getHobby().addAll(listHobby);
 			profileRepository.save(profile);
 		}
-		LOGGER.info("Profile hobbies updated");
+		LOGGER.info("Profile hobbies updated: {}", idProfile);
 	}
 
-	private boolean hasDifference(List<Hobby> listCurrent, List<String> listFromForm)
+	private boolean profileShouldBeUpdated(List<Hobby> currentList, List<String> editedList)
 	{
-		if (listCurrent.size() == 0 && listFromForm == null)
+		if (currentList.size() == 0 && editedList == null)
 			return false;
 
-		if (listCurrent.size() != 0 && listFromForm == null)
+		if (currentList.size() != 0 && editedList == null)
 			return true;
 
-		if (listCurrent.size() != listFromForm.size())
+		if (currentList.size() != editedList.size())
 			return true;
 
-		for (Hobby hobby : listCurrent)
-			if (!listFromForm.contains(hobby.getDescription()))
+		for (Hobby hobby : currentList)
+			if (!editedList.contains(hobby.getDescription()))
 				return true;
 
 		return false;
 	}
 	
-	private List<Hobby> updateListOfHobbiesFromSource(List<Hobby> listCurrent, List<String> listFromForm)
+	private List<Hobby> updateListOfHobbiesFromSource(List<Hobby> currentList, List<String> listFromForm)
 	{
 		List<Hobby> listHobby = new ArrayList<>();
 		
 		for (String hoobyDes : listFromForm)
 		{
 			boolean addedFromCurrentList = false;
-			for (Hobby hobbyFromCurrent : listCurrent)
+			for (Hobby hobbyFromCurrent : currentList)
 				if (hoobyDes.equals(hobbyFromCurrent.getDescription()))
 					addedFromCurrentList = listHobby.add(hobbyFromCurrent);
 			if (!addedFromCurrentList)
@@ -827,7 +830,7 @@ public class EditProfileServiceImpl implements EditProfileService
 	}
 
 	@Override
-	public List<Profile> notCompletedProfilesCreatedBefore(Timestamp date)
+	public List<Profile> findNotCompletedProfilesCreatedBefore(Timestamp date)
 	{
 		return profileRepository.findByActiveFalseAndCreatedBefore(date);
 	}
@@ -859,7 +862,7 @@ public class EditProfileServiceImpl implements EditProfileService
 	}
 
 	@Override
-	public List<Course> coursesBefore(Date date)
+	public List<Course> findCoursesBefore(Date date)
 	{
 		return courseRepository.findByCompletionDateBefore(date);
 	}
@@ -879,7 +882,7 @@ public class EditProfileServiceImpl implements EditProfileService
 	}
 
 	@Override
-	public List<Education> educationsBefore(int year)
+	public List<Education> findEducationsBefore(int year)
 	{
 		return educationRepository.findByCompletionYearLessThan(year);
 	}
@@ -899,7 +902,7 @@ public class EditProfileServiceImpl implements EditProfileService
 	}
 
 	@Override
-	public List<Experience> experiencesBefore(Date date)
+	public List<Experience> findExperiencesBefore(Date date)
 	{
 		return experienceRepository.findByCompletionDateBefore(date);
 	}
@@ -971,36 +974,12 @@ public class EditProfileServiceImpl implements EditProfileService
 		profile.setLastName(DataUtil.capitailizeName(user.getLastName()));
 		profile.setPassword(passwordEncoder.encode(SecurityUtil.generatePassword()));
 		profile.setActive(false);
-		if (user.getHometown() != null)
-		{
-			String[] location = user.getHometown().getName().split(",");
-			profile.setCountry(location[1].trim());
-			profile.setCity(location[0].trim());
-		}
+		setCountryFromUser(profile, user);
 		profile.setBirthday(user.getBirthdayAsDate());
 		profile.setEmail(user.getEmail());
 		profile.setAdditionalInfo(user.getRelationshipStatus());
-		
-		List<Education> educationsFromFacebook = new ArrayList<>();
-		for (com.restfb.types.User.Education educationFacebook : user.getEducation())
-		{
-			Education education = createEducationFromFacebook(educationFacebook);
-			education.setProfile(profile);
-			educationsFromFacebook.add(education);
-		}
-		if (!educationsFromFacebook.isEmpty())
-			profile.setEducation(educationsFromFacebook);
-		
-		List<Experience> worksFromFacebook = new ArrayList<>();
-		for (com.restfb.types.User.Work workFacebook : user.getWork())
-		{
-			Experience experience = createExperienceFromFacebook(workFacebook);
-			experience.setProfile(profile);
-			worksFromFacebook.add(experience);
-		}
-		if (!worksFromFacebook.isEmpty())
-			profile.setExperience(worksFromFacebook);
-	
+		setEducationsFromUser(profile, user);
+		setExperienceFromUser(profile, user);
 		profileRepository.save(profile);
 		registerIndexAfterCreateProfileViaFacebook(profile);
 		return profile;
@@ -1018,6 +997,42 @@ public class EditProfileServiceImpl implements EditProfileService
 						"Can't generate unique uid for profile: " + baseUid + ": maxTryCountToGenerateUid detected");
 		}
 		return uid;
+	}
+
+	private void setCountryFromUser(Profile profile, User user)
+	{
+		if (user.getHometown() != null)
+		{
+			String[] location = user.getHometown().getName().split(",");
+			profile.setCountry(location[1].trim());
+			profile.setCity(location[0].trim());
+		}
+	}
+
+	private void setEducationsFromUser(Profile profile, User user)
+	{
+		List<Education> educationsFromFacebook = new ArrayList<>();
+		for (com.restfb.types.User.Education educationFacebook : user.getEducation())
+		{
+			Education education = createEducationFromFacebook(educationFacebook);
+			education.setProfile(profile);
+			educationsFromFacebook.add(education);
+		}
+		if (!educationsFromFacebook.isEmpty())
+			profile.setEducation(educationsFromFacebook);
+	}
+
+	private void setExperienceFromUser(Profile profile, User user)
+	{
+		List<Experience> worksFromFacebook = new ArrayList<>();
+		for (com.restfb.types.User.Work workFacebook : user.getWork())
+		{
+			Experience experience = createExperienceFromFacebook(workFacebook);
+			experience.setProfile(profile);
+			worksFromFacebook.add(experience);
+		}
+		if (!worksFromFacebook.isEmpty())
+			profile.setExperience(worksFromFacebook);
 	}
 	
 	private Education createEducationFromFacebook(com.restfb.types.User.Education educationFacebook)

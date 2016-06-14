@@ -45,6 +45,15 @@ public class NotificationManagerServiceImpl implements NotificationManagerServic
 		proccesNotification(profile, "passwordChangedNotification", model);
 	}
 
+	@Override
+	public void sendProfileActive(Profile profile)
+	{
+		LOGGER.debug("Successfull sign up account {}", profile.getUid());
+		Map<String, Object> model = new HashMap<>();
+		model.put("profile", profile);
+		proccesNotification(profile, "profileActiveNotification", model);
+	}
+
 	private void proccesNotification(Profile profile, String templateName, Object model)
 	{
 		String destinationAddress = notificationSenderService.getDestinationAddress(profile);

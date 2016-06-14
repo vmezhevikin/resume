@@ -37,7 +37,7 @@ public class RemoveOldDataService
 		
 		LocalDate today = new LocalDate();
 		LocalDate date = today.minusYears(courseYearsAgo);
-		List<Course> coursesToRemove = editProfileService.coursesBefore(date.toDate());
+		List<Course> coursesToRemove = editProfileService.findCoursesBefore(date.toDate());
 		for (Course course : coursesToRemove)
 			editProfileService.removeCourse(course.getId());
 	}
@@ -48,7 +48,7 @@ public class RemoveOldDataService
 
 		LocalDate today = new LocalDate();
 		int year = today.minusYears(educationYearsAgo).getYear();
-		List<Education> educationsToRemove = editProfileService.educationsBefore(year);
+		List<Education> educationsToRemove = editProfileService.findEducationsBefore(year);
 		for (Education education : educationsToRemove)
 			editProfileService.removeEducation(education.getId());
 	}
@@ -59,7 +59,7 @@ public class RemoveOldDataService
 
 		LocalDate today = new LocalDate();
 		LocalDate date = today.minusYears(practicYearsAgo);
-		List<Experience> experiencesToRemove = editProfileService.experiencesBefore(date.toDate());
+		List<Experience> experiencesToRemove = editProfileService.findExperiencesBefore(date.toDate());
 		for (Experience experience : experiencesToRemove)
 			editProfileService.removeExperience(experience.getId());
 	}

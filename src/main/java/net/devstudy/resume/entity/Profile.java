@@ -54,7 +54,6 @@ public class Profile extends AbstractEntity<Long>
 	private String password;
 
 	@Column(nullable = false)
-	@JsonIgnore
 	private Boolean active;
 
 	@Column(name = "first_name", nullable = false, length = 50)

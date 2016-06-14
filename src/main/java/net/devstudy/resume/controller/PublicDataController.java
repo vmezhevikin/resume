@@ -62,7 +62,7 @@ public class PublicDataController
 		if (profile == null)
 			return "profile-not-found";
 
-		List<HobbyName> hobbies = editProfileService.listHobbyName();
+		List<HobbyName> hobbies = editProfileService.findListHobbyName();
 		model.addAttribute("profile", profile);
 		model.addAttribute("hobbies", hobbies);
 		return "resume";
@@ -202,6 +202,6 @@ public class PublicDataController
 			return "error";
 		SecurityUtil.authentificate(profile);
 		editProfileService.removeRestoreToken(profile.getId());
-		return "redirect:/" + profile.getUid();
+		return "redirect:/edit/password";
 	}
 }

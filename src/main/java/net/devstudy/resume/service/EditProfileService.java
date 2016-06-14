@@ -17,85 +17,78 @@ import net.devstudy.resume.entity.Language;
 import net.devstudy.resume.entity.Profile;
 import net.devstudy.resume.entity.Skill;
 import net.devstudy.resume.entity.SkillCategory;
-import net.devstudy.resume.form.CertificateForm;
 import net.devstudy.resume.form.ChangePasswordForm;
-import net.devstudy.resume.form.CourseForm;
-import net.devstudy.resume.form.EducationForm;
-import net.devstudy.resume.form.ExperienceForm;
-import net.devstudy.resume.form.HobbyForm;
-import net.devstudy.resume.form.LanguageForm;
 import net.devstudy.resume.form.SignUpForm;
-import net.devstudy.resume.form.SkillForm;
 
 public interface EditProfileService
 {
 	Profile createNewProfile(SignUpForm form);
 
-	List<HobbyName> listHobbyName();
+	List<HobbyName> findListHobbyName();
 
-	List<SkillCategory> listSkillCategory();
+	List<SkillCategory> findListSkillCategory();
 
-	List<Skill> listSkill(long idProfile);
+	List<Skill> findListSkill(long idProfile);
 
-	void updateSkill(long idProfile, SkillForm form);
+	void updateSkill(long idProfile, List<Skill> editedList);
 
-	void addSkill(long idProfile, Skill form);
+	void addSkill(long idProfile, Skill newSkill);
 
-	List<Language> listLanguage(long idProfile);
+	List<Language> findListLanguage(long idProfile);
 
-	void updateLanguage(long idProfile, LanguageForm form);
+	void updateLanguage(long idProfile, List<Language> editedList);
 
-	void addLanguage(long idProfile, Language form);
+	void addLanguage(long idProfile, Language newLanguage);
 
-	List<Experience> listExperience(long idProfile);
+	List<Experience> findListExperience(long idProfile);
 
-	void updateExperience(long idProfile, ExperienceForm form);
+	void updateExperience(long idProfile, List<Experience> editedList);
 
-	void addExperience(long idProfile, Experience form);
+	void addExperience(long idProfile, Experience newExperience);
 
-	List<Education> listEducation(long idProfile);
+	List<Education> findListEducation(long idProfile);
 
-	void updateEducation(long idProfile, EducationForm form);
+	void updateEducation(long idProfile, List<Education> editedList);
 
-	void addEducation(long idProfile, Education form);
+	void addEducation(long idProfile, Education newEducation);
 
-	List<Course> listCourse(long idProfile);
+	List<Course> findListCourse(long idProfile);
 
-	void updateCourse(long idProfile, CourseForm form);
+	void updateCourse(long idProfile, List<Course> editedList);
 
-	void addCourse(long idProfile, Course form);
+	void addCourse(long idProfile, Course newCourse);
 
-	List<Certificate> listCertificate(long idProfile);
+	List<Certificate> findListCertificate(long idProfile);
 
-	void updateCertificate(long idProfile, CertificateForm form);
+	void updateCertificate(long idProfile, List<Certificate> editedList);
 
-	void addCertificate(long idProfile, Certificate form);
+	void addCertificate(long idProfile, Certificate newCertificate);
 
-	void updateGeneralInfo(long idProfile, Profile form);
+	void updateGeneralInfo(long idProfile, Profile editedProfile);
 
-	void updateAdditionalInfo(long idProfile, Profile form);
+	void updateAdditionalInfo(long idProfile, Profile editedProfile);
 
-	Contact contact(long idProfile);
+	Contact findContact(long idProfile);
 
-	void updateContact(long idProfile, Contact form);
+	void updateContact(long idProfile, Contact newContact);
 
-	List<Hobby> listHobby(long idProfile);
+	List<Hobby> findListHobby(long idProfile);
 
-	void updateHobby(long idProfile, HobbyForm form);
+	void updateHobby(long idProfile, List<String> editedList);
 
-	List<Profile> notCompletedProfilesCreatedBefore(Timestamp date);
+	List<Profile> findNotCompletedProfilesCreatedBefore(Timestamp date);
 	
 	void removeProfile(long idProfile);
 
-	List<Course> coursesBefore(Date date);
+	List<Course> findCoursesBefore(Date date);
 
 	void removeCourse(long idCourse);
 
-	List<Education> educationsBefore(int year);
+	List<Education> findEducationsBefore(int year);
 
 	void removeEducation(long idEducation);
 
-	List<Experience> experiencesBefore(Date date);
+	List<Experience> findExperiencesBefore(Date date);
 
 	void removeExperience(long idExperience);
 	

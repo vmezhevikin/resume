@@ -66,7 +66,7 @@ public class EditProfileController
 	public String getEditGeneral(Model model)
 	{
 		model.addAttribute("profile", findProfileService.findById(SecurityUtil.getCurrentProfileId()));
-		addCurrentSection(model, "General");
+		addAttributeSection(model, "General");
 		return "edit/general";
 	}
 
@@ -75,7 +75,7 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			model.addAttribute("section", "General");
+			addAttributeSection(model, "General");
 			if (form.getPhoto() == null && form.getFile().isEmpty())
 				model.addAttribute("emptyPhoto", true);
 			else
@@ -85,7 +85,7 @@ public class EditProfileController
 		if (form.getPhoto() == null && form.getFile().isEmpty())
 		{
 			model.addAttribute("emptyPhoto", true);
-			addCurrentSection(model, "General");
+			addAttributeSection(model, "General");
 			return "edit/general";
 		}
 		editProfileService.updateGeneralInfo(SecurityUtil.getCurrentProfileId(), form);
@@ -95,8 +95,8 @@ public class EditProfileController
 	@RequestMapping(value = "/edit/contact", method = RequestMethod.GET)
 	public String getEditContact(Model model)
 	{
-		model.addAttribute("contactForm", editProfileService.contact(SecurityUtil.getCurrentProfileId()));
-		addCurrentSection(model, "Contact");
+		model.addAttribute("contactForm", editProfileService.findContact(SecurityUtil.getCurrentProfileId()));
+		addAttributeSection(model, "Contact");
 		return "edit/contact";
 	}
 
@@ -105,7 +105,7 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			addCurrentSection(model, "Contact");
+			addAttributeSection(model, "Contact");
 			return "edit/contact";
 		}
 		editProfileService.updateContact(SecurityUtil.getCurrentProfileId(), form);
@@ -115,9 +115,9 @@ public class EditProfileController
 	@RequestMapping(value = "/edit/skill", method = RequestMethod.GET)
 	public String getEditSkill(Model model)
 	{
-		model.addAttribute("skillForm", new SkillForm(editProfileService.listSkill(SecurityUtil.getCurrentProfileId())));
-		model.addAttribute("skillCategories", editProfileService.listSkillCategory());
-		addCurrentSection(model, "Skill");
+		model.addAttribute("skillForm", new SkillForm(editProfileService.findListSkill(SecurityUtil.getCurrentProfileId())));
+		model.addAttribute("skillCategories", editProfileService.findListSkillCategory());
+		addAttributeSection(model, "Skill");
 		return "edit/skill";
 	}
 
@@ -126,11 +126,11 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			model.addAttribute("skillCategories", editProfileService.listSkillCategory());
-			addCurrentSection(model, "Skill");
+			model.addAttribute("skillCategories", editProfileService.findListSkillCategory());
+			addAttributeSection(model, "Skill");
 			return "edit/skill";
 		}
-		editProfileService.updateSkill(SecurityUtil.getCurrentProfileId(), form);
+		editProfileService.updateSkill(SecurityUtil.getCurrentProfileId(), form.getItems());
 		return "redirect:/edit/skill";
 	}
 
@@ -138,8 +138,8 @@ public class EditProfileController
 	public String getAddSkill(Model model)
 	{
 		model.addAttribute("skillForm", new Skill());
-		model.addAttribute("skillCategories", editProfileService.listSkillCategory());
-		addCurrentSection(model, "Skill");
+		model.addAttribute("skillCategories", editProfileService.findListSkillCategory());
+		addAttributeSection(model, "Skill");
 		return "add/skill";
 	}
 
@@ -148,8 +148,8 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			model.addAttribute("skillCategories", editProfileService.listSkillCategory());
-			addCurrentSection(model, "Skill");
+			model.addAttribute("skillCategories", editProfileService.findListSkillCategory());
+			addAttributeSection(model, "Skill");
 			return "add/skill";
 		}
 		editProfileService.addSkill(SecurityUtil.getCurrentProfileId(), form);
@@ -159,10 +159,10 @@ public class EditProfileController
 	@RequestMapping(value = "/edit/experience", method = RequestMethod.GET)
 	public String getEditExperience(Model model)
 	{
-		model.addAttribute("experienceForm", new ExperienceForm(editProfileService.listExperience(SecurityUtil.getCurrentProfileId())));
-		addMinMaxYears(model, practicYearsAgo);
-		addMonthNames(model);
-		addCurrentSection(model, "Experience");
+		model.addAttribute("experienceForm", new ExperienceForm(editProfileService.findListExperience(SecurityUtil.getCurrentProfileId())));
+		addAttributesMinMaxYear(model, practicYearsAgo);
+		addAttributeMonthName(model);
+		addAttributeSection(model, "Experience");
 		return "edit/experience";
 	}
 
@@ -171,12 +171,12 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			addMinMaxYears(model, practicYearsAgo);
-			addMonthNames(model);
-			addCurrentSection(model, "Experience");
+			addAttributesMinMaxYear(model, practicYearsAgo);
+			addAttributeMonthName(model);
+			addAttributeSection(model, "Experience");
 			return "edit/experience";
 		}
-		editProfileService.updateExperience(SecurityUtil.getCurrentProfileId(), form);
+		editProfileService.updateExperience(SecurityUtil.getCurrentProfileId(), form.getItems());
 		return "redirect:/edit/experience";
 	}
 
@@ -184,9 +184,9 @@ public class EditProfileController
 	public String getAddExperience(Model model)
 	{
 		model.addAttribute("experienceForm", new Experience());
-		addMinMaxYears(model, practicYearsAgo);
-		addMonthNames(model);
-		addCurrentSection(model, "Experience");
+		addAttributesMinMaxYear(model, practicYearsAgo);
+		addAttributeMonthName(model);
+		addAttributeSection(model, "Experience");
 		return "add/experience";
 	}
 
@@ -195,9 +195,9 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			addMinMaxYears(model, practicYearsAgo);
-			addMonthNames(model);
-			addCurrentSection(model, "Experience");
+			addAttributesMinMaxYear(model, practicYearsAgo);
+			addAttributeMonthName(model);
+			addAttributeSection(model, "Experience");
 			return "add/experience";
 		}
 		editProfileService.addExperience(SecurityUtil.getCurrentProfileId(), form);
@@ -207,8 +207,8 @@ public class EditProfileController
 	@RequestMapping(value = "/edit/certificate", method = RequestMethod.GET)
 	public String getEditCertificate(Model model)
 	{
-		model.addAttribute("certificateForm", new CertificateForm(editProfileService.listCertificate(SecurityUtil.getCurrentProfileId())));
-		addCurrentSection(model, "Certificate");
+		model.addAttribute("certificateForm", new CertificateForm(editProfileService.findListCertificate(SecurityUtil.getCurrentProfileId())));
+		addAttributeSection(model, "Certificate");
 		return "edit/certificate";
 	}
 
@@ -217,10 +217,10 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			addCurrentSection(model, "Certificate");
+			addAttributeSection(model, "Certificate");
 			return "edit/certificate";
 		}
-		editProfileService.updateCertificate(SecurityUtil.getCurrentProfileId(), form);
+		editProfileService.updateCertificate(SecurityUtil.getCurrentProfileId(), form.getItems());
 		return "redirect:/edit/certificate";
 	}
 
@@ -228,7 +228,7 @@ public class EditProfileController
 	public String getAddCertificate(Model model)
 	{
 		model.addAttribute("certificateForm", new Certificate());
-		addCurrentSection(model, "Certificate");
+		addAttributeSection(model, "Certificate");
 		return "add/certificate";
 	}
 
@@ -237,7 +237,7 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			addCurrentSection(model, "Certificate");
+			addAttributeSection(model, "Certificate");
 			return "add/certificate";
 		}
 		editProfileService.addCertificate(SecurityUtil.getCurrentProfileId(), form);
@@ -247,10 +247,10 @@ public class EditProfileController
 	@RequestMapping(value = "/edit/course", method = RequestMethod.GET)
 	public String getEditCourse(Model model)
 	{
-		model.addAttribute("courseForm", new CourseForm(editProfileService.listCourse(SecurityUtil.getCurrentProfileId())));
-		addMinMaxYears(model, courseYearsAgo);
-		addMonthNames(model);
-		addCurrentSection(model, "Course");
+		model.addAttribute("courseForm", new CourseForm(editProfileService.findListCourse(SecurityUtil.getCurrentProfileId())));
+		addAttributesMinMaxYear(model, courseYearsAgo);
+		addAttributeMonthName(model);
+		addAttributeSection(model, "Course");
 		return "edit/course";
 	}
 
@@ -259,12 +259,12 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			addMinMaxYears(model, courseYearsAgo);
-			addMonthNames(model);
-			addCurrentSection(model, "Course");
+			addAttributesMinMaxYear(model, courseYearsAgo);
+			addAttributeMonthName(model);
+			addAttributeSection(model, "Course");
 			return "edit/course";
 		}
-		editProfileService.updateCourse(SecurityUtil.getCurrentProfileId(), form);
+		editProfileService.updateCourse(SecurityUtil.getCurrentProfileId(), form.getItems());
 		return "redirect:/edit/course";
 	}
 
@@ -272,9 +272,9 @@ public class EditProfileController
 	public String getAddCourse(Model model)
 	{
 		model.addAttribute("courseForm", new Course());
-		addMinMaxYears(model, courseYearsAgo);
-		addMonthNames(model);
-		addCurrentSection(model, "Course");
+		addAttributesMinMaxYear(model, courseYearsAgo);
+		addAttributeMonthName(model);
+		addAttributeSection(model, "Course");
 		return "add/course";
 	}
 
@@ -283,9 +283,9 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			addMinMaxYears(model, courseYearsAgo);
-			addMonthNames(model);
-			addCurrentSection(model, "Course");
+			addAttributesMinMaxYear(model, courseYearsAgo);
+			addAttributeMonthName(model);
+			addAttributeSection(model, "Course");
 			return "add/course";
 		}
 		editProfileService.addCourse(SecurityUtil.getCurrentProfileId(), form);
@@ -295,9 +295,9 @@ public class EditProfileController
 	@RequestMapping(value = "/edit/education", method = RequestMethod.GET)
 	public String getEditEducation(Model model)
 	{
-		model.addAttribute("educationForm", new EducationForm(editProfileService.listEducation(SecurityUtil.getCurrentProfileId())));
-		addMinMaxYears(model, educationYearsAgo);
-		addCurrentSection(model, "Education");
+		model.addAttribute("educationForm", new EducationForm(editProfileService.findListEducation(SecurityUtil.getCurrentProfileId())));
+		addAttributesMinMaxYear(model, educationYearsAgo);
+		addAttributeSection(model, "Education");
 		return "edit/education";
 	}
 
@@ -306,11 +306,11 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			addMinMaxYears(model, educationYearsAgo);
-			addCurrentSection(model, "Education");
+			addAttributesMinMaxYear(model, educationYearsAgo);
+			addAttributeSection(model, "Education");
 			return "edit/education";
 		}
-		editProfileService.updateEducation(SecurityUtil.getCurrentProfileId(), form);
+		editProfileService.updateEducation(SecurityUtil.getCurrentProfileId(), form.getItems());
 		return "redirect:/edit/education";
 	}
 
@@ -318,8 +318,8 @@ public class EditProfileController
 	public String getAddEducation(Model model)
 	{
 		model.addAttribute("educationForm", new Education());
-		addMinMaxYears(model, educationYearsAgo);
-		addCurrentSection(model, "Education");
+		addAttributesMinMaxYear(model, educationYearsAgo);
+		addAttributeSection(model, "Education");
 		return "add/education";
 	}
 
@@ -328,8 +328,8 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			addMinMaxYears(model, educationYearsAgo);
-			addCurrentSection(model, "Education");
+			addAttributesMinMaxYear(model, educationYearsAgo);
+			addAttributeSection(model, "Education");
 			return "add/education";
 		}
 		editProfileService.addEducation(SecurityUtil.getCurrentProfileId(), form);
@@ -339,8 +339,8 @@ public class EditProfileController
 	@RequestMapping(value = "/edit/language", method = RequestMethod.GET)
 	public String getEditLanguage(Model model)
 	{
-		model.addAttribute("languageForm", new LanguageForm(editProfileService.listLanguage(SecurityUtil.getCurrentProfileId())));
-		addCurrentSection(model, "Language");
+		model.addAttribute("languageForm", new LanguageForm(editProfileService.findListLanguage(SecurityUtil.getCurrentProfileId())));
+		addAttributeSection(model, "Language");
 		return "edit/language";
 	}
 
@@ -349,10 +349,10 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			addCurrentSection(model, "Language");
+			addAttributeSection(model, "Language");
 			return "edit/language";
 		}
-		editProfileService.updateLanguage(SecurityUtil.getCurrentProfileId(), form);
+		editProfileService.updateLanguage(SecurityUtil.getCurrentProfileId(), form.getItems());
 		return "redirect:/edit/language";
 	}
 
@@ -360,7 +360,7 @@ public class EditProfileController
 	public String getAddLanguage(Model model)
 	{
 		model.addAttribute("languageForm", new Language());
-		addCurrentSection(model, "Language");
+		addAttributeSection(model, "Language");
 		return "add/language";
 	}
 
@@ -369,7 +369,7 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			addCurrentSection(model, "Language");
+			addAttributeSection(model, "Language");
 			return "add/language";
 		}
 		editProfileService.addLanguage(SecurityUtil.getCurrentProfileId(), form);
@@ -379,9 +379,9 @@ public class EditProfileController
 	@RequestMapping(value = "/edit/hobby", method = RequestMethod.GET)
 	public String getEditHobby(Model model)
 	{
-		model.addAttribute("hobbyForm", new HobbyForm(editProfileService.listHobby(SecurityUtil.getCurrentProfileId()), profileHobbiesMax));
-		model.addAttribute("hobbies", editProfileService.listHobbyName());
-		addCurrentSection(model, "Hobby");
+		model.addAttribute("hobbyForm", new HobbyForm(editProfileService.findListHobby(SecurityUtil.getCurrentProfileId()), profileHobbiesMax));
+		model.addAttribute("hobbies", editProfileService.findListHobbyName());
+		addAttributeSection(model, "Hobby");
 		return "edit/hobby";
 	}
 
@@ -390,11 +390,11 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			model.addAttribute("hobbies", editProfileService.listHobbyName());
-			addCurrentSection(model, "Hobby");
+			model.addAttribute("hobbies", editProfileService.findListHobbyName());
+			addAttributeSection(model, "Hobby");
 			return "edit/hobby";
 		}
-		editProfileService.updateHobby(SecurityUtil.getCurrentProfileId(), form);
+		editProfileService.updateHobby(SecurityUtil.getCurrentProfileId(), form.getCheckedItems());
 		return "redirect:/edit/hobby";
 	}
 
@@ -402,7 +402,7 @@ public class EditProfileController
 	public String getEditInfo(Model model)
 	{
 		model.addAttribute("profile", findProfileService.findById(SecurityUtil.getCurrentProfileId()));
-		addCurrentSection(model, "Additional");
+		addAttributeSection(model, "Additional");
 		return "edit/additional";
 	}
 
@@ -411,7 +411,7 @@ public class EditProfileController
 	{
 		if (bindingResult.hasErrors())
 		{
-			addCurrentSection(model, "Additional");
+			addAttributeSection(model, "Additional");
 			return "edit/additional";
 		}
 		editProfileService.updateAdditionalInfo(SecurityUtil.getCurrentProfileId(), form);
@@ -421,7 +421,6 @@ public class EditProfileController
 	@RequestMapping(value = "/edit/password", method = RequestMethod.GET)
 	public String getEditPassword(Model model)
 	{
-		model.addAttribute("profile", findProfileService.findById(SecurityUtil.getCurrentProfileId()));
 		model.addAttribute("changePasswordForm", new ChangePasswordForm());
 		return "edit/password";
 	}
@@ -443,19 +442,19 @@ public class EditProfileController
 		return "password-change-success";
 	}
 	
-	private void addMinMaxYears(Model model, int diff)
+	private void addAttributesMinMaxYear(Model model, int diff)
 	{
 		LocalDate today = new LocalDate();
 		model.addAttribute("maxYear", today.getYear());
 		model.addAttribute("minYear", today.getYear() - diff);
 	}
 	
-	private void addCurrentSection(Model model, String section)
+	private void addAttributeSection(Model model, String section)
 	{
 		model.addAttribute("section", section);
 	}
 	
-	private void addMonthNames(Model model)
+	private void addAttributeMonthName(Model model)
 	{
 		model.addAttribute("monthName", Constants.MONTH_NAMES);
 	}

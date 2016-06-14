@@ -32,7 +32,7 @@ public class RemoveNotCompletedProfileService
 		today.minusDays(removeNotCompletedProfilesInterval);
 		Timestamp date = new Timestamp(today.toDate().getTime());
 
-		List<Profile> profilesToRemove = editProfileService.notCompletedProfilesCreatedBefore(date);
+		List<Profile> profilesToRemove = editProfileService.findNotCompletedProfilesCreatedBefore(date);
 		for (Profile profile : profilesToRemove)
 			editProfileService.removeProfile(profile.getId());
 	}

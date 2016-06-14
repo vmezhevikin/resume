@@ -5,7 +5,7 @@ function deleteRow(r) {
 
 var onloadCallback = function() {
 	grecaptcha.render('g-recaptcha', {
-		'sitekey' : 'sitekey',
+		'sitekey' : '6Lfl2iETAAAAALdj_BDVgmo0HQdaG5c0kPGNeivL',
 		'callback' : function(response) {
 			document.getElementById('recaptchaResponse').value = response;
 		},
