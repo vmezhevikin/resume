@@ -7,8 +7,8 @@ import org.springframework.data.repository.RepositoryDefinition;
 
 import net.devstudy.resume.entity.HobbyName;
 
-@RepositoryDefinition(domainClass=HobbyName.class, idClass=Long.class)
-public interface HobbyNameRepository
-{
+@RepositoryDefinition(domainClass = HobbyName.class, idClass = Long.class)
+public interface HobbyNameRepository {
+	
 	List<HobbyName> findAll(Sort sort);
 }

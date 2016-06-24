@@ -11,57 +11,52 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component("defaultExecutorService")
-public class ExecutorServiceFactoryBean implements FactoryBean<ExecutorService>
-{
+public class ExecutorServiceFactoryBean implements FactoryBean<ExecutorService> {
+
 	public static final String AUTO = "AUTO";
-	
+
 	private ExecutorService executorService;
 	private boolean autoThreadCount;
 	private int threadCount;
-	
+
 	@Value("${executorService.threadCount}")
-	public void setThreadCount(String threadCount)
-	{
-		if (AUTO.equalsIgnoreCase(threadCount.trim()))
+	public void setThreadCount(String threadCount) {
+		if (AUTO.equalsIgnoreCase(threadCount.trim())) {
 			autoThreadCount = true;
-		else
-		{
+		} else {
 			this.threadCount = Integer.parseInt(threadCount.trim());
-			if (this.threadCount <= 0)
+			if (this.threadCount <= 0) {
 				autoThreadCount = true;
+			}
 		}
 	}
-	
+
 	@PostConstruct
-	private void postConstruct()
-	{
-		if (autoThreadCount)
+	private void postConstruct() {
+		if (autoThreadCount) {
 			executorService = Executors.newCachedThreadPool();
-		else
+		} else {
 			executorService = Executors.newFixedThreadPool(threadCount);
+		}
 	}
-	
+
 	@PreDestroy
-	private void preDestroy()
-	{
+	private void preDestroy() {
 		executorService.shutdown();
 	}
-	
+
 	@Override
-	public ExecutorService getObject() throws Exception
-	{
+	public ExecutorService getObject() throws Exception {
 		return executorService;
 	}
 
 	@Override
-	public Class<?> getObjectType()
-	{
+	public Class<?> getObjectType() {
 		return ExecutorService.class;
 	}
 
 	@Override
-	public boolean isSingleton()
-	{
+	public boolean isSingleton() {
 		return true;
 	}
 }

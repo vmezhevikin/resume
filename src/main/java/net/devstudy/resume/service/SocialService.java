@@ -1,10 +1,13 @@
 package net.devstudy.resume.service;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.devstudy.resume.entity.Profile;
 
-public interface SocialService<T>
-{
-	Profile loginViaSocailNetwork(T model);
+public interface SocialService<T> {
 	
-	Profile signupViaSocailNetwork(T model);
+	@Nullable Profile findProfileViaSocailNetwork(@Nonnull T model);
+	
+	@Nullable Profile createNewProfileViaSocailNetwork(@Nonnull T model);
 }

@@ -17,7 +17,7 @@
 			</tr>
 			<tr>
 				<td colspan="3" align="center">
-					<a href="/add/certificate" class="btn btn-default">Add new certificate</a>
+					<a href="/add/certificate" class="btn btn-default">Add certificate</a>
 					<span class="text-muted">Save changes before adding new certificate! Unsaved data will be lost!</span>
 				</td>
 			</tr>

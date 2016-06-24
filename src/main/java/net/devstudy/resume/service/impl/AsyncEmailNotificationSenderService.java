@@ -18,8 +18,8 @@ import net.devstudy.resume.model.NotificationMessage;
 import net.devstudy.resume.service.NotificationSenderService;
 
 @Service
-public class AsyncEmailNotificationSenderService implements NotificationSenderService
-{
+public class AsyncEmailNotificationSenderService implements NotificationSenderService {
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(AsyncEmailNotificationSenderService.class);
 
 	@Autowired
@@ -27,6 +27,9 @@ public class AsyncEmailNotificationSenderService implements NotificationSenderSe
 
 	@Autowired
 	private JavaMailSender javaMailSender;
+
+	@Value("${application.production}")
+	private boolean production;
 
 	@Value("${email.fromEmail}")
 	private String fromEmail;
@@ -38,35 +41,30 @@ public class AsyncEmailNotificationSenderService implements NotificationSenderSe
 	private int tryCount;
 
 	@Override
-	public void sendNotification(NotificationMessage message)
-	{
+	public void sendNotification(NotificationMessage message) {
 		executorService.submit(new EmailItem(message, tryCount));
 	}
 
 	@Override
-	public String getDestinationAddress(Profile profile)
-	{
+	public String getDestinationAddress(Profile profile) {
 		return profile.getEmail();
 	}
 
-	private class EmailItem implements Runnable
-	{
+	private class EmailItem implements Runnable {
+		
 		private final NotificationMessage notificationMessage;
 
 		private int tryCount;
 
-		private EmailItem(NotificationMessage notificationMessage, int tryCount)
-		{
+		private EmailItem(NotificationMessage notificationMessage, int tryCount) {
 			super();
 			this.notificationMessage = notificationMessage;
 			this.tryCount = tryCount;
 		}
 
 		@Override
-		public void run()
-		{
-			try
-			{
+		public void run() {
+			try {
 				LOGGER.debug("Send new email to {}", notificationMessage.getDestinationAddress());
 				MimeMessageHelper messageHelper = new MimeMessageHelper(javaMailSender.createMimeMessage(), false);
 				messageHelper.setSubject(notificationMessage.getSubject());
@@ -74,19 +72,21 @@ public class AsyncEmailNotificationSenderService implements NotificationSenderSe
 				messageHelper.setFrom(fromEmail, fromEmail);
 				messageHelper.setText(notificationMessage.getContent(), true);
 				MimeMailMessage message = new MimeMailMessage(messageHelper);
-				javaMailSender.send(message.getMimeMessage());
-				LOGGER.info("Email to {} successfully sent", notificationMessage.getDestinationAddress());
-			} catch (Exception e)
-			{
+				if (production) {
+					javaMailSender.send(message.getMimeMessage());
+					LOGGER.info("Email to {} successfully sent", notificationMessage.getDestinationAddress());
+				} else {
+					LOGGER.debug("Debug: sending email to {}", notificationMessage.getDestinationAddress());
+				}
+			} catch (Exception e) {
 				LOGGER.error("Can't send email to " + notificationMessage.getDestinationAddress() + ": " + e.getMessage(), e);
 				tryCount--;
-				if (tryCount > 0)
-				{
+				if (tryCount > 0) {
 					LOGGER.debug("Decrement tryCount and try again to send email: tryCount={}, destinationEmail={}", tryCount, notificationMessage.getDestinationAddress());
 					executorService.submit(this);
-				}
-				else
+				} else {
 					LOGGER.error("Email wasn't sent to " + notificationMessage.getDestinationAddress());
+				}
 			}
 		}
 	}

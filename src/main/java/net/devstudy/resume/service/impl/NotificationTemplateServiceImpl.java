@@ -25,8 +25,8 @@ import net.devstudy.resume.model.NotificationMessage;
 import net.devstudy.resume.service.NotificationTemplateService;
 
 @Service
-public class NotificationTemplateServiceImpl implements NotificationTemplateService
-{
+public class NotificationTemplateServiceImpl implements NotificationTemplateService {
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(NotificationTemplateServiceImpl.class);
 
 	private Map<String, NotificationMessage> notificationTemplates;
@@ -41,61 +41,53 @@ public class NotificationTemplateServiceImpl implements NotificationTemplateServ
 	private NotificationContentResolver notificationContentResolver;
 
 	@PostConstruct
-	private void postContruct()
-	{
+	private void postContruct() {
 		notificationTemplates = Collections.unmodifiableMap(getNotificationTemplates());
 		LOGGER.info("Loaded {} notification templates", notificationTemplates.size());
 	}
 
-	private Map<String, NotificationMessage> getNotificationTemplates()
-	{
+	private Map<String, NotificationMessage> getNotificationTemplates() {
 		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
 		reader.setValidating(false);
 		reader.loadBeanDefinitions(new PathResource(notificationConfigPath));
 		return getConfiguredTemplates(beanFactory.getBeansOfType(NotificationMessage.class));
 	}
-	
-	private Map<String, NotificationMessage> getConfiguredTemplates(Map<String, NotificationMessage> notificationTemplates)
-	{
+
+	private Map<String, NotificationMessage> getConfiguredTemplates(Map<String, NotificationMessage> notificationTemplates) {
 		Map<String, NotificationMessage> configuredTemplates = new HashMap<>();
-		for (Map.Entry<String, NotificationMessage> entry : notificationTemplates.entrySet())
-		{
+		for (Map.Entry<String, NotificationMessage> entry : notificationTemplates.entrySet()) {
 			NotificationMessage messageTemplate = entry.getValue();
 			String htmlContent = readHtmlTemplate(notificationEmailTemplatesPath + messageTemplate.getContent());
-			if (StringUtils.isNotBlank(htmlContent))
-			{
+			if (StringUtils.isNotBlank(htmlContent)) {
 				messageTemplate.setContent(htmlContent);
 				configuredTemplates.put(entry.getKey(), messageTemplate);
 			}
-		}	
+		}
 		return configuredTemplates;
 	}
 
-	private String readHtmlTemplate(String filePath)
-	{
+	private String readHtmlTemplate(String filePath) {
 		StringBuilder htmlTemplate = new StringBuilder();
 		Scanner scanner = null;
-		try
-		{
+		try {
 			scanner = new Scanner(new File(filePath));
-			while (scanner.hasNext())
+			while (scanner.hasNext()) {
 				htmlTemplate.append(scanner.nextLine().replace("\t", ""));
-			 return htmlTemplate.toString();
-		} catch (FileNotFoundException e)
-		{
+			}
+			return htmlTemplate.toString();
+		} catch (FileNotFoundException e) {
 			LOGGER.error("Can't find email template file " + filePath);
-			return null;
-		} finally
-		{
-			if (scanner != null)
+			return "";
+		} finally {
+			if (scanner != null) {
 				scanner.close();
+			}
 		}
 	}
 
 	@Override
-	public NotificationMessage createNotificationMessage(String templateName, Object model)
-	{
+	public NotificationMessage createNotificationMessage(String templateName, Object model) {
 		NotificationMessage message = notificationTemplates.get(templateName);
 		if (message == null)
 			throw new CantCompleteClientRequestException("Notification template '" + templateName + "' not found");

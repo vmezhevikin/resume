@@ -15,8 +15,7 @@ import net.devstudy.resume.validator.MinUpperCharCountConstraintValidator;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = { MinUpperCharCountConstraintValidator.class })
-public @interface MinUpperCharCount
-{
+public @interface MinUpperCharCount {
 	String message() default "MinUpperCharCount";
 
 	int value() default 1;

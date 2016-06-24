@@ -11,7 +11,7 @@
 			</c:forEach>
 			<tr>
 				<td align="center">
-					<a href="/add/education" class="btn btn-default">Add new education</a>
+					<a href="/add/education" class="btn btn-default">Add education</a>
 					<span class="text-muted">Save changes before adding new education! Unsaved data will be lost!</span>
 				</td>
 			</tr>

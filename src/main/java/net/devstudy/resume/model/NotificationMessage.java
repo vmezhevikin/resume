@@ -1,61 +1,51 @@
 package net.devstudy.resume.model;
 
-public class NotificationMessage
-{
+public class NotificationMessage {
+	
 	private String destinationAddress;
 	private String destinationName;
 	private String subject;
 	private String content;
-	
-	public NotificationMessage()
-	{
+
+	public NotificationMessage() {
 		super();
 	}
 
-	public NotificationMessage(String subject, String content)
-	{
+	public NotificationMessage(String subject, String content) {
 		super();
 		this.subject = subject;
 		this.content = content;
 	}
 
-	public String getDestinationAddress()
-	{
+	public String getDestinationAddress() {
 		return destinationAddress;
 	}
 
-	public void setDestinationAddress(String destinationAddress)
-	{
+	public void setDestinationAddress(String destinationAddress) {
 		this.destinationAddress = destinationAddress;
 	}
 
-	public String getDestinationName()
-	{
+	public String getDestinationName() {
 		return destinationName;
 	}
 
-	public void setDestinationName(String destinationName)
-	{
+	public void setDestinationName(String destinationName) {
 		this.destinationName = destinationName;
 	}
 
-	public String getSubject()
-	{
+	public String getSubject() {
 		return subject;
 	}
 
-	public void setSubject(String subject)
-	{
+	public void setSubject(String subject) {
 		this.subject = subject;
 	}
 
-	public String getContent()
-	{
+	public String getContent() {
 		return content;
 	}
 
-	public void setContent(String content)
-	{
+	public void setContent(String content) {
 		this.content = content;
 	}
 }

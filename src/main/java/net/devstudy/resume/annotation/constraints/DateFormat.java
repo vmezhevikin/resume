@@ -11,14 +11,13 @@ import javax.validation.Payload;
 
 import net.devstudy.resume.validator.DateFormatConstraintValidator;
 
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER})
+@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = { DateFormatConstraintValidator.class })
-public @interface DateFormat
-{
+public @interface DateFormat {
 	String message() default "DateFormat";
-	
+
 	int adulthoodAge() default 18;
 
 	Class<? extends Payload>[] payload() default {};

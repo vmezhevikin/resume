@@ -21,14 +21,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource("classpath:application.properties")
 @EnableTransactionManagement
 @EnableJpaRepositories("net.devstudy.resume.repository.storage")
-public class JPAConfig
-{
+public class JPAConfig {
+	
 	@Autowired
 	private Environment environment;
-	
-	@Bean(/*"destroyMethod=close"*/)
-	public DataSource dataSource()
-	{
+
+	@Bean(/* "destroyMethod=close" */)
+	public DataSource dataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(environment.getRequiredProperty("db.driver"));
 		dataSource.setUrl(environment.getRequiredProperty("db.url"));
@@ -38,18 +37,16 @@ public class JPAConfig
 		dataSource.setMaxTotal(Integer.parseInt(environment.getRequiredProperty("db.pool.maxSize")));
 		return dataSource;
 	}
-	
-	private Properties hibernateProperties()
-	{
+
+	private Properties hibernateProperties() {
 		Properties properties = new Properties();
 		properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
 		properties.put("javax.persistence.validation.mode", "none");
 		return properties;
 	}
-	
+
 	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory()
-	{
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactory.setDataSource(dataSource());
 		entityManagerFactory.setPersistenceProviderClass(HibernatePersistenceProvider.class);
@@ -58,10 +55,9 @@ public class JPAConfig
 		entityManagerFactory.setJpaProperties(hibernateProperties());
 		return entityManagerFactory;
 	}
-	
+
 	@Bean
-	public JpaTransactionManager transactionManager()
-	{
+	public JpaTransactionManager transactionManager() {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
 		transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
 		return transactionManager;

@@ -14,20 +14,18 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 @Configuration
 @ComponentScan("net.devstudy.resume.repository.search")
 @EnableElasticsearchRepositories("net.devstudy.resume.repository.search")
-public class ElasticSearchConfig
-{
+public class ElasticSearchConfig {
+	
 	@Value("${elasticsearch.home}")
 	private String elasticSearchHome;
 
 	@Bean // (destroyMethod="close")
-	public Node node()
-	{
+	public Node node() {
 		return new NodeBuilder().local(true).settings(Settings.builder().put("path.home", elasticSearchHome)).node();
 	}
 
 	@Bean
-	public ElasticsearchOperations elasticsearchTemplate()
-	{
+	public ElasticsearchOperations elasticsearchTemplate() {
 		return new ElasticsearchTemplate(node().client());
 	}
 }

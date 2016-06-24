@@ -5,35 +5,36 @@ import javax.validation.ConstraintValidatorContext;
 
 import net.devstudy.resume.annotation.constraints.MinDigitCount;
 
-public class MinDigitCountConstraintValidator implements ConstraintValidator<MinDigitCount, String>
-{
+public class MinDigitCountConstraintValidator implements ConstraintValidator<MinDigitCount, String> {
+	
 	private static final String DIGITS = "0123456789";
 
 	private int count;
 
 	@Override
-	public void initialize(MinDigitCount constraintAnnotation)
-	{
+	public void initialize(MinDigitCount constraintAnnotation) {
 		this.count = constraintAnnotation.value();
 	}
 
 	@Override
-	public boolean isValid(String value, ConstraintValidatorContext context)
-	{
-		if (value == null)
+	public boolean isValid(String value, ConstraintValidatorContext context) {
+		if (value == null) {
 			return true;
+		}
 
 		int countDigits = 0;
-		for (int i = 0; i < value.length(); i++)
-		{
+		for (int i = 0; i < value.length(); i++) {
 			char ch = value.charAt(i);
-			if (DIGITS.indexOf(ch) != -1)
+			if (DIGITS.indexOf(ch) != -1) {
 				countDigits++;
+			}
 		}
-		
-		if (countDigits >= count)
+
+		if (countDigits >= count) {
 			return true;
-		else
+		}
+		else {
 			return false;
+		}
 	}
 }

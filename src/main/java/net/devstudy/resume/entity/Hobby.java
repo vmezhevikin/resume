@@ -15,8 +15,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "hobby")
-public class Hobby extends AbstractEntity<Long> implements Serializable, ProfileEntity
-{
+public class Hobby extends AbstractEntity<Long> implements Serializable, ProfileEntity {
+	
 	private static final long serialVersionUID = 4900586647321986730L;
 
 	@Id
@@ -33,39 +33,37 @@ public class Hobby extends AbstractEntity<Long> implements Serializable, Profile
 	private String description;
 
 	@Override
-	public Long getId()
-	{
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Long id)
-	{
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Profile getProfile()
-	{
+	public Profile getProfile() {
 		return profile;
 	}
 
-	public void setProfile(Profile profile)
-	{
+	public void setProfile(Profile profile) {
 		this.profile = profile;
 	}
 
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description)
-	{
+	public void setDescription(String description) {
 		this.description = description;
 	}
 
 	@Override
-	public int hashCode()
-	{
+	public boolean hasNullSubstantionalFields() {
+		return id == null && profile == null && description == null;
+	}
+
+	@Override
+	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
@@ -74,8 +72,7 @@ public class Hobby extends AbstractEntity<Long> implements Serializable, Profile
 	}
 
 	@Override
-	public boolean equals(Object obj)
-	{
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (!super.equals(obj))
@@ -83,14 +80,12 @@ public class Hobby extends AbstractEntity<Long> implements Serializable, Profile
 		if (getClass() != obj.getClass())
 			return false;
 		Hobby other = (Hobby) obj;
-		if (description == null)
-		{
+		if (description == null) {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (id == null)
-		{
+		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))

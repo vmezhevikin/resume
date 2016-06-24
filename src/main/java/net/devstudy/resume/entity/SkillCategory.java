@@ -7,8 +7,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "skill_category")
-public class SkillCategory extends AbstractEntity<Long>
-{
+public class SkillCategory extends AbstractEntity<Long> {
+	
 	private static final long serialVersionUID = -5449563594231337899L;
 
 	@Id
@@ -19,23 +19,19 @@ public class SkillCategory extends AbstractEntity<Long>
 	private String name;
 
 	@Override
-	public Long getId()
-	{
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Long id)
-	{
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
-	public void setName(String name)
-	{
+	public void setName(String name) {
 		this.name = name;
 	}
 }

@@ -23,11 +23,10 @@ import org.springframework.web.servlet.DispatcherServlet;
 import net.devstudy.resume.filter.ResumeFilter;
 import net.devstudy.resume.listener.ApplicationListener;
 
-public class ResumeWebApplicationInitializer implements WebApplicationInitializer
-{
+public class ResumeWebApplicationInitializer implements WebApplicationInitializer {
+	
 	@Override
-	public void onStartup(ServletContext container) throws ServletException
-	{
+	public void onStartup(ServletContext container) throws ServletException {
 		WebApplicationContext context = createWebApplicationContext(container);
 
 		container.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
@@ -38,8 +37,7 @@ public class ResumeWebApplicationInitializer implements WebApplicationInitialize
 		registerSpribngMVCDispathcerServlet(container, context);
 	}
 
-	private WebApplicationContext createWebApplicationContext(ServletContext container)
-	{
+	private WebApplicationContext createWebApplicationContext(ServletContext container) {
 		AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
 		context.scan("net.devstudy.resume.configuration");
 		context.setServletContext(container);
@@ -47,8 +45,7 @@ public class ResumeWebApplicationInitializer implements WebApplicationInitialize
 		return context;
 	}
 
-	private void registerFilters(ServletContext container, WebApplicationContext context)
-	{
+	private void registerFilters(ServletContext container, WebApplicationContext context) {
 		registerFilter(container, context.getBean(ResumeFilter.class));
 		registerFilter(container, new CharacterEncodingFilter("UTF-8", true));
 		registerFilter(container, new OpenEntityManagerInViewFilter());
@@ -57,26 +54,21 @@ public class ResumeWebApplicationInitializer implements WebApplicationInitialize
 		registerFilter(container, buildConfigurableSiteMeshFilter(), "sitemesh");
 	}
 
-	private void registerFilter(ServletContext container, Filter filter, String... filterNames)
-	{
+	private void registerFilter(ServletContext container, Filter filter, String... filterNames) {
 		String filterName = filterNames.length > 0 ? filterNames[0] : filter.getClass().getSimpleName();
 		container.addFilter(filterName, filter).addMappingForUrlPatterns(null, true, "/*");
 	}
 
-	private void registerSpribngMVCDispathcerServlet(ServletContext container, WebApplicationContext context)
-	{
+	private void registerSpribngMVCDispathcerServlet(ServletContext container, WebApplicationContext context) {
 		ServletRegistration.Dynamic servlet = container.addServlet("dispatcher", new DispatcherServlet(context));
 		servlet.setLoadOnStartup(1);
 		servlet.addMapping("/");
 	}
 
-	private ConfigurableSiteMeshFilter buildConfigurableSiteMeshFilter()
-	{
-		return new ConfigurableSiteMeshFilter()
-		{
+	private ConfigurableSiteMeshFilter buildConfigurableSiteMeshFilter() {
+		return new ConfigurableSiteMeshFilter() {
 			@Override
-			protected void applyCustomConfiguration(SiteMeshFilterBuilder builder)
-			{
+			protected void applyCustomConfiguration(SiteMeshFilterBuilder builder) {
 				builder.addDecoratorPath("/*", "/WEB-INF/template/template-resume.jsp");
 				builder.addDecoratorPath("/edit/password*", "/WEB-INF/template/template-resume.jsp");
 				builder.addDecoratorPath("/edit/*", "/WEB-INF/template/template-edit.jsp");

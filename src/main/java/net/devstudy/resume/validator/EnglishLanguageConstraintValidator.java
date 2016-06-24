@@ -5,8 +5,8 @@ import javax.validation.ConstraintValidatorContext;
 
 import net.devstudy.resume.annotation.constraints.EnglishLanguage;
 
-public class EnglishLanguageConstraintValidator implements ConstraintValidator<EnglishLanguage, String>
-{
+public class EnglishLanguageConstraintValidator implements ConstraintValidator<EnglishLanguage, String> {
+	
 	private static final String SPEC_SYMBOLS = "~#$%^&*-+=_\\|/@`!'\";:><,.?{}";
 	private static final String PUNCTUATIONS = ".,?!-:()'\"[]{}; \t\n";
 	private static final String NUMBERS = "0123456789";
@@ -17,38 +17,39 @@ public class EnglishLanguageConstraintValidator implements ConstraintValidator<E
 	private boolean withSpecSymbols;
 
 	@Override
-	public void initialize(EnglishLanguage constraintAnnotation)
-	{
+	public void initialize(EnglishLanguage constraintAnnotation) {
 		this.withNumbers = constraintAnnotation.withNumbers();
 		this.withPunctuations = constraintAnnotation.withPunctuations();
 		this.withSpecSymbols = constraintAnnotation.withSpecSymbols();
 	}
 
 	@Override
-	public boolean isValid(String value, ConstraintValidatorContext context)
-	{
-		if (value == null)
+	public boolean isValid(String value, ConstraintValidatorContext context) {
+		if (value == null) {
 			return true;
+		}
 
 		String validationTemplate = getValidationTemplate();
-		for (int i = 0; i < value.length(); i++)
-		{
+		for (int i = 0; i < value.length(); i++) {
 			char ch = value.charAt(i);
-			if (validationTemplate.indexOf(ch) == -1)
+			if (validationTemplate.indexOf(ch) == -1) {
 				return false;
+			}
 		}
 		return true;
 	}
 
-	private String getValidationTemplate()
-	{
+	private String getValidationTemplate() {
 		StringBuilder template = new StringBuilder(LETTERS);
-		if (withNumbers)
+		if (withNumbers) {
 			template.append(NUMBERS);
-		if (withPunctuations)
+		}
+		if (withPunctuations) {
 			template.append(PUNCTUATIONS);
-		if (withSpecSymbols)
+		}
+		if (withSpecSymbols) {
 			template.append(SPEC_SYMBOLS);
+		}
 		return template.toString();
 	}
 }

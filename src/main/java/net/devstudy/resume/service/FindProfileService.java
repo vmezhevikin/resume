@@ -1,25 +1,33 @@
 package net.devstudy.resume.service;
 
+import java.sql.Timestamp;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import net.devstudy.resume.entity.Profile;
 
-public interface FindProfileService
-{
-	Profile findByUid(String uid);
+public interface FindProfileService {
 	
-	Profile findById(long id);
+	@Nullable Profile findByUid(@Nonnull String uid);
 	
-	Profile findByEmail(String email);
+	@Nullable Profile findById(long id);
+	
+	@Nullable Profile findByEmail(@Nonnull String email);
 
-	Page<Profile> findAll(Pageable pageable);
+	@Nonnull Page<Profile> findAll(@Nonnull Pageable pageable);
 	
-	Iterable<Profile> findAllForIndexing();
+	@Nonnull Iterable<Profile> findAllForIndexing();
 	
-	Page<Profile> findBySearchQuery(String query, Pageable pageable);
+	@Nonnull Page<Profile> findBySearchQuery(@Nonnull String query, @Nonnull Pageable pageable);
 	
-	Profile findByUniqueId(String anyUniqueId);
+	@Nullable Profile findByUniqueId(@Nonnull String anyUniqueId);
 	
-	Profile findByToken(String token);
+	@Nullable Profile findByToken(@Nonnull String token);
+
+	@Nonnull List<Profile> findNotCompletedProfilesCreatedBefore(@Nonnull Timestamp date);
 }

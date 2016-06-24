@@ -14,27 +14,24 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractFilter implements Filter
-{
+public abstract class AbstractFilter implements Filter {
+	
 	protected final Logger LOGGER = LoggerFactory.getLogger(AbstractFilter.class);
 
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException
-	{
+	public void init(FilterConfig filterConfig) throws ServletException {
 	}
 
 	@Override
-	public final void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
-	{
+	public final void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 		doFilter(httpServletRequest, httpServletResponse, chain);
 	}
-	
+
 	public abstract void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException;
 
 	@Override
-	public void destroy()
-	{
+	public void destroy() {
 	}
 }

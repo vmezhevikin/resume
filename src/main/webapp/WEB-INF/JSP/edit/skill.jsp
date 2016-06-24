@@ -15,7 +15,7 @@
 			</c:forEach>
 			<tr>
 				<td colspan="3" align="center">
-					<a href="/add/skill" class="btn btn-default">Add new skill</a>
+					<a href="/add/skill" class="btn btn-default">Add skill</a>
 					<span class="text-muted">Save changes before adding new skill! Unsaved data will be lost!</span>
 				</td>
 			</tr>

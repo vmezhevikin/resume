@@ -36,8 +36,8 @@ import net.devstudy.resume.annotation.constraints.Phone;
 @Entity
 @Table(name = "profile")
 @Document(indexName = "profile")
-public class Profile extends AbstractEntity<Long>
-{
+public class Profile extends AbstractEntity<Long> {
+	
 	private static final long serialVersionUID = 4419584168346691423L;
 
 	@Id
@@ -169,121 +169,98 @@ public class Profile extends AbstractEntity<Long>
 	private MultipartFile file;
 
 	@Override
-	public Long getId()
-	{
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Long id)
-	{
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public String getUid()
-	{
+	public String getUid() {
 		return uid;
 	}
 
-	public void setUid(String uid)
-	{
+	public void setUid(String uid) {
 		this.uid = uid;
 	}
 
-	public String getPassword()
-	{
+	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password)
-	{
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	public Boolean getActive()
-	{
+	public Boolean getActive() {
 		return active;
 	}
 
-	public void setActive(Boolean active)
-	{
+	public void setActive(Boolean active) {
 		this.active = active;
 	}
 
-	public String getFirstName()
-	{
+	public String getFirstName() {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName)
-	{
+	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-	public String getLastName()
-	{
+	public String getLastName() {
 		return lastName;
 	}
 
-	public void setLastName(String lastName)
-	{
+	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
 	@Transient
-	public String getFullName()
-	{
+	public String getFullName() {
 		if (fullName == null)
 			fullName = firstName + " " + lastName;
 		return fullName;
 	}
 
 	@Transient
-	public void setFullName(String fullName)
-	{
+	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
 
-	public String getCountry()
-	{
+	public String getCountry() {
 		return country;
 	}
 
-	public void setCountry(String country)
-	{
+	public void setCountry(String country) {
 		this.country = country;
 	}
 
-	public String getCity()
-	{
+	public String getCity() {
 		return city;
 	}
 
-	public void setCity(String city)
-	{
+	public void setCity(String city) {
 		this.city = city;
 	}
 
-	public Date getBirthday()
-	{
+	public Date getBirthday() {
 		return birthday;
 	}
 
-	public void setBirthday(Date birthday)
-	{
+	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
 	}
 
 	@Transient
-	public void setBirthdayString(String birthdayString)
-	{
+	public void setBirthdayString(String birthdayString) {
 		this.birthdayString = birthdayString;
 	}
 
 	@Transient
-	public String getBirthdayString()
-	{
-		if (birthdayString == null && birthday != null)
-		{
+	public String getBirthdayString() {
+		if (birthdayString == null && birthday != null) {
 			LocalDate birthdate = new LocalDate(birthday);
 			birthdayString = birthdate.toString("yyyy-MM-dd");
 		}
@@ -291,216 +268,182 @@ public class Profile extends AbstractEntity<Long>
 	}
 
 	@Transient
-	public int getAge()
-	{
+	public int getAge() {
 		LocalDate birthdate = new LocalDate(birthday);
 		LocalDate now = new LocalDate();
 		Years age = Years.yearsBetween(birthdate, now);
 		return age.getYears();
 	}
 
-	public String getEmail()
-	{
+	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email)
-	{
+	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	public String getPhone()
-	{
+	public String getPhone() {
 		return phone;
 	}
 
-	public void setPhone(String phone)
-	{
+	public void setPhone(String phone) {
 		this.phone = phone;
 	}
 
-	public String getAdditionalInfo()
-	{
+	public String getAdditionalInfo() {
 		return additionalInfo;
 	}
 
-	public void setAdditionalInfo(String additionalInfo)
-	{
+	public void setAdditionalInfo(String additionalInfo) {
 		this.additionalInfo = additionalInfo;
 	}
 
-	public String getObjective()
-	{
+	public String getObjective() {
 		return objective;
 	}
 
-	public void setObjective(String objective)
-	{
+	public void setObjective(String objective) {
 		this.objective = objective;
 	}
 
-	public String getSummary()
-	{
+	public String getSummary() {
 		return summary;
 	}
 
-	public void setSummary(String summary)
-	{
+	public void setSummary(String summary) {
 		this.summary = summary;
 	}
 
-	public String getPhoto()
-	{
+	public String getPhoto() {
 		return photo;
 	}
 
-	public void setPhoto(String photo)
-	{
+	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
 
-	public String getPhotoSmall()
-	{
+	public String getPhotoSmall() {
 		return photoSmall;
 	}
 
-	public void setPhotoSmall(String photoSmall)
-	{
+	public void setPhotoSmall(String photoSmall) {
 		this.photoSmall = photoSmall;
 	}
 
-	public Timestamp getCreated()
-	{
+	public Timestamp getCreated() {
 		return created;
 	}
 
-	public void setCreated(Timestamp created)
-	{
+	public void setCreated(Timestamp created) {
 		this.created = created;
 	}
 
-	public List<Certificate> getCertificate()
-	{
+	public List<Certificate> getCertificate() {
 		return certificate;
 	}
 
-	public void setCertificate(List<Certificate> certificate)
-	{
+	public void setCertificate(List<Certificate> certificate) {
 		this.certificate = certificate;
 	}
 
-	public List<Course> getCourse()
-	{
+	public List<Course> getCourse() {
 		return course;
 	}
 
-	public void setCourse(List<Course> course)
-	{
+	public void setCourse(List<Course> course) {
 		this.course = course;
 	}
 
-	public List<Education> getEducation()
-	{
+	public List<Education> getEducation() {
 		return education;
 	}
 
-	public void setEducation(List<Education> education)
-	{
+	public void setEducation(List<Education> education) {
 		this.education = education;
 	}
 
-	public List<Experience> getExperience()
-	{
+	public List<Experience> getExperience() {
 		return experience;
 	}
 
-	public void setExperience(List<Experience> experience)
-	{
+	public void setExperience(List<Experience> experience) {
 		this.experience = experience;
 	}
 
-	public List<Hobby> getHobby()
-	{
+	public List<Hobby> getHobby() {
 		return hobby;
 	}
 
-	public void setHobby(List<Hobby> hobby)
-	{
+	public void setHobby(List<Hobby> hobby) {
 		this.hobby = hobby;
 	}
 
 	@Transient
-	public boolean hasHobby(String description)
-	{
-		if (hobby == null || hobby.size() == 0)
+	public boolean hasHobby(String description) {
+		if (hobby == null || hobby.size() == 0) {
 			return false;
-
-		for (Hobby h : hobby)
-			if (h.getDescription().equals(description))
+		}
+		for (Hobby h : hobby) {
+			if (h.getDescription().equals(description)) {
 				return true;
+			}
+		}
 
 		return false;
 	}
 
-	public List<Language> getLanguage()
-	{
+	public List<Language> getLanguage() {
 		return language;
 	}
 
-	public void setLanguage(List<Language> language)
-	{
+	public void setLanguage(List<Language> language) {
 		this.language = language;
 	}
 
-	public List<Skill> getSkill()
-	{
+	public List<Skill> getSkill() {
 		return skill;
 	}
 
-	public void setSkill(List<Skill> skill)
-	{
+	public void setSkill(List<Skill> skill) {
 		this.skill = skill;
 	}
 
-	public ProfileRestore getProfileRestore()
-	{
+	public ProfileRestore getProfileRestore() {
 		return profileRestore;
 	}
 
-	public void setProfileRestore(ProfileRestore profileRestore)
-	{
+	public void setProfileRestore(ProfileRestore profileRestore) {
 		this.profileRestore = profileRestore;
 	}
 
-	public Contact getContact()
-	{
-		if (contact == null)
+	public Contact getContact() {
+		if (contact == null) {
 			contact = new Contact();
+		}
 		return contact;
 	}
 
-	public void setContact(Contact contact)
-	{
+	public void setContact(Contact contact) {
 		this.contact = contact;
 	}
 
 	@Transient
-	public MultipartFile getFile()
-	{
+	public MultipartFile getFile() {
 		return file;
 	}
 
 	@Transient
-	public void setFile(MultipartFile file)
-	{
+	public void setFile(MultipartFile file) {
 		this.file = file;
 	}
 
 	@Transient
-	public void updateListProfile(List<? extends ProfileEntity> list)
-	{
-		if (list != null)
-			for (ProfileEntity entity : list)
+	public void updateListProfile(List<? extends ProfileEntity> list) {
+		if (list != null) {
+			for (ProfileEntity entity : list) {
 				entity.setProfile(this);
+			}
+		}
 	}
 }

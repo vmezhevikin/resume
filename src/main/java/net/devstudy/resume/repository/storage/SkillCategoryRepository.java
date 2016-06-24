@@ -7,8 +7,8 @@ import org.springframework.data.repository.RepositoryDefinition;
 
 import net.devstudy.resume.entity.SkillCategory;
 
-@RepositoryDefinition(domainClass=SkillCategory.class, idClass=Long.class)
-public interface SkillCategoryRepository
-{
+@RepositoryDefinition(domainClass = SkillCategory.class, idClass = Long.class)
+public interface SkillCategoryRepository {
+	
 	List<SkillCategory> findAll(Sort sort);
 }

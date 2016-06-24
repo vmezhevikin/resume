@@ -8,31 +8,27 @@ import javax.validation.Valid;
 
 import net.devstudy.resume.entity.Skill;
 
-public class SkillForm implements Serializable
-{
-	private static final long serialVersionUID = -6468612336014457333L;
+public class SkillForm implements Serializable {
 	
+	private static final long serialVersionUID = -6468612336014457333L;
+
 	@Valid
 	private List<Skill> items = new ArrayList<>();
 
-	public SkillForm()
-	{
+	public SkillForm() {
 		super();
 	}
 
-	public SkillForm(List<Skill> items)
-	{
+	public SkillForm(List<Skill> items) {
 		super();
 		this.items = items;
 	}
 
-	public List<Skill> getItems()
-	{
+	public List<Skill> getItems() {
 		return items;
 	}
 
-	public void setItems(List<Skill> items)
-	{
+	public void setItems(List<Skill> items) {
 		this.items = items;
 	}
 }

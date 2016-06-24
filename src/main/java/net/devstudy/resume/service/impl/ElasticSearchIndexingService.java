@@ -14,39 +14,36 @@ import net.devstudy.resume.repository.search.ProfileSearchRepository;
 import net.devstudy.resume.service.FindProfileService;
 
 @Service
-public class ElasticSearchIndexingService
-{
-	private static final Logger LOGGER = LoggerFactory.getLogger(ElasticSearchIndexingService.class);
+public class ElasticSearchIndexingService {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ElasticSearchIndexingService.class);
+
 	@Value("${index.all.during.startup}")
 	private boolean indexAllDuringStartup;
-	
+
 	@Autowired
 	private ProfileSearchRepository profileSearchRepository;
-	
+
 	@Autowired
 	private ElasticsearchOperations elasticsearchOperations;
-	
+
 	@Autowired
 	private FindProfileService findProfileService;
-	
+
 	@PostConstruct
-	private void postConstruct()
-	{
-		if (indexAllDuringStartup)
-		{
+	private void postConstruct() {
+		if (indexAllDuringStartup) {
 			LOGGER.info("Detected index all command");
 			LOGGER.info("Clear old index");
 			elasticsearchOperations.deleteIndex(Profile.class);
 			LOGGER.info("Start indexing");
-			for (Profile profile : findProfileService.findAllForIndexing())
-			{
+			for (Profile profile : findProfileService.findAllForIndexing()) {
 				profileSearchRepository.save(profile);
 				LOGGER.info("Successfull indexing profile " + profile.getUid());
 			}
 			LOGGER.info("Finish indexing");
-		}
-		else
+		} else {
 			LOGGER.info("Indexing all during startup is disabled");
+		}
 	}
 }

@@ -19,12 +19,11 @@ import org.springframework.web.servlet.view.JstlView;
 @Configuration
 @EnableWebMvc
 @EnableSpringDataWebSupport
-@ComponentScan({"net.devstudy.resume.controller"})
-public class MVCConfig extends WebMvcConfigurerAdapter
-{
+@ComponentScan({ "net.devstudy.resume.controller" })
+public class MVCConfig extends WebMvcConfigurerAdapter {
+	
 	@Bean
-	public ViewResolver viewResolver()
-	{
+	public ViewResolver viewResolver() {
 		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
 		viewResolver.setViewClass(JstlView.class);
 		viewResolver.setPrefix("/WEB-INF/JSP/");
@@ -33,23 +32,20 @@ public class MVCConfig extends WebMvcConfigurerAdapter
 	}
 
 	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry)
-	{
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/static/**").addResourceLocations("/static/");
 		registry.addResourceHandler("/media/**").addResourceLocations("/media/");
-		//registry.addResourceHandler("/favicon/**").addResourceLocations("/favicon.ico");
+		registry.addResourceHandler("/favicon/**").addResourceLocations("/favicon.ico");
 	}
-	
+
 	@Bean
-	public CommonsMultipartResolver multipartResolver()
-	{
+	public CommonsMultipartResolver multipartResolver() {
 		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
 		return multipartResolver;
 	}
-	
+
 	@Bean
-	public LocalValidatorFactoryBean localValidatorFactoryBean()
-	{
+	public LocalValidatorFactoryBean localValidatorFactoryBean() {
 		LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
 		localValidatorFactoryBean.setProviderClass(HibernateValidator.class);
 		localValidatorFactoryBean.setValidationMessageSource(messageSource());
@@ -57,8 +53,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter
 	}
 
 	@Bean
-	public MessageSource messageSource()
-	{
+	public MessageSource messageSource() {
 		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 		messageSource.setBasename("messages");
 		messageSource.setDefaultEncoding("UTF-8");

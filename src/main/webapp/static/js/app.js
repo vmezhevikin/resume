@@ -1,6 +1,6 @@
-function deleteRow(r) {
-	var i = r.parentNode.parentNode.rowIndex;
-	document.getElementById("table").deleteRow(i);
+function deleteRow(row) {
+	var ind = row.parentNode.parentNode.rowIndex;
+	document.getElementById("table").deleteRow(ind);
 }
 
 var onloadCallback = function() {
@@ -81,5 +81,13 @@ var resume = {
 				resume.alert('Error! Try again later...');
 			}
 		});
+	},
+	
+	chooseFile : function() {
+		$('#fileButton').parent().find('input[type=file]').click();
+	},
+	
+	browseFile : function() {
+		$('#fileInput').parent().parent().find('#fileName').html($('#fileInput').val().split(/[\\|/]/).pop());
 	}
 };

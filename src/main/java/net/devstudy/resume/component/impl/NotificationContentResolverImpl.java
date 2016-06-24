@@ -12,17 +12,14 @@ import freemarker.template.TemplateException;
 import net.devstudy.resume.component.NotificationContentResolver;
 
 @Component
-public class NotificationContentResolverImpl implements NotificationContentResolver
-{
+public class NotificationContentResolverImpl implements NotificationContentResolver {
+
 	@Override
-	public String resolve(String stringTemplate, Object model)
-	{
-		try
-		{
+	public String resolve(String stringTemplate, Object model) {
+		try {
 			Template template = new Template("", new StringReader(stringTemplate), new Configuration(Configuration.VERSION_2_3_0));
 			return FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-		} catch (IOException | TemplateException e)
-		{
+		} catch (IOException | TemplateException e) {
 			throw new IllegalArgumentException("Can't resolve string template: " + e.getMessage(), e);
 		}
 	}

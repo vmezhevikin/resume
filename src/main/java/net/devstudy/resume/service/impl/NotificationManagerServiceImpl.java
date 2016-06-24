@@ -16,19 +16,18 @@ import net.devstudy.resume.service.NotificationSenderService;
 import net.devstudy.resume.service.NotificationTemplateService;
 
 @Service
-public class NotificationManagerServiceImpl implements NotificationManagerService
-{
-	private static final Logger LOGGER = LoggerFactory.getLogger(NotificationManagerServiceImpl.class);
+public class NotificationManagerServiceImpl implements NotificationManagerService {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(NotificationManagerServiceImpl.class);
+
 	@Autowired
 	private NotificationSenderService notificationSenderService;
-	
+
 	@Autowired
 	private NotificationTemplateService notificationTemplateService;
-	
+
 	@Override
-	public void sendRestoreAccessLink(Profile profile, String restoreLink)
-	{
+	public void sendRestoreAccessLink(Profile profile, String restoreLink) {
 		LOGGER.debug("Restore link: {} for account {}", restoreLink, profile.getUid());
 		Map<String, Object> model = new HashMap<>();
 		model.put("profile", profile);
@@ -37,8 +36,7 @@ public class NotificationManagerServiceImpl implements NotificationManagerServic
 	}
 
 	@Override
-	public void sendPasswordChanged(Profile profile)
-	{
+	public void sendPasswordChanged(Profile profile) {
 		LOGGER.debug("Password changed for account {}", profile.getUid());
 		Map<String, Object> model = new HashMap<>();
 		model.put("profile", profile);
@@ -46,26 +44,23 @@ public class NotificationManagerServiceImpl implements NotificationManagerServic
 	}
 
 	@Override
-	public void sendProfileActive(Profile profile)
-	{
-		LOGGER.debug("Successfull sign up account {}", profile.getUid());
+	public void sendProfileActive(Profile profile) {
+		LOGGER.debug("Successful sign up account {}", profile.getUid());
 		Map<String, Object> model = new HashMap<>();
 		model.put("profile", profile);
 		proccesNotification(profile, "profileActiveNotification", model);
 	}
 
-	private void proccesNotification(Profile profile, String templateName, Object model)
-	{
+	private void proccesNotification(Profile profile, String templateName, Object model) {
 		String destinationAddress = notificationSenderService.getDestinationAddress(profile);
-		if (StringUtils.isNotBlank(destinationAddress))
-		{
+		if (StringUtils.isNotBlank(destinationAddress)) {
 			NotificationMessage notificationMessage = notificationTemplateService.createNotificationMessage(templateName, model);
 			notificationMessage.setDestinationAddress(destinationAddress);
 			notificationMessage.setDestinationName(profile.getFullName());
 			notificationSenderService.sendNotification(notificationMessage);
-		}
-		else
+		} else {
 			LOGGER.error("Notification ignored: destinationAddress is empty for profile " + profile.getUid());
-		
+		}
+
 	}
 }

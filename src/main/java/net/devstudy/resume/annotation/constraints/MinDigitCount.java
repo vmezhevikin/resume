@@ -15,8 +15,7 @@ import net.devstudy.resume.validator.MinDigitCountConstraintValidator;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = { MinDigitCountConstraintValidator.class })
-public @interface MinDigitCount
-{
+public @interface MinDigitCount {
 	String message() default "MinDigitCount";
 
 	int value() default 1;

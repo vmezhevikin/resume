@@ -12,12 +12,11 @@ import net.devstudy.resume.annotation.constraints.FieldMatch;
 import net.devstudy.resume.annotation.constraints.PasswordStrength;
 
 @FieldMatch(first = "password", second = "confirm")
-public class SignUpForm extends RecaptchaForm implements Serializable
-{
+public class SignUpForm extends RecaptchaForm implements Serializable {
+	
 	private static final long serialVersionUID = 5105334805427908062L;
 
-	public SignUpForm()
-	{
+	public SignUpForm() {
 		super();
 	}
 
@@ -37,43 +36,35 @@ public class SignUpForm extends RecaptchaForm implements Serializable
 
 	private String confirm;
 
-	public String getFirstName()
-	{
+	public String getFirstName() {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName)
-	{
+	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-	public String getLastName()
-	{
+	public String getLastName() {
 		return lastName;
 	}
 
-	public void setLastName(String lastName)
-	{
+	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
-	public String getPassword()
-	{
+	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password)
-	{
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	public String getConfirm()
-	{
+	public String getConfirm() {
 		return confirm;
 	}
 
-	public void setConfirm(String confirm)
-	{
+	public void setConfirm(String confirm) {
 		this.confirm = confirm;
 	}
 }

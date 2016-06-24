@@ -8,31 +8,27 @@ import javax.validation.Valid;
 
 import net.devstudy.resume.entity.Course;
 
-public class CourseForm implements Serializable
-{
-	private static final long serialVersionUID = -4846161030355068622L;
+public class CourseForm implements Serializable {
 	
+	private static final long serialVersionUID = -4846161030355068622L;
+
 	@Valid
 	private List<Course> items = new ArrayList<>();
 
-	public CourseForm()
-	{
+	public CourseForm() {
 		super();
 	}
 
-	public CourseForm(List<Course> items)
-	{
+	public CourseForm(List<Course> items) {
 		super();
 		this.items = items;
 	}
 
-	public List<Course> getItems()
-	{
+	public List<Course> getItems() {
 		return items;
 	}
 
-	public void setItems(List<Course> items)
-	{
+	public void setItems(List<Course> items) {
 		this.items = items;
 	}
 }

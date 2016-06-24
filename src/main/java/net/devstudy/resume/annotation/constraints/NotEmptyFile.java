@@ -11,12 +11,11 @@ import javax.validation.Payload;
 
 import net.devstudy.resume.validator.NotEmptyFileConstraintValidator;
 
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER})
+@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = { NotEmptyFileConstraintValidator.class })
-public @interface NotEmptyFile
-{
+public @interface NotEmptyFile {
 	String message() default "NotEmptyFile";
 
 	Class<? extends Payload>[] payload() default {};

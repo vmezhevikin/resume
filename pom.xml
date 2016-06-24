@@ -30,8 +30,8 @@
 					<configuration>
 						<warSourceDirectory>src/main/webapp</warSourceDirectory>
 						<failOnMissingWebXml>false</failOnMissingWebXml>
-						<warSourceExcludes>/media/**, /static/css/style.min.css,
-							/static/css/script.min.js</warSourceExcludes>
+						<!-- <warSourceExcludes>/media/**, /static/css/style.min.css,
+							/static/css/script.min.js</warSourceExcludes> -->
 					</configuration>
 				</plugin>
 			</plugins>
@@ -47,6 +47,8 @@
 						<configuration>
 							<tasks>
 								<delete dir="${basedir}/src/main/webapp/WEB-INF/lib" />
+								<delete file="${basedir}/src/main/webapp/static/css/style.min.css" />
+								<delete file="${basedir}/src/main/webapp/static/js/script.min.js" />
 							</tasks>
 						</configuration>
 						<goals>
@@ -265,5 +267,15 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.5.2</version>
 		</dependency>
-	</dependencies>
+		<dependency>
+			<groupId>com.moparisthebest</groupId>
+			<artifactId>junidecode</artifactId>
+			<version>0.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+</dependencies>
 </project>

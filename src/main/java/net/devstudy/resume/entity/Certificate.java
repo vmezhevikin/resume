@@ -26,14 +26,12 @@ import net.devstudy.resume.annotation.constraints.NotEmptyFile;
 
 @Entity
 @Table(name = "certificate")
-public class Certificate extends AbstractEntity<Long> implements Serializable, ProfileEntity
-{
+public class Certificate extends AbstractEntity<Long> implements Serializable, ProfileEntity {
+	
 	private static final long serialVersionUID = -6718545401459519784L;
 
 	@Id
 	@Column(unique = true, nullable = false)
-	// @GeneratedValue(strategy = GenerationType.SEQUENCE, generator =
-	// "certificate_seq")
 	@SequenceGenerator(name = "CERTIFICATE_ID_GENERATOR", sequenceName = "certificate_seq", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CERTIFICATE_ID_GENERATOR")
 	private Long id;
@@ -56,82 +54,69 @@ public class Certificate extends AbstractEntity<Long> implements Serializable, P
 	@Column(name = "img_small", nullable = false, length = 255)
 	@JsonIgnore
 	private String imgSmall;
-	
+
 	@Transient
 	@NotEmptyFile
 	@JsonIgnore
 	private MultipartFile file;
 
 	@Override
-	public Long getId()
-	{
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Long id)
-	{
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Profile getProfile()
-	{
+	public Profile getProfile() {
 		return profile;
 	}
 
-	public void setProfile(Profile profile)
-	{
+	public void setProfile(Profile profile) {
 		this.profile = profile;
 	}
 
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description)
-	{
+	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	public String getImg()
-	{
+	public String getImg() {
 		return img;
 	}
 
-	public void setImg(String img)
-	{
+	public void setImg(String img) {
 		this.img = img;
 	}
 
-	public String getImgSmall()
-	{
+	public String getImgSmall() {
 		return imgSmall;
 	}
 
-	public void setImgSmall(String imgSmall)
-	{
+	public void setImgSmall(String imgSmall) {
 		this.imgSmall = imgSmall;
 	}
 
-	public MultipartFile getFile()
-	{
+	public MultipartFile getFile() {
 		return file;
 	}
 
-	public void setFile(MultipartFile file)
-	{
+	public void setFile(MultipartFile file) {
 		this.file = file;
 	}
 
 	@Transient
-	public boolean hasAllNullFields()
-	{
+	@Override
+	public boolean hasNullSubstantionalFields() {
 		return id == null && profile == null && description == null && img == null && imgSmall == null;
 	}
 
 	@Override
-	public int hashCode()
-	{
+	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -142,8 +127,7 @@ public class Certificate extends AbstractEntity<Long> implements Serializable, P
 	}
 
 	@Override
-	public boolean equals(Object obj)
-	{
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (!super.equals(obj))
@@ -151,26 +135,22 @@ public class Certificate extends AbstractEntity<Long> implements Serializable, P
 		if (getClass() != obj.getClass())
 			return false;
 		Certificate other = (Certificate) obj;
-		if (id == null)
-		{
+		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (description == null)
-		{
+		if (description == null) {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (img == null)
-		{
+		if (img == null) {
 			if (other.img != null)
 				return false;
 		} else if (!img.equals(other.img))
 			return false;
-		if (imgSmall == null)
-		{
+		if (imgSmall == null) {
 			if (other.imgSmall != null)
 				return false;
 		} else if (!imgSmall.equals(other.imgSmall))

@@ -7,19 +7,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import net.devstudy.resume.annotation.constraints.NotEmptyFile;
 
-public class NotEmptyFileConstraintValidator implements ConstraintValidator<NotEmptyFile, MultipartFile>
-{
+public class NotEmptyFileConstraintValidator implements ConstraintValidator<NotEmptyFile, MultipartFile> {
+	
 	@Override
-	public void initialize(NotEmptyFile constraintAnnotation)
-	{
+	public void initialize(NotEmptyFile constraintAnnotation) {
 	}
 
 	@Override
-	public boolean isValid(MultipartFile value, ConstraintValidatorContext context)
-	{
-		if (value == null)
+	public boolean isValid(MultipartFile value, ConstraintValidatorContext context) {
+		if (value == null) {
 			return false;
-		else
+		} else {
 			return !value.isEmpty();
+		}
 	}
 }

@@ -1,12 +1,14 @@
 package net.devstudy.resume.service;
 
+import javax.annotation.Nonnull;
+
 import net.devstudy.resume.entity.Profile;
 
-public interface NotificationManagerService
-{
-	void sendRestoreAccessLink(Profile profile, String restoreLink);
+public interface NotificationManagerService {
 	
-	void sendPasswordChanged(Profile profile);
+	void sendRestoreAccessLink(@Nonnull Profile profile, @Nonnull String restoreLink);
 	
-	void sendProfileActive(Profile profile);
+	void sendPasswordChanged(@Nonnull Profile profile);
+	
+	void sendProfileActive(@Nonnull Profile profile);
 }

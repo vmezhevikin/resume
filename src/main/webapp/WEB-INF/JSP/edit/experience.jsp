@@ -11,7 +11,7 @@
 			</c:forEach>
 			<tr>
 				<td align="center">
-					<a href="/add/experience" class="btn btn-default">Add new experience</a>
+					<a href="/add/experience" class="btn btn-default">Add experience</a>
 					<span class="text-muted">Save changes before adding new experience! Unsaved data will be lost!</span>
 				</td>
 			</tr>

@@ -18,9 +18,16 @@
 					<c:if test="${profile.photo == null}">
 						<img src="/static/img/blank-photo.jpg" class="img-responsive" width="50%" alt="Photo">
 					</c:if>
-					<div class="form-group">
-						<label>Choose image file</label>
-						<input name="file" type="file" value="${profile.file}" />
+					<br />
+					<div class="input-group">
+						<span class="form-control" id="fileName">Choose image file</span>
+						<span class="input-group-btn">
+							<input class="input-file" id="fileInput" name="file" type="file" value="${profile.file}" onchange="resume.browseFile();" />
+							<span class="btn btn-warning" id="fileButton" onclick="resume.chooseFile();">
+								<i class="fa fa-folder-open" aria-hidden="true"></i>
+								Browse...
+							</span>
+						</span>
 					</div>
 					<c:if test="${emptyPhoto == true}">
 						<div class="alert alert-danger" role="alert">Select file</div>
@@ -29,7 +36,7 @@
 				<td class="text-muted" width="40%">
 					1. Photo can tell a lot about a candidate: from his aesthetic qualities to his relation to the search of serious work.
 					<br />
-					2. Photo as in a passport or in suit is not obligatory, most importantly is adequate and neat appearance.
+					2. Photo as in a passport or in a suit is not obligatory, most importantly is adequate and neat appearance.
 					<br />
 					3. As examples you can look at photos of the demonstration resumes.
 					<br />

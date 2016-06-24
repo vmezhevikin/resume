@@ -1,6 +1,7 @@
 package net.devstudy.resume.entity;
 
-public interface ProfileEntity
-{
+public interface ProfileEntity {
 	void setProfile(Profile profile);
+	
+	boolean hasNullSubstantionalFields();
 }

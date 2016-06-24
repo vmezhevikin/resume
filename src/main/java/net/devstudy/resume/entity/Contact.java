@@ -15,108 +15,95 @@ import net.devstudy.resume.annotation.constraints.EnglishLanguage;
 
 @Embeddable
 @Access(AccessType.FIELD)
-public class Contact implements Serializable
-{
+public class Contact implements Serializable {
+	
 	private static final long serialVersionUID = 4455994843618128278L;
 
-	@Column(name = "skype", length=50)
+	@Column(name = "skype", length = 50)
 	@EnglishLanguage
 	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String skype;
-	
-	@Column(name = "vkontakte", length=255)
+
+	@Column(name = "vkontakte", length = 255)
 	@EnglishLanguage
 	@URL(message = "Not a URL address")
 	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String vkontakte;
-	
-	@Column(name = "facebook", length=255)
+
+	@Column(name = "facebook", length = 255)
 	@EnglishLanguage
 	@URL(message = "Not a URL address")
 	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String facebook;
-	
-	@Column(name = "linkedin", length=255)
+
+	@Column(name = "linkedin", length = 255)
 	@EnglishLanguage
 	@URL(message = "Not a URL address")
 	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String linkedin;
-	
-	@Column(name = "github", length=255)
+
+	@Column(name = "github", length = 255)
 	@EnglishLanguage
 	@URL(message = "Not a URL address")
 	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String github;
-	
-	@Column(name = "stackoverflow", length=255)
+
+	@Column(name = "stackoverflow", length = 255)
 	@EnglishLanguage
 	@URL(message = "Not a URL address")
 	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
 	private String stackoverflow;
 
-	public String getSkype()
-	{
+	public String getSkype() {
 		return skype;
 	}
 
-	public void setSkype(String skype)
-	{
+	public void setSkype(String skype) {
 		this.skype = skype;
 	}
 
-	public String getVkontakte()
-	{
+	public String getVkontakte() {
 		return vkontakte;
 	}
 
-	public void setVkontakte(String vkontakte)
-	{
+	public void setVkontakte(String vkontakte) {
 		this.vkontakte = vkontakte;
 	}
 
-	public String getFacebook()
-	{
+	public String getFacebook() {
 		return facebook;
 	}
 
-	public void setFacebook(String facebook)
-	{
+	public void setFacebook(String facebook) {
 		this.facebook = facebook;
 	}
 
-	public String getLinkedin()
-	{
+	public String getLinkedin() {
 		return linkedin;
 	}
 
-	public void setLinkedin(String linkedin)
-	{
+	public void setLinkedin(String linkedin) {
 		this.linkedin = linkedin;
 	}
 
-	public String getGithub()
-	{
+	public String getGithub() {
 		return github;
 	}
 
-	public void setGithub(String github)
-	{
+	public void setGithub(String github) {
 		this.github = github;
 	}
 
-	public String getStackoverflow()
-	{
+	public String getStackoverflow() {
 		return stackoverflow;
 	}
 
-	public void setStackoverflow(String stackoverflow)
-	{
+	public void setStackoverflow(String stackoverflow) {
 		this.stackoverflow = stackoverflow;
 	}
 
 	@Override
-	public int hashCode()
-	{
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((facebook == null) ? 0 : facebook.hashCode());
@@ -129,8 +116,7 @@ public class Contact implements Serializable
 	}
 
 	@Override
-	public boolean equals(Object obj)
-	{
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -138,38 +124,32 @@ public class Contact implements Serializable
 		if (getClass() != obj.getClass())
 			return false;
 		Contact other = (Contact) obj;
-		if (facebook == null)
-		{
+		if (facebook == null) {
 			if (other.facebook != null)
 				return false;
 		} else if (!facebook.equals(other.facebook))
 			return false;
-		if (github == null)
-		{
+		if (github == null) {
 			if (other.github != null)
 				return false;
 		} else if (!github.equals(other.github))
 			return false;
-		if (linkedin == null)
-		{
+		if (linkedin == null) {
 			if (other.linkedin != null)
 				return false;
 		} else if (!linkedin.equals(other.linkedin))
 			return false;
-		if (skype == null)
-		{
+		if (skype == null) {
 			if (other.skype != null)
 				return false;
 		} else if (!skype.equals(other.skype))
 			return false;
-		if (stackoverflow == null)
-		{
+		if (stackoverflow == null) {
 			if (other.stackoverflow != null)
 				return false;
 		} else if (!stackoverflow.equals(other.stackoverflow))
 			return false;
-		if (vkontakte == null)
-		{
+		if (vkontakte == null) {
 			if (other.vkontakte != null)
 				return false;
 		} else if (!vkontakte.equals(other.vkontakte))
@@ -177,27 +157,3 @@ public class Contact implements Serializable
 		return true;
 	}
 }
-
-
-/*
-
- @Embeddable public class Address {
-       protected String street;
-       protected String city;
-       protected String state;
-       @Embedded protected Zipcode zipcode;
-    }
-
-    @Embeddable public class Zipcode {
-       protected String zip;
-       protected String plusFour;
-     }
-
-skype character varying(50),
-  vkontakte character varying(255),
-  facebook character varying(255),
-  linkedin character varying(255),
-  github character varying(255),
-  stackoverflow character varying(255)
-
-*/

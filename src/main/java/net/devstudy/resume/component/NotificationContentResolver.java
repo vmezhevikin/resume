@@ -1,6 +1,7 @@
 package net.devstudy.resume.component;
 
-public interface NotificationContentResolver
-{
-	String resolve(String template, Object model);
+import javax.annotation.Nonnull;
+
+public interface NotificationContentResolver {
+	@Nonnull String resolve(@Nonnull String template, @Nonnull Object model);
 }

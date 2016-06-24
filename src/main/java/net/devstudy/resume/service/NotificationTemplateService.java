@@ -1,8 +1,10 @@
 package net.devstudy.resume.service;
 
+import javax.annotation.Nonnull;
+
 import net.devstudy.resume.model.NotificationMessage;
 
-public interface NotificationTemplateService
-{
-	NotificationMessage createNotificationMessage(String templateName, Object model);
+public interface NotificationTemplateService {
+	
+	@Nonnull NotificationMessage createNotificationMessage(@Nonnull String templateName, @Nonnull Object model);
 }

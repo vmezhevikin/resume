@@ -7,12 +7,11 @@ import net.devstudy.resume.annotation.constraints.FieldMatch;
 import net.devstudy.resume.annotation.constraints.PasswordStrength;
 
 @FieldMatch(first = "password", second = "confirm")
-public class ChangePasswordForm implements Serializable
-{
+public class ChangePasswordForm implements Serializable {
+	
 	private static final long serialVersionUID = 2776455703501721852L;
 
-	public ChangePasswordForm()
-	{
+	public ChangePasswordForm() {
 		super();
 	}
 
@@ -22,23 +21,19 @@ public class ChangePasswordForm implements Serializable
 
 	private String confirm;
 
-	public String getPassword()
-	{
+	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password)
-	{
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	public String getConfirm()
-	{
+	public String getConfirm() {
 		return confirm;
 	}
 
-	public void setConfirm(String confirm)
-	{
+	public void setConfirm(String confirm) {
 		this.confirm = confirm;
 	}
 }

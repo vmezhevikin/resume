@@ -3,7 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <form:form action="/add/education" method="post" commandName="educationForm">
 	<div class="container resume-edit-block">
-		<div class="text-center">Education</div>
+		<h2 class="text-center">Education</h2>
 		<table class="table" id="table">
 			<tr>
 				<td>

@@ -15,8 +15,7 @@ import net.devstudy.resume.validator.MinSpecCharCountConstraintValidator;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = { MinSpecCharCountConstraintValidator.class })
-public @interface MinSpecCharCount
-{
+public @interface MinSpecCharCount {
 	String message() default "MinSpecCharCount";
 
 	String specSymbols() default "!@~`#$%^&*()_-+=|\\/{}[].,;:/?";

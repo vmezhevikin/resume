@@ -4,13 +4,22 @@
 <%@ taglib prefix="resume" tagdir="/WEB-INF/tags"%>
 <form:form action="/add/certificate?${_csrf.parameterName}=${_csrf.token}" method="post" commandName="certificateForm" enctype="multipart/form-data">
 	<div class="container resume-edit-block">
-		<div class="text-center">Certificates</div>
+		<h2 class="text-center">Certificates</h2>
 		<table class="table">
 			<tr>
 				<td>
 					<div class="form-group">
-						<label>Choose certificate file</label>
-						<input name="file" type="file" value="${certificate.file}" />
+						<label>Certificate image</label>
+						<div class="input-group">
+							<span class="form-control" id="fileName">Choose certificate image file</span>
+							<span class="input-group-btn">
+								<input class="input-file" id="fileInput" name="file" type="file" value="${certificate.file}" onchange="resume.browseFile();" />
+								<span class="btn btn-warning" id="fileButton" onclick="resume.chooseFile();">
+									<i class="fa fa-folder-open" aria-hidden="true"></i>
+									Browse...
+								</span>
+							</span>
+						</div>
 						<form:errors path="file" cssClass="alert alert-danger" role="alert" element="div" />
 					</div>
 					<div class="form-group">

@@ -24,8 +24,8 @@ import net.devstudy.resume.annotation.constraints.FirstFieldLessThanSecond;
 @Entity
 @Table(name = "education")
 @FirstFieldLessThanSecond(first = "startingYear", second = "completionYear")
-public class Education extends AbstractEntity<Long> implements Serializable, ProfileEntity
-{
+public class Education extends AbstractEntity<Long> implements Serializable, ProfileEntity {
+	
 	private static final long serialVersionUID = 8257785827490293025L;
 
 	@Id
@@ -63,86 +63,71 @@ public class Education extends AbstractEntity<Long> implements Serializable, Pro
 	private Integer completionYear;
 
 	@Override
-	public Long getId()
-	{
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Long id)
-	{
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Profile getProfile()
-	{
+	public Profile getProfile() {
 		return profile;
 	}
 
-	public void setProfile(Profile profile)
-	{
+	public void setProfile(Profile profile) {
 		this.profile = profile;
 	}
 
-	public String getSpeciality()
-	{
+	public String getSpeciality() {
 		return speciality;
 	}
 
-	public void setSpeciality(String speciality)
-	{
+	public void setSpeciality(String speciality) {
 		this.speciality = speciality;
 	}
 
-	public String getUniversity()
-	{
+	public String getUniversity() {
 		return university;
 	}
 
-	public void setUniversity(String university)
-	{
+	public void setUniversity(String university) {
 		this.university = university;
 	}
 
-	public String getDepartment()
-	{
+	public String getDepartment() {
 		return department;
 	}
 
-	public void setDepartment(String department)
-	{
+	public void setDepartment(String department) {
 		this.department = department;
 	}
 
-	public Integer getStartingYear()
-	{
+	public Integer getStartingYear() {
 		return startingYear;
 	}
 
-	public void setStartingYear(Integer startingYear)
-	{
+	public void setStartingYear(Integer startingYear) {
 		this.startingYear = startingYear;
 	}
 
-	public Integer getCompletionYear()
-	{
+	public Integer getCompletionYear() {
 		return completionYear;
 	}
 
-	public void setCompletionYear(Integer completionYear)
-	{
+	public void setCompletionYear(Integer completionYear) {
 		this.completionYear = completionYear;
 	}
 
 	@Transient
-	public boolean hasAllNullFields()
-	{
-		return id == null && profile == null && speciality == null && university == null && department == null && startingYear == null
-				&& completionYear == null;
+	@Override
+	public boolean hasNullSubstantionalFields() {
+		return id == null && profile == null && speciality == null && university == null && department == null
+				&& startingYear == null && completionYear == null;
 	}
 
 	@Override
-	public int hashCode()
-	{
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((completionYear == null) ? 0 : completionYear.hashCode());
@@ -154,8 +139,7 @@ public class Education extends AbstractEntity<Long> implements Serializable, Pro
 	}
 
 	@Override
-	public boolean equals(Object obj)
-	{
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -163,32 +147,27 @@ public class Education extends AbstractEntity<Long> implements Serializable, Pro
 		if (getClass() != obj.getClass())
 			return false;
 		Education other = (Education) obj;
-		if (completionYear == null)
-		{
+		if (completionYear == null) {
 			if (other.completionYear != null)
 				return false;
 		} else if (!completionYear.equals(other.completionYear))
 			return false;
-		if (department == null)
-		{
+		if (department == null) {
 			if (other.department != null)
 				return false;
 		} else if (!department.equals(other.department))
 			return false;
-		if (id == null)
-		{
+		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (startingYear == null)
-		{
+		if (startingYear == null) {
 			if (other.startingYear != null)
 				return false;
 		} else if (!startingYear.equals(other.startingYear))
 			return false;
-		if (university == null)
-		{
+		if (university == null) {
 			if (other.university != null)
 				return false;
 		} else if (!university.equals(other.university))

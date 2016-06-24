@@ -30,7 +30,6 @@
   background-color: white;
   border-radius: 4px;
 }
-
 .resume-footer > p {
 	color: #777;
 	text-align: center;
@@ -61,4 +60,9 @@
   color: #262626;
   text-decoration: none;
   background-color: #f5f5f5;
+}
+
+.input-file {
+	visibility: hidden;
+	height: 0;
 }

@@ -27,8 +27,8 @@ import net.devstudy.resume.annotation.constraints.EnglishLanguage;
 
 @Entity
 @Table(name = "course")
-public class Course extends AbstractEntity<Long> implements Serializable, ProfileEntity
-{
+public class Course extends AbstractEntity<Long> implements Serializable, ProfileEntity {
+	
 	private static final long serialVersionUID = -7509905830407382879L;
 
 	@Id
@@ -68,66 +68,54 @@ public class Course extends AbstractEntity<Long> implements Serializable, Profil
 	private Integer completionYear;
 
 	@Override
-	public Long getId()
-	{
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Long id)
-	{
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Profile getProfile()
-	{
+	public Profile getProfile() {
 		return profile;
 	}
 
-	public void setProfile(Profile profile)
-	{
+	public void setProfile(Profile profile) {
 		this.profile = profile;
 	}
 
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description)
-	{
+	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	public String getSchool()
-	{
+	public String getSchool() {
 		return school;
 	}
 
-	public void setSchool(String school)
-	{
+	public void setSchool(String school) {
 		this.school = school;
 	}
 
-	public Date getCompletionDate()
-	{
+	public Date getCompletionDate() {
 		return completionDate;
 	}
 
 	@Transient
-	public String getCompletionDateString()
-	{
+	public String getCompletionDateString() {
 		LocalDate date = new LocalDate(completionDate);
 		return date.toString("MMM yyyy");
 	}
 
-	public void setCompletionDate(Date completionDate)
-	{
+	public void setCompletionDate(Date completionDate) {
 		this.completionDate = completionDate;
 	}
 
 	@Transient
-	public Integer getCompletionMonth()
-	{
+	public Integer getCompletionMonth() {
 		if (completionDate == null)
 			return null;
 		LocalDate date = new LocalDate(completionDate);
@@ -135,15 +123,13 @@ public class Course extends AbstractEntity<Long> implements Serializable, Profil
 	}
 
 	@Transient
-	public void setCompletionMonth(Integer completionMonth)
-	{
+	public void setCompletionMonth(Integer completionMonth) {
 		this.completionMonth = completionMonth;
 		setupCompletionDate();
 	}
 
 	@Transient
-	public Integer getCompletionYear()
-	{
+	public Integer getCompletionYear() {
 		if (completionDate == null)
 			return null;
 		LocalDate date = new LocalDate(completionDate);
@@ -151,16 +137,13 @@ public class Course extends AbstractEntity<Long> implements Serializable, Profil
 	}
 
 	@Transient
-	public void setCompletionYear(Integer completionYear)
-	{
+	public void setCompletionYear(Integer completionYear) {
 		this.completionYear = completionYear;
 		setupCompletionDate();
 	}
 
-	private void setupCompletionDate()
-	{
-		if (completionYear != null && completionMonth != null)
-		{
+	private void setupCompletionDate() {
+		if (completionYear != null && completionMonth != null) {
 			DateTime dateTime = new DateTime(completionYear, completionMonth, 1, 0, 0);
 			Date date = new Date(dateTime.getMillis());
 			setCompletionDate(date);
@@ -169,14 +152,13 @@ public class Course extends AbstractEntity<Long> implements Serializable, Profil
 	}
 
 	@Transient
-	public boolean hasAllNullFields()
-	{
+	@Override
+	public boolean hasNullSubstantionalFields() {
 		return id == null && profile == null && description == null && school == null && completionDate == null;
 	}
 
 	@Override
-	public int hashCode()
-	{
+	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((completionDate == null) ? 0 : completionDate.hashCode());
@@ -187,8 +169,7 @@ public class Course extends AbstractEntity<Long> implements Serializable, Profil
 	}
 
 	@Override
-	public boolean equals(Object obj)
-	{
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (!super.equals(obj))
@@ -196,26 +177,22 @@ public class Course extends AbstractEntity<Long> implements Serializable, Profil
 		if (getClass() != obj.getClass())
 			return false;
 		Course other = (Course) obj;
-		if (id == null)
-		{
+		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (description == null)
-		{
+		if (description == null) {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (school == null)
-		{
+		if (school == null) {
 			if (other.school != null)
 				return false;
 		} else if (!school.equals(other.school))
 			return false;
-		if (completionDate == null)
-		{
+		if (completionDate == null) {
 			if (other.completionDate != null)
 				return false;
 		} else if (!completionDate.equals(other.completionDate))

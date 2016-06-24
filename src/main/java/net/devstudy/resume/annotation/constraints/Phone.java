@@ -11,12 +11,11 @@ import javax.validation.Payload;
 
 import net.devstudy.resume.validator.PhoneConstraintValidator;
 
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER})
+@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = { PhoneConstraintValidator.class })
-public @interface Phone
-{
+public @interface Phone {
 	String message() default "Phone";
 
 	Class<? extends Payload>[] payload() default {};

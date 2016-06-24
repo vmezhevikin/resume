@@ -15,8 +15,7 @@ import net.devstudy.resume.validator.MinLowerCharCountConstraintValidator;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = { MinLowerCharCountConstraintValidator.class })
-public @interface MinLowerCharCount
-{
+public @interface MinLowerCharCount {
 	String message() default "MinLowerCharCount";
 
 	int value() default 1;

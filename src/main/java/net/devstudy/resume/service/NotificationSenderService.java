@@ -1,11 +1,13 @@
 package net.devstudy.resume.service;
 
+import javax.annotation.Nonnull;
+
 import net.devstudy.resume.entity.Profile;
 import net.devstudy.resume.model.NotificationMessage;
 
-public interface NotificationSenderService
-{
-	void sendNotification(NotificationMessage message);
+public interface NotificationSenderService {
 	
-	String getDestinationAddress(Profile profile);
+	void sendNotification(@Nonnull NotificationMessage message);
+	
+	@Nonnull String getDestinationAddress(@Nonnull Profile profile);
 }

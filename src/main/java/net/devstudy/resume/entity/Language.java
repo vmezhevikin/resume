@@ -24,8 +24,8 @@ import net.devstudy.resume.annotation.constraints.EnglishLanguage;
 
 @Entity
 @Table(name = "language")
-public class Language extends AbstractEntity<Long> implements Serializable, ProfileEntity
-{
+public class Language extends AbstractEntity<Long> implements Serializable, ProfileEntity {
+	
 	private static final long serialVersionUID = 7843447412112290470L;
 
 	@Id
@@ -56,65 +56,54 @@ public class Language extends AbstractEntity<Long> implements Serializable, Prof
 	private String level;
 
 	@Override
-	public Long getId()
-	{
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Long id)
-	{
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Profile getProfile()
-	{
+	public Profile getProfile() {
 		return profile;
 	}
 
-	public void setProfile(Profile profile)
-	{
+	public void setProfile(Profile profile) {
 		this.profile = profile;
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
-	public void setName(String name)
-	{
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	public String getType()
-	{
+	public String getType() {
 		return type;
 	}
 
-	public void setType(String type)
-	{
+	public void setType(String type) {
 		this.type = type;
 	}
 
-	public String getLevel()
-	{
+	public String getLevel() {
 		return level;
 	}
 
-	public void setLevel(String level)
-	{
+	public void setLevel(String level) {
 		this.level = level;
 	}
-	
+
 	@Transient
-	public boolean hasAllNullFields()
-	{
+	@Override
+	public boolean hasNullSubstantionalFields() {
 		return id == null && profile == null && name == null && type == null && level == null;
 	}
 
 	@Override
-	public int hashCode()
-	{
+	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -125,8 +114,7 @@ public class Language extends AbstractEntity<Long> implements Serializable, Prof
 	}
 
 	@Override
-	public boolean equals(Object obj)
-	{
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (!super.equals(obj))
@@ -134,26 +122,22 @@ public class Language extends AbstractEntity<Long> implements Serializable, Prof
 		if (getClass() != obj.getClass())
 			return false;
 		Language other = (Language) obj;
-		if (id == null)
-		{
+		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (level == null)
-		{
+		if (level == null) {
 			if (other.level != null)
 				return false;
 		} else if (!level.equals(other.level))
 			return false;
-		if (name == null)
-		{
+		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (type == null)
-		{
+		if (type == null) {
 			if (other.type != null)
 				return false;
 		} else if (!type.equals(other.type))

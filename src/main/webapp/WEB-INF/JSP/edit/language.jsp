@@ -11,7 +11,7 @@
 			</c:forEach>
 			<tr>
 				<td align="center">
-					<a href="/add/language" class="btn btn-default">Add new language</a>
+					<a href="/add/language" class="btn btn-default">Add language</a>
 					<span class="text-muted">Save changes before adding new language! Unsaved data will be lost!</span>
 				</td>
 			</tr>

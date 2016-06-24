@@ -4,7 +4,7 @@
 <%@ taglib prefix="resume" tagdir="/WEB-INF/tags"%>
 <form:form action="/add/course" method="post" commandName="courseForm">
 	<div class="container resume-edit-block">
-		<div class="text-center">Courses</div>
+		<h2 class="text-center">Courses</h2>
 		<table class="table" id="table">
 			<tr>
 				<td>

@@ -11,27 +11,25 @@ import javax.validation.Payload;
 
 import net.devstudy.resume.validator.FieldMatchConstraintValidator;
 
-@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ ElementType.TYPE, ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = { FieldMatchConstraintValidator.class })
-public @interface FieldMatch
-{
+public @interface FieldMatch {
 	String message() default "FieldMatch";
-	
+
 	String first();
-	
+
 	String second();
-	
+
 	Class<?>[] groups() default {};
-	
+
 	Class<? extends Payload>[] payload() default {};
-	
-	@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+
+	@Target({ ElementType.TYPE, ElementType.ANNOTATION_TYPE })
 	@Retention(RetentionPolicy.RUNTIME)
 	@Documented
-	@interface List
-	{
+	@interface List {
 		FieldMatch[] value();
 	}
 }

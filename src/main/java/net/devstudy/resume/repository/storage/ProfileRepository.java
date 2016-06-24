@@ -8,23 +8,27 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import net.devstudy.resume.entity.Profile;
 
-//@RepositoryDefinition(domainClass=Profile.class, idClass=Long.class)
-//public interface ProfileRepository extends JpaRepository<Profile, Long>
-public interface ProfileRepository extends PagingAndSortingRepository<Profile, Long>
-{
+public interface ProfileRepository extends PagingAndSortingRepository<Profile, Long> {
+	
 	List<Profile> findAll(Sort sort);
-	
+
 	Profile findById(Long id);
-	
+
 	Profile findByUid(String uid);
-	
+
 	Profile findByEmail(String email);
-	
+
 	Profile findByPhone(String phone);
-	
+
+	Profile findByUidOrEmailOrPhone(String uid, String email, String phone);
+
 	int countByUid(String uid);
-	
+
+	int countByEmail(String email);
+
+	int countByPhone(String phone);
+
 	List<Profile> findByActiveFalseAndCreatedBefore(Timestamp date);
-	
+
 	Profile findByProfileRestoreToken(String token);
 }

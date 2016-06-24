@@ -1,6 +1,6 @@
 package net.devstudy.resume.service;
 
-public interface RecaptchaService
-{
+public interface RecaptchaService {
+	
 	boolean isResponseValid(String remoteIP, String response);
 }

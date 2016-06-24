@@ -10,8 +10,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "hobby_name")
-public class HobbyName extends AbstractEntity<Long>
-{
+public class HobbyName extends AbstractEntity<Long> {
+	
 	private static final long serialVersionUID = -4937799992479955679L;
 
 	@Id
@@ -20,40 +20,34 @@ public class HobbyName extends AbstractEntity<Long>
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "HOBBY_NAME_ID_GENERATOR")
 	private Long id;
 
-	@Column(nullable=false, length=100)
+	@Column(nullable = false, length = 100)
 	private String icon;
 
-	@Column(nullable=false, length=25)
+	@Column(nullable = false, length = 25)
 	private String name;
 
 	@Override
-	public Long getId()
-	{
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Long id)
-	{
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public String getIcon()
-	{
+	public String getIcon() {
 		return icon;
 	}
 
-	public void setIcon(String icon)
-	{
+	public void setIcon(String icon) {
 		this.icon = icon;
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
-	public void setName(String name)
-	{
+	public void setName(String name) {
 		this.name = name;
 	}
 }

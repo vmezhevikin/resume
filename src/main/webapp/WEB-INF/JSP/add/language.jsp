@@ -3,7 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <form:form action="/add/language" method="post" commandName="languageForm">
 	<div class="container resume-edit-block">
-		<div class="text-center">Foreign languages</div>
+		<h2 class="text-center">Foreign languages</h2>
 		<table class="table" id="table">
 			<tr>
 				<td>

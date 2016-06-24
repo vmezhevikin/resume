@@ -13,24 +13,22 @@ import net.devstudy.resume.service.FindProfileService;
 import net.devstudy.resume.util.SecurityUtil;
 
 @Controller
-public class RemoveProfileController
-{
+public class RemoveProfileController {
+	
 	@Autowired
 	private FindProfileService findProfileService;
-	
+
 	@Autowired
 	private EditProfileService editProfileService;
-	
+
 	@RequestMapping(value = "/remove", method = RequestMethod.GET)
-	public String getRemove(Model model)
-	{
+	public String getRemove(Model model) {
 		model.addAttribute("profile", findProfileService.findById(SecurityUtil.getCurrentProfileId()));
 		return "remove";
 	}
 
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
-	public String postRemove(HttpServletRequest request)
-	{
+	public String postRemove(HttpServletRequest request) {
 		editProfileService.removeProfile(SecurityUtil.getCurrentProfileId());
 		SecurityUtil.logoutCurrentUser(request);
 		return "redirect:/welcome";

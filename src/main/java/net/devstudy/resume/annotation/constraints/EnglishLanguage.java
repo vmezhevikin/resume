@@ -11,12 +11,11 @@ import javax.validation.Payload;
 
 import net.devstudy.resume.validator.EnglishLanguageConstraintValidator;
 
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER})
+@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = { EnglishLanguageConstraintValidator.class })
-public @interface EnglishLanguage
-{
+public @interface EnglishLanguage {
 	String message() default "EnglishLanguage";
 
 	// 0123456789

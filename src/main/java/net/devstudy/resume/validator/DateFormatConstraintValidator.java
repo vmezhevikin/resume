@@ -10,26 +10,23 @@ import org.joda.time.Years;
 
 import net.devstudy.resume.annotation.constraints.DateFormat;
 
-public class DateFormatConstraintValidator implements ConstraintValidator<DateFormat, String>
-{
+public class DateFormatConstraintValidator implements ConstraintValidator<DateFormat, String> {
+	
 	private int adulthoodAge;
 
 	@Override
-	public void initialize(DateFormat constraintAnnotation)
-	{
+	public void initialize(DateFormat constraintAnnotation) {
 		this.adulthoodAge = constraintAnnotation.adulthoodAge();
 	}
 
 	@Override
-	public boolean isValid(String value, ConstraintValidatorContext context)
-	{
+	public boolean isValid(String value, ConstraintValidatorContext context) {
 		if (value == null)
 			return true;
 
 		if (!Pattern.matches("^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$", value))
 			return false;
-		try
-		{
+		try {
 			String[] part = value.split("-");
 			int year = Integer.parseInt(part[0]);
 			int month = Integer.parseInt(part[1]);
@@ -40,8 +37,7 @@ public class DateFormatConstraintValidator implements ConstraintValidator<DateFo
 			int years = Years.yearsBetween(date, today).getYears();
 
 			return years >= adulthoodAge;
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			return false;
 		}
 	}
