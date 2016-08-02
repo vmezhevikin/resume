@@ -1,7 +1,6 @@
 package net.devstudy.resume.service.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -37,8 +36,8 @@ public class FacebookService implements SocialService<User> {
 	@Autowired
 	private ProfileRepository profileRepository;
 
-	/*@Autowired
-	private ProfileSearchRepository profileSearchRepository;*/
+	@Autowired
+	private ProfileSearchRepository profileSearchRepository;
 
 	@Autowired
 	private TranslitConverter translitConverter;
@@ -76,7 +75,7 @@ public class FacebookService implements SocialService<User> {
 			ProfileDataUtil.setAllProfileCollectionsAsEmty(profile);
 			setFieldsFromUser(profile, user);
 			profileRepository.save(profile);
-			//registerIndexAfterCreateProfileViaFacebook(profile, user);
+			registerIndexAfterCreateProfileViaFacebook(profile, user);
 		}
 		return profile;
 	}
@@ -226,9 +225,8 @@ public class FacebookService implements SocialService<User> {
 		return experience;
 	}
 
-	/*private void registerIndexAfterCreateProfileViaFacebook(final Profile profile, final User user) {
+	private void registerIndexAfterCreateProfileViaFacebook(final Profile profile, final User user) {
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
-			@SuppressWarnings("unchecked")
 			@Override
 			public void afterCommit() {
 				LOGGER.info("Profile {}: profile has been created via Facebook", profile.getUid());
@@ -239,5 +237,5 @@ public class FacebookService implements SocialService<User> {
 				LOGGER.info("Profile {}: has been index created", profile.getUid());
 			}
 		});
-	}*/
+	}
 }

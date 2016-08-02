@@ -1,6 +1,6 @@
 package net.devstudy.resume.configuration;
 
-/*import java.io.IOException;
+import java.io.IOException;
 
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
@@ -22,10 +22,10 @@ import net.devstudy.resume.component.impl.AutoWiringSpringBeanJobFactory;
 import net.devstudy.resume.scheduler.RemoveNotCompletedProfileJob;
 import net.devstudy.resume.scheduler.RemoveOldDataJob;
 
-@Configuration*/
+@Configuration
 public class QuartzSchedulerConfiguration {
 
-	/*@Value("${remove.not.completed.profiles.schedule.cron}")
+	@Value("${remove.not.completed.profiles.schedule.cron}")
 	private String removeNotCompletedProfilesScheduleCron;
 
 	@Value("${remove.old.data.schedule.cron}")
@@ -91,5 +91,5 @@ public class QuartzSchedulerConfiguration {
 		scheduler.scheduleJob(removeOldDataJobDetail, removeOldDataTrigger);
 		scheduler.start();
 		return scheduler;
-	}*/
+	}
 }

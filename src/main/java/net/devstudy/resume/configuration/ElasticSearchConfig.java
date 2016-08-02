@@ -1,6 +1,6 @@
 package net.devstudy.resume.configuration;
 
-/*import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,10 +13,10 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 
 @Configuration
 @ComponentScan("net.devstudy.resume.repository.search")
-@EnableElasticsearchRepositories("net.devstudy.resume.repository.search")*/
+@EnableElasticsearchRepositories("net.devstudy.resume.repository.search")
 public class ElasticSearchConfig {
 	
-	/*@Value("${elasticsearch.home}")
+	@Value("${elasticsearch.home}")
 	private String elasticSearchHome;
 
 	@Bean // (destroyMethod="close")
@@ -27,5 +27,5 @@ public class ElasticSearchConfig {
 	@Bean
 	public ElasticsearchOperations elasticsearchTemplate() {
 		return new ElasticsearchTemplate(node().client());
-	}*/
+	}
 }

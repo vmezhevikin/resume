@@ -48,8 +48,8 @@ public class EditProfileServiceImpl implements EditProfileService {
 	@Autowired
 	private ProfileRepository profileRepository;
 
-	/*@Autowired
-	private ProfileSearchRepository profileSearchRepository;*/
+	@Autowired
+	private ProfileSearchRepository profileSearchRepository;
 
 	@Autowired
 	private CourseRepository courseRepository;
@@ -92,7 +92,7 @@ public class EditProfileServiceImpl implements EditProfileService {
 		profile.setPassword(passwordEncoder.encode(form.getPassword()));
 		profile.setActive(false);
 		profileRepository.save(profile);
-		//registerIndexAfterCreateProfile(profile);
+		registerIndexAfterCreateProfile(profile);
 		return profile;
 	}
 
@@ -108,7 +108,7 @@ public class EditProfileServiceImpl implements EditProfileService {
 		return uid;
 	}
 	
-	/*private void registerIndexAfterCreateProfile(final Profile profile) {
+	private void registerIndexAfterCreateProfile(final Profile profile) {
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
 			@Override
 			public void afterCommit() {
@@ -118,7 +118,7 @@ public class EditProfileServiceImpl implements EditProfileService {
 				LOGGER.info("Profile {}: index has been created", profile.getUid());
 			}
 		});
-	}*/
+	}
 	
 	@Override
 	@Transactional
@@ -179,7 +179,7 @@ public class EditProfileServiceImpl implements EditProfileService {
 			currentList.addAll(editedList);
 			profileRepository.save(profile);
 			if (!("Education".equals(clazz.getSimpleName()) || "Hobby".equals(clazz.getSimpleName()))) {
-				//updateIndexAfterEditCollection(idProfile, clazz, editedList);
+				updateIndexAfterEditCollection(idProfile, clazz, editedList);
 			}
 			if ("Certificate".equals(clazz.getSimpleName())) {
 				LOGGER.debug("Profile {}: old certificate images removing", idProfile);
@@ -190,7 +190,7 @@ public class EditProfileServiceImpl implements EditProfileService {
 		}
 	}
 	
-	/*private <E extends ProfileCollectionField> void updateIndexAfterEditCollection(final long idProfile, final Class<E> clazz, final List<E> editedList) {
+	private <E extends ProfileCollectionField> void updateIndexAfterEditCollection(final long idProfile, final Class<E> clazz, final List<E> editedList) {
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
 			@Override
 			public void afterCommit() {
@@ -203,7 +203,7 @@ public class EditProfileServiceImpl implements EditProfileService {
 				LOGGER.info("Profile {}: index has been updated", idProfile);
 			}
 		});
-	}*/
+	}
 	
 	@Override
 	@Transactional
@@ -216,7 +216,7 @@ public class EditProfileServiceImpl implements EditProfileService {
 		newCertificate.setProfile(profile);
 		profile.getCertificate().add(newCertificate);
 		profileRepository.save(profile);
-		//updateIndexAfterEditCollection(idProfile, Certificate.class, profile.getCertificate());
+		updateIndexAfterEditCollection(idProfile, Certificate.class, profile.getCertificate());
 	}
 	
 	private List<String> getImagesList(List<Certificate> certificateList) {
@@ -258,7 +258,7 @@ public class EditProfileServiceImpl implements EditProfileService {
 					profile.setPhotoSmall(uploadResult.getSmallImageLink());
 				}
 				profileRepository.save(profile);
-				//updateIndexAfterEditGeneralInfo(idProfile, profile);
+				updateIndexAfterEditGeneralInfo(idProfile, profile);
 				if (!profileWasActiveBeforeEdit) {
 					sendProfileActivatedNotification(profile);
 				}
@@ -286,7 +286,7 @@ public class EditProfileServiceImpl implements EditProfileService {
 		}
 	}
 	
-	/*private void updateIndexAfterEditGeneralInfo(final long idProfile, final Profile updatedProfile) {
+	private void updateIndexAfterEditGeneralInfo(final long idProfile, final Profile updatedProfile) {
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
 			@Override
 			public void afterCommit() {
@@ -297,7 +297,7 @@ public class EditProfileServiceImpl implements EditProfileService {
 				LOGGER.info("Profile {}: index has been updated", idProfile);
 			}
 		});
-	}*/
+	}
 	
 	private void sendProfileActivatedNotification(final Profile profile) {
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
@@ -349,7 +349,7 @@ public class EditProfileServiceImpl implements EditProfileService {
 		Profile profile = profileRepository.findById(idProfile);
 		profileRepository.delete(profile);
 		removeProfileImages(profile);
-		//updateIndexAfterRemoveProfile(idProfile);
+		updateIndexAfterRemoveProfile(idProfile);
 	}
 
 	private void removeProfileImages(final Profile profile) {
@@ -367,7 +367,7 @@ public class EditProfileServiceImpl implements EditProfileService {
 		});
 	}
 
-	/*private void updateIndexAfterRemoveProfile(final long idProfile) {
+	private void updateIndexAfterRemoveProfile(final long idProfile) {
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
 			@Override
 			public void afterCommit() {
@@ -377,7 +377,7 @@ public class EditProfileServiceImpl implements EditProfileService {
 				LOGGER.info("Profile {}: index has been removed", idProfile);
 			}
 		});
-	}*/
+	}
 
 	@Override
 	@Transactional
@@ -387,7 +387,7 @@ public class EditProfileServiceImpl implements EditProfileService {
 		Profile profile = removingCourse.getProfile();
 		profile.getCourse().remove(removingCourse);
 		profileRepository.save(profile);
-		//updateIndexAfterEditCollection(profile.getId(), Course.class, profile.getCourse());
+		updateIndexAfterEditCollection(profile.getId(), Course.class, profile.getCourse());
 	}
 
 	@Override
@@ -409,7 +409,7 @@ public class EditProfileServiceImpl implements EditProfileService {
 		Profile profile = removingExperience.getProfile();
 		profile.getExperience().remove(removingExperience);
 		profileRepository.save(profile);
-		//updateIndexAfterEditCollection(profile.getId(), Experience.class, profile.getExperience());
+		updateIndexAfterEditCollection(profile.getId(), Experience.class, profile.getExperience());
 	}
 
 	@Override

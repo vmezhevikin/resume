@@ -84,10 +84,10 @@ public class PublicDataController {
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public String getSearch(@ModelAttribute("query") String query, Model model) {
-		/*PageRequest pageable = new PageRequest(0, Constants.MAX_PROFILES_PER_PAGE, new Sort("id"));
+		PageRequest pageable = new PageRequest(0, Constants.MAX_PROFILES_PER_PAGE, new Sort("id"));
 		Page<Profile> profiles = findProfileService.findBySearchQuery(query, pageable);
 		model.addAttribute("profiles", profiles.getContent());
-		model.addAttribute("page", profiles);*/
+		model.addAttribute("page", profiles);
 		return "welcome";
 	}
 	
@@ -96,9 +96,9 @@ public class PublicDataController {
 		Page<Profile> profiles = null;
 		if (StringUtils.isEmpty(query)) {
 			profiles = findProfileService.findAllActive(pageable);
-		}/* else {
+		} else {
 			profiles = findProfileService.findBySearchQuery(query, pageable);
-		}*/
+		}
 		model.addAttribute("profiles", profiles.getContent());
 		return "more-profiles";
 	}

@@ -1,6 +1,6 @@
 package net.devstudy.resume.scheduler;
 
-/*import java.sql.Timestamp;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -14,11 +14,11 @@ import org.springframework.beans.factory.annotation.Value;
 
 import net.devstudy.resume.entity.Profile;
 import net.devstudy.resume.service.EditProfileService;
-import net.devstudy.resume.service.FindProfileService;*/
+import net.devstudy.resume.service.FindProfileService;
 
-public class RemoveNotCompletedProfileJob /*implements Job*/ {
+public class RemoveNotCompletedProfileJob implements Job {
 	
-	/*private static final Logger LOGGER = LoggerFactory.getLogger(RemoveNotCompletedProfileJob.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RemoveNotCompletedProfileJob.class);
 
 	@Autowired
 	private FindProfileService findProfileService;
@@ -40,5 +40,5 @@ public class RemoveNotCompletedProfileJob /*implements Job*/ {
 		for (Profile profile : profilesToRemove) {
 			editProfileService.removeProfile(profile.getId());
 		}
-	}*/
+	}
 }

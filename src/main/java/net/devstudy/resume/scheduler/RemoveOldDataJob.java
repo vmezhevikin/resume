@@ -1,6 +1,6 @@
 package net.devstudy.resume.scheduler;
 
-/*import java.util.List;
+import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.quartz.Job;
@@ -15,11 +15,11 @@ import net.devstudy.resume.entity.Course;
 import net.devstudy.resume.entity.Education;
 import net.devstudy.resume.entity.Experience;
 import net.devstudy.resume.service.EditProfileService;
-import net.devstudy.resume.service.FindProfileDataService;*/
+import net.devstudy.resume.service.FindProfileDataService;
 
-public class RemoveOldDataJob /*implements Job*/ {
+public class RemoveOldDataJob implements Job {
 	
-	/*private static final Logger LOGGER = LoggerFactory.getLogger(RemoveOldDataJob.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RemoveOldDataJob.class);
 
 	@Autowired
 	private EditProfileService editProfileService;
@@ -69,5 +69,5 @@ public class RemoveOldDataJob /*implements Job*/ {
 		for (Experience experience : experiencesToRemove) {
 			editProfileService.removeExperience(experience.getId());
 		}
-	}*/
+	}
 }

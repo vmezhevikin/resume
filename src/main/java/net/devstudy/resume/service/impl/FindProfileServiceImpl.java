@@ -29,8 +29,8 @@ public class FindProfileServiceImpl implements FindProfileService, UserDetailsSe
 	@Autowired
 	private ProfileRepository profileRepository;
 
-	/*@Autowired
-	private ProfileSearchRepository profileSearchRepository;*/
+	@Autowired
+	private ProfileSearchRepository profileSearchRepository;
 
 	@Override
 	public Profile findByUid(String uid) {
@@ -71,10 +71,10 @@ public class FindProfileServiceImpl implements FindProfileService, UserDetailsSe
 		return allProfiles;
 	}
 
-	/*@Override
+	@Override
 	public Page<Profile> findBySearchQuery(String query, Pageable pageable) {
 		return profileSearchRepository.findByAllSubstantialFields(query, pageable);
-	}*/
+	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

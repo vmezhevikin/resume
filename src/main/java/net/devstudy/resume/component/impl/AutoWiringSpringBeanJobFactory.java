@@ -1,15 +1,15 @@
 package net.devstudy.resume.component.impl;
 
-/*import org.quartz.spi.TriggerFiredBundle;
+import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.scheduling.quartz.SpringBeanJobFactory;*/
+import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
-public class AutoWiringSpringBeanJobFactory /*extends SpringBeanJobFactory implements ApplicationContextAware*/ {
+public class AutoWiringSpringBeanJobFactory extends SpringBeanJobFactory implements ApplicationContextAware {
 	
-	/*private transient AutowireCapableBeanFactory beanFactory;
+	private transient AutowireCapableBeanFactory beanFactory;
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -21,5 +21,5 @@ public class AutoWiringSpringBeanJobFactory /*extends SpringBeanJobFactory imple
 		final Object job = super.createJobInstance(bundle);
 		beanFactory.autowireBean(job);
 		return job;
-	}*/
+	}
 }
