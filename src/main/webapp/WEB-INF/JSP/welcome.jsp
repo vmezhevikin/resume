@@ -3,23 +3,22 @@
 <%@ taglib prefix="resume" tagdir="/WEB-INF/tags"%>
 <div class="container">
 	<table class="table table-borderless">
+		<resume:search-info query="${query}" />
 		<tr>
 			<td>
-				<div id="profileContainer" class="row" data-profile-total="${page.totalPages}" data-profile-number="${page.number}">
-					<jsp:include page="fragment/welcome-more.jsp" />
+				<div id="profileContainer" class="row" data-profile-total="${page.totalPages}" data-profile-number="${page.number}" data-search-query="${query}">
+					<jsp:include page="more-profiles.jsp" />
 				</div>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<c:if test="${page.number < page.totalPages - 1}">
-					<div id="loadMoreContainer" class="text-center">
-						<a href="javascript:resume.welcomeMore();" class="btn btn-primary">Load more</a>
-					</div>
-					<div id="loadMoreIndicator" class="text-center" style="display: none;">
-						<img src="/static/img/large-loading.gif" alt="loading..." />
-					</div>
-				</c:if>
+				<div id="loadMoreContainer" class="text-center">
+					<button id="loadMoreBtn" class="btn btn-primary">Load more</button>
+				</div>
+				<div id="loadMoreIndicator" class="text-center">
+					<img src="/static/img/large-loading.gif" alt="loading..." />
+				</div>
 			</td>
 		</tr>
 	</table>

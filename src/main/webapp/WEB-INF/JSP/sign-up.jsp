@@ -12,12 +12,12 @@
 					</div>
 				</div>
 				<div class="panel-body">
-					<p>
-						Warning!
+					<p class="text-danger">
+						<strong>Warning!</strong>
 						<br />
-						Your name can not be changed after registration. Provide your real name.
+						<strong>Your name can not be changed after registration. Provide your real name.</strong>
 					</p>
-					<form:form action="/sign-up" method="post" commandName="signUpForm">
+					<form:form action="/sign-up" method="post" commandName="form">
 						<div class="form-group">
 							<label>First name</label>
 							<input name="firstName" type="text" class="form-control" placeholder="Example: Richard" />
@@ -39,9 +39,11 @@
 							<form:errors path="confirm" cssClass="alert alert-danger" role="alert" element="div" />
 							<form:errors path="" cssClass="alert alert-danger" element="div" />
 						</div>
-						<div class="form-group"><div id="g-recaptcha"></div></div>
-						<input name="recaptchaResponse" type="hidden" id="recaptchaResponse" />
+						<div class="form-group">
+							<div id="g-recaptcha" data-sitekey="${recaptchaSiteKey}"></div>
+						</div>
 						<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=en" async defer></script>
+						<input name="recaptchaResponse" type="hidden" id="recaptchaResponse" />
 						<form:errors path="recaptchaResponse" cssClass="alert alert-danger" role="alert" element="div" />
 						<div class="form-group">
 							<button type="submit" class="btn btn-primary">Sign up</button>

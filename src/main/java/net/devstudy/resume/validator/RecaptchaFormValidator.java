@@ -15,6 +15,7 @@ import org.springframework.web.context.WebApplicationContext;
 import net.devstudy.resume.exception.RecaptchaServiceException;
 import net.devstudy.resume.form.RecaptchaForm;
 import net.devstudy.resume.service.RecaptchaService;
+import net.devstudy.resume.util.RequestDataUtil;
 
 @Component
 @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -40,28 +41,15 @@ public class RecaptchaFormValidator implements Validator {
 	@Override
 	public void validate(Object target, Errors errors) {
 		RecaptchaForm form = (RecaptchaForm) target;
-
-		if (form.getRecaptchaResponse() != null) {
-			String remoteIP = getRemoteIP(httpServletRequest);
-			if (!form.getRecaptchaResponse().isEmpty() && !recaptchaService.isResponseValid(remoteIP, form.getRecaptchaResponse())) {
-				LOGGER.info("Recaptcha response invalid, remote address " + remoteIP);
+		String recaptchaResponse = form.getRecaptchaResponse();
+		String remoteIP = RequestDataUtil.getAddr(httpServletRequest);
+		if (recaptchaResponse != null) {
+			if (!recaptchaResponse.isEmpty() && !recaptchaService.isResponseValid(remoteIP, recaptchaResponse)) {
+				LOGGER.warn("Recaptcha response invalid, remote address " + remoteIP);
 				throw new RecaptchaServiceException("Recaptcha response invalid, remote address " + remoteIP);
+			} else {
+				LOGGER.info("Recaptcha response valid, remote address {}, resposne: {}", remoteIP, recaptchaResponse);
 			}
 		}
-	}
-
-	private String getRemoteIP(HttpServletRequest request) {
-		String ip = request.getHeader("x-forwarded-for");
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("Proxy-Client-IP");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("WL-Proxy-Client-IP");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getRemoteAddr();
-		}
-
-		return ip;
 	}
 }

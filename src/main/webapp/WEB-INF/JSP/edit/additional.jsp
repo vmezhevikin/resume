@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="resume" tagdir="/WEB-INF/tags"%>
+<resume:edit-navtab section="Additional" />
 <div class="container resume-edit-block">
 	<h2 class="text-center">Additional information</h2>
-	<form:form action="/edit/additional" method="post" commandName="profile">
+	<form:form action="/edit/additional" method="post" commandName="form">
 		<input type="hidden" name="country" value="stub" />
 		<input type="hidden" name="city" value="stub" />
 		<input type="hidden" name="birthdayString" value="1990-01-01" />
@@ -17,7 +19,7 @@
 			</tr>
 			<tr>
 				<td>
-					<textarea name="additionalInfo" class="form-control" rows="6" style="resize: none;" placeholder="Summary">${profile.additionalInfo}</textarea>
+					<textarea name="additionalInfo" class="form-control" rows="6" placeholder="Summary">${form.additionalInfo}</textarea>
 					<form:errors path="additionalInfo" cssClass="alert alert-danger" role="alert" element="div" />
 				</td>
 			</tr>
@@ -32,10 +34,11 @@
 				</td>
 			</tr>
 			<tr>
-				<td align="center">
-					<button type="submit" class="btn btn-primary">Save</button>
+				<td class="align-center">
+					<button type="submit" class="btn btn-primary">Edit</button>
 				</td>
 			</tr>
 		</table>
 	</form:form>
 </div>
+<resume:modal-message message="${message}" />

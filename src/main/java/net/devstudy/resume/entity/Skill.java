@@ -12,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,7 +20,7 @@ import net.devstudy.resume.annotation.constraints.EnglishLanguage;
 
 @Entity
 @Table(name = "skill")
-public class Skill extends AbstractEntity<Long> implements Serializable, ProfileEntity {
+public class Skill extends AbstractEntity<Long> implements Serializable, ProfileCollectionField {
 	
 	private static final long serialVersionUID = 1649774983085049619L;
 
@@ -38,12 +37,12 @@ public class Skill extends AbstractEntity<Long> implements Serializable, Profile
 
 	@Column(nullable = false, length = 25)
 	@EnglishLanguage
-	@Size(min = 1, message = "Don't leave it empty")
+	@Size(min = 1)
 	private String category;
 
 	@Column(nullable = false, length = 2147483647)
 	@EnglishLanguage
-	@Size(min = 1, message = "Don't leave it empty")
+	@Size(min = 1)
 	private String description;
 
 	@Override
@@ -78,12 +77,6 @@ public class Skill extends AbstractEntity<Long> implements Serializable, Profile
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	@Transient
-	@Override
-	public boolean hasNullSubstantionalFields() {
-		return id == null && profile == null && category == null && description == null;
 	}
 
 	@Override

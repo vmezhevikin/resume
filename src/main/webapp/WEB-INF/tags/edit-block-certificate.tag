@@ -4,15 +4,16 @@
 <%@ taglib prefix="resume" tagdir="/WEB-INF/tags"%>
 <%@ attribute name="index" required="true" type="java.lang.Object"%>
 <%@ attribute name="certificate" required="false" type="net.devstudy.resume.entity.Certificate"%>
-<div id="ui-item-${index}" class="col-sm-6 col-md-3">
+<div id="item-${index}" class="col-sm-6 col-md-3">
 	<input type="hidden" name="items[${index}].id" value="${certificate.id}" />
 	<input type="hidden" name="items[${index}].img" value="${certificate.img}" />
 	<input type="hidden" name="items[${index}].imgSmall" value="${certificate.imgSmall}" />
 	<input type="hidden" name="items[${index}].description" value="${certificate.description}" />
-	<button type="button" class="close" aria-label="Close" onclick="$('#ui-item-${index}').remove();">
+	<button type="button" class="close remove-item-btn certificate-block-btn" aria-label="Close" data-item="${index}">
 		<span aria-hidden="true">&times;</span>
 	</button>
-	<a href="${certificate.img}" class="thumbnail text-center">
+	<a class="modal-certificate-btn thumbnail text-center" data-toggle="modal" data-target="#modal-certificate" data-certificate-img="${certificate.img}"
+		data-certificate-desc="${certificate.description}">
 		<img src="${certificate.imgSmall}" alt="certificate">
 		<span>${certificate.description}</span>
 	</a>

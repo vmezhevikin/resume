@@ -147,10 +147,10 @@ public class TestDataGenerator
 		statement.executeQuery("select setval('experience_seq', 1, false)");
 		statement.executeQuery("select setval('language_seq', 1, false)");
 		statement.executeQuery("select setval('profile_seq', 1, false)");
-		statement.executeQuery("select setval('skill_category_seq', 1, false)");
+		statement.executeQuery("select setval('static_skill_data_seq', 1, false)");
 		statement.executeQuery("select setval('skill_seq', 1, false)");
 		statement.executeQuery("select setval('hobby_seq', 1, false)");
-		statement.executeQuery("select setval('hobby_name_seq', 1, false)");
+		statement.executeQuery("select setval('static_hobby_data_seq', 1, false)");
 		System.out.println("DB has been cleared");
 	}
 
@@ -178,8 +178,8 @@ public class TestDataGenerator
 
 	private static void insertData(Connection connection) throws SQLException, IOException {
 		System.out.println("Inserting data");
-		insertSkillCategory(connection);
-		insertHobbyName(connection);
+		insertStaticSkillData(connection);
+		insertStaticHobbyData(connection);
 		insertProfiles(connection);
 		for (int id = 1; id <= profilePhotoImages.size(); id++) {
 			insertSkill(connection, id);
@@ -294,8 +294,8 @@ public class TestDataGenerator
 		return phone.toString();
 	}
 
-	private static void insertSkillCategory(Connection connection) throws SQLException {
-		String sql = "insert into skill_category (id, name) values (nextval('skill_category_seq'),?)";
+	private static void insertStaticSkillData(Connection connection) throws SQLException {
+		String sql = "insert into static_skill_data (id, name) values (nextval('static_skill_data_seq'),?)";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		for (int i = 0; i < SKILLS_CATEGORIES.length; i++) {
 			statement.setString(1, SKILLS_CATEGORIES[i]);
@@ -306,8 +306,8 @@ public class TestDataGenerator
 		statement.close();
 	}
 
-	private static void insertHobbyName(Connection connection) throws SQLException {
-		String sql = "insert into hobby_name (id, icon, name) values (nextval('hobby_name_seq'),?,?)";
+	private static void insertStaticHobbyData(Connection connection) throws SQLException {
+		String sql = "insert into static_hobby_data (id, icon, name) values (nextval('static_hobby_data_seq'),?,?)";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		for (int i = 0; i < HOBBY_ICONS.length; i++) {
 			statement.setString(1, HOBBY_ICONS[i]);

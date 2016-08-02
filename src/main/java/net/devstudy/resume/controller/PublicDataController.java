@@ -3,6 +3,7 @@ package net.devstudy.resume.controller;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -20,19 +21,21 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import net.devstudy.resume.Constants;
 import net.devstudy.resume.entity.Profile;
 import net.devstudy.resume.form.SignUpForm;
 import net.devstudy.resume.service.EditProfileService;
 import net.devstudy.resume.service.FindProfileService;
+import net.devstudy.resume.service.FormService;
 import net.devstudy.resume.service.StaticDataService;
 import net.devstudy.resume.util.SecurityUtil;
 import net.devstudy.resume.validator.RecaptchaFormValidator;
 
 @Controller
 public class PublicDataController {
-
+	
 	@Autowired
 	private FindProfileService findProfileService;
 
@@ -41,14 +44,20 @@ public class PublicDataController {
 
 	@Autowired
 	private StaticDataService staticDataService;
+	
+	@Autowired
+	private FormService formService;
 
 	@Value("${app.host}")
 	private String appHost;
+	
+	@Value("${recaptcha.site.key}")
+	private String recaptchaSiteKey;
 
 	@Autowired
 	private RecaptchaFormValidator recaptchaFormValidator;
 
-	@InitBinder("signUpForm")
+	@InitBinder("form")
 	public void initBinder(WebDataBinder binder) {
 		binder.addValidators(recaptchaFormValidator);
 	}
@@ -59,45 +68,39 @@ public class PublicDataController {
 		if (profile == null) {
 			return "profile-not-found";
 		}
-
 		model.addAttribute("profile", profile);
-		model.addAttribute("hobbies", staticDataService.getListHobbyName());
+		model.addAttribute("hobbies", staticDataService.getListHobbyData());
 		return "resume";
 	}
 
 	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
 	public String getWelcome(Model model) {
 		PageRequest pageable = new PageRequest(0, Constants.MAX_PROFILES_PER_PAGE, new Sort("id"));
-		Page<Profile> profiles = findProfileService.findAll(pageable);
+		Page<Profile> profiles = findProfileService.findAllActive(pageable);
 		model.addAttribute("profiles", profiles.getContent());
 		model.addAttribute("page", profiles);
 		return "welcome";
 	}
 
-	@RequestMapping(value = "/fragment/welcome-more", method = RequestMethod.GET)
-	public String getMoreProfiles(Model model, @PageableDefault(size = Constants.MAX_PROFILES_PER_PAGE) @SortDefault(sort = "id") Pageable pageable) {
-		Page<Profile> profiles = findProfileService.findAll(pageable);
-		model.addAttribute("profiles", profiles.getContent());
-		return "fragment/welcome-more";
-	}
-
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public String getSearch(@ModelAttribute("query") String query, Model model) {
-		PageRequest pageable = new PageRequest(0, Constants.MAX_PROFILES_PER_PAGE, new Sort("id"));
+		/*PageRequest pageable = new PageRequest(0, Constants.MAX_PROFILES_PER_PAGE, new Sort("id"));
 		Page<Profile> profiles = findProfileService.findBySearchQuery(query, pageable);
 		model.addAttribute("profiles", profiles.getContent());
-		model.addAttribute("page", profiles);
-
-		return "search";
+		model.addAttribute("page", profiles);*/
+		return "welcome";
 	}
-
-	@RequestMapping(value = "/fragment/search-more", method = RequestMethod.GET)
-	public String getMoreSearch(@ModelAttribute("query") String query, Model model, @PageableDefault(size = Constants.MAX_PROFILES_PER_PAGE) @SortDefault(sort = "id") Pageable pageable) {
-
-		Page<Profile> profiles = findProfileService.findBySearchQuery(query, pageable);
+	
+	@RequestMapping(value = "/more-profiles", method = RequestMethod.GET)
+	public String getWelcomeMore(@RequestParam(value = "query", required = false) String query, Model model, @PageableDefault(size = Constants.MAX_PROFILES_PER_PAGE) @SortDefault(sort = "id") Pageable pageable) {
+		Page<Profile> profiles = null;
+		if (StringUtils.isEmpty(query)) {
+			profiles = findProfileService.findAllActive(pageable);
+		}/* else {
+			profiles = findProfileService.findBySearchQuery(query, pageable);
+		}*/
 		model.addAttribute("profiles", profiles.getContent());
-
-		return "fragment/search-more";
+		return "more-profiles";
 	}
 
 	@RequestMapping(value = "/sign-in", method = RequestMethod.GET)
@@ -123,18 +126,17 @@ public class PublicDataController {
 
 	@RequestMapping(value = "/sign-up", method = RequestMethod.GET)
 	public String getSignUp(Model model) {
-		model.addAttribute("signUpForm", new SignUpForm());
-		model.addAttribute("hasErrors", false);
+		model.addAttribute("form", formService.produceForm("sign-up"));
+		model.addAttribute("recaptchaSiteKey", recaptchaSiteKey);
 		return "sign-up";
 	}
 
 	@RequestMapping(value = "/sign-up", method = RequestMethod.POST)
-	public String postSignUp(@Valid @ModelAttribute("signUpForm") SignUpForm form, BindingResult bindingResult, Model model) {
+	public String postSignUp(@Valid @ModelAttribute("form") SignUpForm form, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("hasErrors", true);
+			model.addAttribute("recaptchaSiteKey", recaptchaSiteKey);
 			return "sign-up";
 		}
-
 		Profile profile = editProfileService.createNewProfile(form);
 		SecurityUtil.authentificate(profile);
 		return "redirect:/sign-up/success";
@@ -172,7 +174,6 @@ public class PublicDataController {
 		if (profile != null) {
 			editProfileService.addRestoreToken(profile.getId(), SecurityUtil.generateNewRestoreAccessToken());
 		}
-
 		return "redirect:/restore/success";
 	}
 

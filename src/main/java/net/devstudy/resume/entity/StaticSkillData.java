@@ -6,8 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "skill_category")
-public class SkillCategory extends AbstractEntity<Long> {
+@Table(name = "static_skill_data")
+public class StaticSkillData extends AbstractEntity<Long> {
 	
 	private static final long serialVersionUID = -5449563594231337899L;
 

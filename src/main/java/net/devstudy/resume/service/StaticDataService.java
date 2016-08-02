@@ -4,12 +4,15 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import net.devstudy.resume.entity.HobbyName;
-import net.devstudy.resume.entity.SkillCategory;
+import net.devstudy.resume.entity.Hobby;
+import net.devstudy.resume.entity.StaticHobbyData;
+import net.devstudy.resume.entity.StaticSkillData;
 
 public interface StaticDataService {
 	
-	@Nonnull List<HobbyName> getListHobbyName();
+	@Nonnull List<StaticHobbyData> getListHobbyData();
+	
+	@Nonnull List<Hobby> getListHobby();
 
-	@Nonnull List<SkillCategory> getListSkillCategory();
+	@Nonnull List<StaticSkillData> getListSkillData();
 }

@@ -6,7 +6,7 @@ import net.devstudy.resume.annotation.constraints.EnglishLanguage;
 import net.devstudy.resume.annotation.constraints.FieldMatch;
 import net.devstudy.resume.annotation.constraints.PasswordStrength;
 
-@FieldMatch(first = "password", second = "confirm")
+@FieldMatch(firstField = "password", secondField = "confirm")
 public class ChangePasswordForm implements Serializable {
 	
 	private static final long serialVersionUID = 2776455703501721852L;

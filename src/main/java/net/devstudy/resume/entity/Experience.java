@@ -29,8 +29,8 @@ import net.devstudy.resume.annotation.constraints.FirstFieldLessThanSecond;
 
 @Entity
 @Table(name = "experience")
-@FirstFieldLessThanSecond(first = "startingDateStr", second = "completionDateStr")
-public class Experience extends AbstractEntity<Long> implements Serializable, ProfileEntity {
+@FirstFieldLessThanSecond(firstField = "startingDateStr", secondField = "completionDateStr")
+public class Experience extends AbstractEntity<Long> implements Serializable, ProfileCollectionField {
 	
 	private static final long serialVersionUID = 6158879936084081673L;
 
@@ -47,14 +47,14 @@ public class Experience extends AbstractEntity<Long> implements Serializable, Pr
 
 	@Column(nullable = false, length = 100)
 	@EnglishLanguage
-	@Size(min = 1, message = "Don't leave it empty")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@Size(min = 1)
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String company;
 
 	@Column(nullable = false, length = 100)
 	@EnglishLanguage
-	@Size(min = 1, message = "Don't leave it empty")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@Size(min = 1)
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String position;
 
 	@Column(name = "starting_date", nullable = false)
@@ -67,22 +67,22 @@ public class Experience extends AbstractEntity<Long> implements Serializable, Pr
 
 	@Column(nullable = false, length = 2147483647)
 	@EnglishLanguage
-	@Size(min = 1, message = "Don't leave it empty")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@Size(min = 1)
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	@JsonIgnore
 	private String responsibility;
 
 	@Column(length = 255)
 	@EnglishLanguage
-	@URL(message = "Not a URL address")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@URL
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	@JsonIgnore
 	private String demo;
 
 	@Column(length = 255)
 	@EnglishLanguage
-	@URL(message = "Not a URL address")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@URL
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	@JsonIgnore
 	private String code;
 
@@ -259,13 +259,6 @@ public class Experience extends AbstractEntity<Long> implements Serializable, Pr
 	public void setCompletionYear(Integer completionYear) {
 		this.completionYear = completionYear;
 		setupCompletionDate();
-	}
-
-	@Transient
-	@Override
-	public boolean hasNullSubstantionalFields() {
-		return id == null && profile == null && company == null && position == null && startingDate == null
-				&& completionDate == null;
 	}
 
 	private void setupCompletionDate() {

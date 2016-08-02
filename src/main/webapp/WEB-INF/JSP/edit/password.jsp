@@ -13,7 +13,7 @@
 				</div>
 				<div class="panel-body">
 					<p>Input your new password and confirm it.</p>
-					<form:form action="/edit/password" method="post" commandName="changePasswordForm">
+					<form:form action="/edit/password" method="post" commandName="form">
 						<div class="form-group">
 							<label>New password</label>
 							<input name="password" type="password" class="form-control" placeholder="New password" />

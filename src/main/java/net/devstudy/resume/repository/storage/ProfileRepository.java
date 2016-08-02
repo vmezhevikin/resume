@@ -3,6 +3,8 @@ package net.devstudy.resume.repository.storage;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -31,4 +33,6 @@ public interface ProfileRepository extends PagingAndSortingRepository<Profile, L
 	List<Profile> findByActiveFalseAndCreatedBefore(Timestamp date);
 
 	Profile findByProfileRestoreToken(String token);
+	
+	Page<Profile> findAllByActiveTrue(Pageable pageable);
 }

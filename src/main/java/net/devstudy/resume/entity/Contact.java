@@ -21,37 +21,37 @@ public class Contact implements Serializable {
 
 	@Column(name = "skype", length = 50)
 	@EnglishLanguage
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String skype;
 
 	@Column(name = "vkontakte", length = 255)
 	@EnglishLanguage
 	@URL(message = "Not a URL address")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String vkontakte;
 
 	@Column(name = "facebook", length = 255)
 	@EnglishLanguage
 	@URL(message = "Not a URL address")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String facebook;
 
 	@Column(name = "linkedin", length = 255)
 	@EnglishLanguage
 	@URL(message = "Not a URL address")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String linkedin;
 
 	@Column(name = "github", length = 255)
 	@EnglishLanguage
 	@URL(message = "Not a URL address")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String github;
 
 	@Column(name = "stackoverflow", length = 255)
 	@EnglishLanguage
 	@URL(message = "Not a URL address")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String stackoverflow;
 
 	public String getSkype() {

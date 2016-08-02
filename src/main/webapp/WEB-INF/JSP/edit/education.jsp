@@ -2,24 +2,25 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="resume" tagdir="/WEB-INF/tags"%>
-<form:form action="/edit/education" method="post" commandName="educationForm">
+<resume:edit-navtab section="Education" />
+<form:form action="/edit/education" method="post" commandName="form">
 	<div class="container resume-edit-block">
 		<h2 class="text-center">Education</h2>
-		<table class="table" id="table">
-			<c:forEach var="education" items="${educationForm.items}" varStatus="status">
-				<resume:edit-block-education index="${status.index}" education="${education}"  minYear="${minYear}" maxYear="${maxYear}" />
+		<hr/>
+		<c:set var="itemsSize" value="${form.items.size()}" />
+		<table class="table table-borderless" id="edit-table" data-init-size="${itemsSize}">
+			<c:forEach var="education" items="${form.items}" varStatus="status">
+				<resume:edit-block-education index="${status.index}" education="${education}" minYear="${minYear}" maxYear="${maxYear}" />
 			</c:forEach>
-			<tr>
-				<td align="center">
-					<a href="/add/education" class="btn btn-default">Add education</a>
-					<span class="text-muted">Save changes before adding new education! Unsaved data will be lost!</span>
-				</td>
-			</tr>
-			<tr>
-				<td align="center">
-					<button type="submit" class="btn btn-primary">Save</button>
+			<resume:edit-block-education index="${itemsSize}" minYear="${minYear}" maxYear="${maxYear}" />
+			<tr id="add-item-row">
+				<td class="align-center">
+					<hr/>
+					<button id="add-item" type="button" class="btn btn-success">Add</button>
+					<button type="submit" class="btn btn-primary">Edit</button>
 				</td>
 			</tr>
 		</table>
 	</div>
 </form:form>
+<resume:modal-message message="${message}" />

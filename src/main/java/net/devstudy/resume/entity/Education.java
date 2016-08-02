@@ -12,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.SafeHtml;
@@ -23,8 +22,8 @@ import net.devstudy.resume.annotation.constraints.FirstFieldLessThanSecond;
 
 @Entity
 @Table(name = "education")
-@FirstFieldLessThanSecond(first = "startingYear", second = "completionYear")
-public class Education extends AbstractEntity<Long> implements Serializable, ProfileEntity {
+@FirstFieldLessThanSecond(firstField = "startingYear", secondField = "completionYear")
+public class Education extends AbstractEntity<Long> implements Serializable, ProfileCollectionField {
 	
 	private static final long serialVersionUID = 8257785827490293025L;
 
@@ -41,19 +40,19 @@ public class Education extends AbstractEntity<Long> implements Serializable, Pro
 	@Column(nullable = false, length = 100)
 	@EnglishLanguage
 	@Size(min = 1, message = "Don't leave it empty")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String speciality;
 
 	@Column(nullable = false, length = 100)
 	@EnglishLanguage
 	@Size(min = 1, message = "Don't leave it empty")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String university;
 
 	@Column(nullable = false, length = 100)
 	@EnglishLanguage
 	@Size(min = 1, message = "Don't leave it empty")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String department;
 
 	@Column(name = "starting_year", nullable = false)
@@ -117,13 +116,6 @@ public class Education extends AbstractEntity<Long> implements Serializable, Pro
 
 	public void setCompletionYear(Integer completionYear) {
 		this.completionYear = completionYear;
-	}
-
-	@Transient
-	@Override
-	public boolean hasNullSubstantionalFields() {
-		return id == null && profile == null && speciality == null && university == null && department == null
-				&& startingYear == null && completionYear == null;
 	}
 
 	@Override

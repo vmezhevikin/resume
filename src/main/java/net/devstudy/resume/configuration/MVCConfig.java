@@ -35,7 +35,6 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/static/**").addResourceLocations("/static/");
 		registry.addResourceHandler("/media/**").addResourceLocations("/media/");
-		registry.addResourceHandler("/favicon/**").addResourceLocations("/favicon.ico");
 	}
 
 	@Bean

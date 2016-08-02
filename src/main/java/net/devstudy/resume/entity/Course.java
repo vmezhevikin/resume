@@ -27,7 +27,7 @@ import net.devstudy.resume.annotation.constraints.EnglishLanguage;
 
 @Entity
 @Table(name = "course")
-public class Course extends AbstractEntity<Long> implements Serializable, ProfileEntity {
+public class Course extends AbstractEntity<Long> implements Serializable, ProfileCollectionField {
 	
 	private static final long serialVersionUID = -7509905830407382879L;
 
@@ -44,14 +44,14 @@ public class Course extends AbstractEntity<Long> implements Serializable, Profil
 
 	@Column(nullable = false, length = 100)
 	@EnglishLanguage
-	@Size(min = 1, message = "Don't leave it empty")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@Size(min = 1)
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String description;
 
 	@Column(nullable = false, length = 100)
 	@EnglishLanguage
-	@Size(min = 1, message = "Don't leave it empty")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@Size(min = 1)
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	@JsonIgnore
 	private String school;
 
@@ -149,12 +149,6 @@ public class Course extends AbstractEntity<Long> implements Serializable, Profil
 			setCompletionDate(date);
 		} else
 			setCompletionDate(null);
-	}
-
-	@Transient
-	@Override
-	public boolean hasNullSubstantionalFields() {
-		return id == null && profile == null && description == null && school == null && completionDate == null;
 	}
 
 	@Override

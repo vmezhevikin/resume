@@ -20,7 +20,7 @@
 		<table class="table table-bordered table-striped">
 			<c:forEach var="skill" items="${profile.skill}">
 				<tr>
-					<td class="text-center" width="20%">${skill.category}</td>
+					<td class="text-center resume-skill-td-category">${skill.category}</td>
 					<td>${skill.description}</td>
 				</tr>
 			</c:forEach>

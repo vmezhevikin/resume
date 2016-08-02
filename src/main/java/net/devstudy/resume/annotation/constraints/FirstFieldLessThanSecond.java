@@ -18,9 +18,9 @@ import net.devstudy.resume.validator.FirstFieldLessThanSecondConstraintValidator
 public @interface FirstFieldLessThanSecond {
 	String message() default "FirstFieldLessThanSecond";
 
-	String first();
+	String firstField();
 
-	String second();
+	String secondField();
 
 	Class<? extends Payload>[] payload() default {};
 

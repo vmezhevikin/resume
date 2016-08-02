@@ -2,28 +2,29 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="resume" tagdir="/WEB-INF/tags"%>
-<form:form action="/edit/skill" method="post" commandName="skillForm">
+<resume:edit-navtab section="Skill" />
+<form:form action="/edit/skill" method="post" commandName="form">
 	<div class="container resume-edit-block">
 		<h2 class="text-center">Technical skills in the frameworks and technologies.</h2>
-		<table class="table" id="table">
+		<hr/>
+		<c:set var="itemsSize" value="${form.items.size()}" />
+		<table class="table table-borderless" id="edit-table" data-init-size="${itemsSize}">
 			<tr>
 				<th>Category</th>
 				<th>Description</th>
 			</tr>
-			<c:forEach var="skill" items="${skillForm.getItems()}" varStatus="status">
+			<c:forEach var="skill" items="${form.getItems()}" varStatus="status">
 				<resume:edit-block-skill index="${status.index}" skill="${skill}" />
 			</c:forEach>
-			<tr>
-				<td colspan="3" align="center">
-					<a href="/add/skill" class="btn btn-default">Add skill</a>
-					<span class="text-muted">Save changes before adding new skill! Unsaved data will be lost!</span>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="3" align="center">
-					<button type="submit" class="btn btn-primary">Save</button>
+			<resume:edit-block-skill index="${itemsSize}" />
+			<tr id="add-item-row">
+				<td colspan="3" class="align-center">
+					<hr/>
+					<button id="add-item" type="button" class="btn btn-success">Add</button>
+					<button type="submit" class="btn btn-primary">Edit</button>
 				</td>
 			</tr>
 		</table>
 	</div>
 </form:form>
+<resume:modal-message message="${message}" />

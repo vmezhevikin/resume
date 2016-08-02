@@ -17,12 +17,12 @@
 		</div>
 	</div>
 	<div class="panel-body">
-		<table class="table table-bordered table-hobby">
+		<table class="table table-bordered">
 			<c:forEach var="hobby" items="${hobbies}">
 				<c:if test="${profile.hasHobby(hobby.name)}">
 					<tr>
-						<td width="25%" class="text-center">${hobby.icon}</td>
-						<td width="75%" class="text-center">${hobby.name}</td>
+						<td class="text-center resume-hobby-td-icon">${hobby.icon}</td>
+						<td class="text-center resume-hobby-td-name">${hobby.name}</td>
 					</tr>
 				</c:if>
 			</c:forEach>

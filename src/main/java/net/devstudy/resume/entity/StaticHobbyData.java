@@ -9,15 +9,15 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "hobby_name")
-public class HobbyName extends AbstractEntity<Long> {
+@Table(name = "static_hobby_data")
+public class StaticHobbyData extends AbstractEntity<Long> {
 	
 	private static final long serialVersionUID = -4937799992479955679L;
 
 	@Id
 	@Column(name = "id")
-	@SequenceGenerator(name = "HOBBY_NAME_ID_GENERATOR", sequenceName = "hobby_name_seq", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "HOBBY_NAME_ID_GENERATOR")
+	@SequenceGenerator(name = "STATIC_HOBBY_DATA_ID_GENERATOR", sequenceName = "static_hobby_data_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STATIC_HOBBY_DATA_ID_GENERATOR")
 	private Long id;
 
 	@Column(nullable = false, length = 100)

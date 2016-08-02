@@ -26,7 +26,7 @@ import net.devstudy.resume.annotation.constraints.NotEmptyFile;
 
 @Entity
 @Table(name = "certificate")
-public class Certificate extends AbstractEntity<Long> implements Serializable, ProfileEntity {
+public class Certificate extends AbstractEntity<Long> implements Serializable, ProfileCollectionField {
 	
 	private static final long serialVersionUID = -6718545401459519784L;
 
@@ -43,8 +43,8 @@ public class Certificate extends AbstractEntity<Long> implements Serializable, P
 
 	@Column(nullable = false, length = 50)
 	@EnglishLanguage
-	@Size(min = 1, message = "Don't leave it empty")
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@Size(min = 1)
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String description;
 
 	@Column(nullable = false, length = 255)
@@ -107,12 +107,6 @@ public class Certificate extends AbstractEntity<Long> implements Serializable, P
 
 	public void setFile(MultipartFile file) {
 		this.file = file;
-	}
-
-	@Transient
-	@Override
-	public boolean hasNullSubstantionalFields() {
-		return id == null && profile == null && description == null && img == null && imgSmall == null;
 	}
 
 	@Override

@@ -11,7 +11,7 @@
 					</div>
 				</div>
 				<div class="panel-body">
-					<p>
+					<p class="text-danger">
 						Account deleting
 						<strong>CAN NOT BE UNDONE. </strong>
 						Please confirm removing account

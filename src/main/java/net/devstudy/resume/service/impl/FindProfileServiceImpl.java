@@ -3,6 +3,7 @@ package net.devstudy.resume.service.impl;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,8 @@ public class FindProfileServiceImpl implements FindProfileService, UserDetailsSe
 	@Autowired
 	private ProfileRepository profileRepository;
 
-	@Autowired
-	private ProfileSearchRepository profileSearchRepository;
+	/*@Autowired
+	private ProfileSearchRepository profileSearchRepository;*/
 
 	@Override
 	public Profile findByUid(String uid) {
@@ -52,23 +53,28 @@ public class FindProfileServiceImpl implements FindProfileService, UserDetailsSe
 	}
 
 	@Override
+	public Page<Profile> findAllActive(Pageable pageable) {
+		return profileRepository.findAllByActiveTrue(pageable);
+	}
+
+	@Override
 	@Transactional
 	public Iterable<Profile> findAllForIndexing() {
 		Iterable<Profile> allProfiles = profileRepository.findAll();
 		for (Profile profile : allProfiles) {
-			profile.getCertificate().size();
-			profile.getCourse().size();
-			profile.getExperience().size();
-			profile.getLanguage().size();
-			profile.getSkill().size();
+			Hibernate.initialize(profile.getCertificate());
+			Hibernate.initialize(profile.getCourse());
+			Hibernate.initialize(profile.getExperience());
+			Hibernate.initialize(profile.getLanguage());
+			Hibernate.initialize(profile.getSkill());
 		}
 		return allProfiles;
 	}
 
-	@Override
+	/*@Override
 	public Page<Profile> findBySearchQuery(String query, Pageable pageable) {
 		return profileSearchRepository.findByAllSubstantialFields(query, pageable);
-	}
+	}*/
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

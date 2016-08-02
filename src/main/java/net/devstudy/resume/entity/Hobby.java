@@ -12,25 +12,35 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "hobby")
-public class Hobby extends AbstractEntity<Long> implements Serializable, ProfileEntity {
+public class Hobby extends AbstractEntity<Long> implements Serializable, ProfileCollectionField {
 	
 	private static final long serialVersionUID = 4900586647321986730L;
 
 	@Id
-	@Column(name = "id", unique = true, nullable = false)
+	@Column(unique = true, nullable = false)
 	@SequenceGenerator(name = "HOBBY_ID_GENERATOR", sequenceName = "hobby_seq", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "HOBBY_ID_GENERATOR")
 	private Long id;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_profile", nullable = false)
+	@JsonIgnore
 	private Profile profile;
 
-	@Column(name = "description", nullable = false, length = 25)
+	@Column(nullable = false, length = 25)
 	private String description;
+	
+	@Transient
+	private String checked;
+	
+	@Transient
+	private String icon;
 
 	@Override
 	public Long getId() {
@@ -57,9 +67,24 @@ public class Hobby extends AbstractEntity<Long> implements Serializable, Profile
 		this.description = description;
 	}
 
-	@Override
-	public boolean hasNullSubstantionalFields() {
-		return id == null && profile == null && description == null;
+	@Transient
+	public String getChecked() {
+		return checked;
+	}
+
+	@Transient
+	public void setChecked(String checked) {
+		this.checked = checked;
+	}
+
+	@Transient
+	public String getIcon() {
+		return icon;
+	}
+
+	@Transient
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 
 	@Override

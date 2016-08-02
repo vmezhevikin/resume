@@ -1,19 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<form:form action="/edit/contact" method="post" commandName="contact">
+<%@ taglib prefix="resume" tagdir="/WEB-INF/tags"%>
+<resume:edit-navtab section="Contact" />
+<form:form action="/edit/contact" method="post" commandName="form">
 	<div class="container resume-edit-block">
 		<h2 class="text-center">Additional contacts: skype, social networks, etc.</h2>
 		<table class="table">
 			<tr>
-				<td width="10%">
+				<td class="contact-td-items">
 					<strong>Skype</strong>
 				</td>
-				<td width="50%">
-					<input name="skype" type="text" class="form-control" placeholder="Skype" value="${contactForm.skype}"/>
+				<td class="contact-td-fileds">
+					<input name="skype" type="text" class="form-control" placeholder="Skype" value="${form.skype}"/>
 					<form:errors path="skype" cssClass="alert alert-danger" role="alert" element="div"/>
 				</td>
-				<td class="text-muted" width="40%">
+				<td class="text-muted contact-td-notes">
 					1. It is advisable that your skype name contains your name and surname as in your passport. If the specified name is already taken, contraction
 					is possible.
 					<br />
@@ -27,7 +29,7 @@
 					<strong>Vkontakte</strong>
 				</td>
 				<td>
-					<input name="vkontakte" type="text" class="form-control" placeholder="Vkontakte" value="${contactForm.vkontakte}"/>
+					<input name="vkontakte" type="text" class="form-control" placeholder="Vkontakte" value="${form.vkontakte}"/>
 					<form:errors path="vkontakte" cssClass="alert alert-danger" role="alert" element="div"/>
 				</td>
 				<td rowspan="5" class="text-muted">
@@ -49,7 +51,7 @@
 					<strong>Facebook</strong>
 				</td>
 				<td>
-					<input name="facebook" type="text" class="form-control" placeholder="Facebook" value="${contactForm.facebook}"/>
+					<input name="facebook" type="text" class="form-control" placeholder="Facebook" value="${form.facebook}"/>
 					<form:errors path="facebook" cssClass="alert alert-danger" role="alert" element="div"/>
 				</td>
 			</tr>
@@ -58,7 +60,7 @@
 					<strong>Linkedin</strong>
 				</td>
 				<td>
-					<input name="linkedin" type="text" class="form-control" placeholder="Linkedin" value="${contactForm.linkedin}"/>
+					<input name="linkedin" type="text" class="form-control" placeholder="Linkedin" value="${form.linkedin}"/>
 					<form:errors path="linkedin" cssClass="alert alert-danger" role="alert" element="div"/>
 				</td>
 			</tr>
@@ -67,7 +69,7 @@
 					<strong>Github</strong>
 				</td>
 				<td>
-					<input name="github" type="text" class="form-control" placeholder="Github" value="${contactForm.github}"/>
+					<input name="github" type="text" class="form-control" placeholder="Github" value="${form.github}"/>
 					<form:errors path="github" cssClass="alert alert-danger" role="alert" element="div"/>
 				</td>
 			</tr>
@@ -76,15 +78,16 @@
 					<strong>Stackoverflow</strong>
 				</td>
 				<td>
-					<input name="stackoverflow" type="text" class="form-control" placeholder="Stackoverflow" value="${contactForm.stackoverflow}"/>
+					<input name="stackoverflow" type="text" class="form-control" placeholder="Stackoverflow" value="${form.stackoverflow}"/>
 					<form:errors path="stackoverflow" cssClass="alert alert-danger" role="alert" element="div"/>
 				</td>
 			</tr>
 			<tr>
-				<td colspan="3" align="center">
-					<button type="submit" class="btn btn-primary">Save</button>
+				<td colspan="3" class="align-center">
+					<button type="submit" class="btn btn-primary">Edit</button>
 				</td>
 			</tr>
 		</table>
 	</div>
 </form:form>
+<resume:modal-message message="${message}" />

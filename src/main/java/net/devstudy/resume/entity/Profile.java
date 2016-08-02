@@ -31,11 +31,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import net.devstudy.resume.annotation.constraints.DateFormat;
 import net.devstudy.resume.annotation.constraints.EnglishLanguage;
+import net.devstudy.resume.annotation.constraints.FieldImageOrFileNotEmpty;
 import net.devstudy.resume.annotation.constraints.Phone;
 
 @Entity
 @Table(name = "profile")
 @Document(indexName = "profile")
+@FieldImageOrFileNotEmpty(imageField = "photo", fileField = "file")
 public class Profile extends AbstractEntity<Long> {
 	
 	private static final long serialVersionUID = 4419584168346691423L;
@@ -67,54 +69,54 @@ public class Profile extends AbstractEntity<Long> {
 	private String fullName;
 
 	@Column(length = 50)
-	@Size(min = 1, message = "Don't leave it empty")
+	@Size(min = 1)
 	@EnglishLanguage
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String country;
 
 	@Column(length = 50)
-	@Size(min = 1, message = "Don't leave it empty")
+	@Size(min = 1)
 	@EnglishLanguage
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String city;
 
 	@Column
 	private Date birthday;
 
 	@Transient
-	@Size(min = 1, message = "Don't leave it empty")
+	@Size(min = 1)
 	@DateFormat
 	@JsonIgnore
 	private String birthdayString;
 
 	@Column(length = 100)
-	@Size(min = 1, message = "Don't leave it empty")
+	@Size(min = 1)
 	@EnglishLanguage
-	@Email(message = "Not an email address")
+	@Email
 	@JsonIgnore
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String email;
 
 	@Column(length = 20)
-	@Size(min = 1, message = "Don't leave it empty")
+	@Size(min = 1)
 	@Phone
 	@JsonIgnore
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String phone;
 
 	@Column(name = "additional_info", length = 2147483647)
 	@EnglishLanguage
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String additionalInfo;
 
 	@Column(length = 2147483647)
 	@EnglishLanguage
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String objective;
 
 	@Column(length = 2147483647)
 	@EnglishLanguage
-	@SafeHtml(whitelistType = WhiteListType.NONE, message = "Html is not allowed")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	private String summary;
 
 	@Column(length = 255)
@@ -439,9 +441,9 @@ public class Profile extends AbstractEntity<Long> {
 	}
 
 	@Transient
-	public void updateListProfile(List<? extends ProfileEntity> list) {
+	public void updateListProfile(List<? extends ProfileCollectionField> list) {
 		if (list != null) {
-			for (ProfileEntity entity : list) {
+			for (ProfileCollectionField entity : list) {
 				entity.setProfile(this);
 			}
 		}

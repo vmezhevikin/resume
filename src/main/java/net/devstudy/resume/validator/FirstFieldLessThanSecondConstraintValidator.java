@@ -3,41 +3,40 @@ package net.devstudy.resume.validator;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.beans.BeanUtils;
 
 import net.devstudy.resume.annotation.constraints.FirstFieldLessThanSecond;
 
 public class FirstFieldLessThanSecondConstraintValidator implements ConstraintValidator<FirstFieldLessThanSecond, Object> {
-	
-	private String first;
 
-	private String second;
+	private String firstField;
+
+	private String secondField;
 
 	@Override
 	public void initialize(FirstFieldLessThanSecond constraintAnnotation) {
-		this.first = constraintAnnotation.first();
-		this.second = constraintAnnotation.second();
+		this.firstField = constraintAnnotation.firstField();
+		this.secondField = constraintAnnotation.secondField();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean isValid(Object value, ConstraintValidatorContext context) {
 		try {
-			String firstObj = BeanUtils.getProperty(value, first);
-			String secondObj = BeanUtils.getProperty(value, second);
-
-			if (firstObj == null && secondObj != null) {
+			Object first = BeanUtils.getPropertyDescriptor(value.getClass(), firstField).getReadMethod().invoke(value);
+			Object second = BeanUtils.getPropertyDescriptor(value.getClass(), secondField).getReadMethod().invoke(value);
+			
+			if (first == null && second != null) {
 				return false;
 			}
-
-			if (firstObj == null && secondObj == null) {
+			if (second == null) {
 				return true;
 			}
-
-			if (firstObj != null && secondObj == null) {
-				return true;
+			if (first instanceof Comparable<?> && second instanceof Comparable<?>) {
+				return ((Comparable<Object>) first).compareTo((Comparable<Object>) second) <= 0;
+			} else {
+				return false;
 			}
-
-			return firstObj.compareTo(secondObj) <= 0;
 		} catch (Exception e) {
 			return false;
 		}

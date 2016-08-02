@@ -1,5 +1,7 @@
 package net.devstudy.resume.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import net.devstudy.resume.Constants;
 import net.devstudy.resume.entity.Certificate;
 import net.devstudy.resume.entity.Contact;
-import net.devstudy.resume.entity.Course;
-import net.devstudy.resume.entity.Education;
-import net.devstudy.resume.entity.Experience;
-import net.devstudy.resume.entity.Language;
+import net.devstudy.resume.entity.Hobby;
 import net.devstudy.resume.entity.Profile;
-import net.devstudy.resume.entity.Skill;
 import net.devstudy.resume.form.CertificateForm;
 import net.devstudy.resume.form.ChangePasswordForm;
 import net.devstudy.resume.form.CourseForm;
@@ -31,15 +29,16 @@ import net.devstudy.resume.form.LanguageForm;
 import net.devstudy.resume.form.SkillForm;
 import net.devstudy.resume.model.CurrentProfile;
 import net.devstudy.resume.service.EditProfileService;
-import net.devstudy.resume.service.FindProfileDataService;
 import net.devstudy.resume.service.FindProfileService;
+import net.devstudy.resume.service.FormService;
 import net.devstudy.resume.service.StaticDataService;
+import net.devstudy.resume.util.FormUtil;
 import net.devstudy.resume.util.DataUtil;
 import net.devstudy.resume.util.SecurityUtil;
 
 @Controller
 public class EditProfileController {
-	
+
 	@Autowired
 	private FindProfileService findProfileService;
 
@@ -47,13 +46,10 @@ public class EditProfileController {
 	private EditProfileService editProfileService;
 
 	@Autowired
-	private FindProfileDataService findProfileDataService;
-
-	@Autowired
 	private StaticDataService staticDataService;
-
-	@Value("${profile.hobbies.max}")
-	private int profileHobbiesMax;
+	
+	@Autowired
+	private FormService formService;
 
 	@Value("${practic.years.ago}")
 	private int practicYearsAgo;
@@ -71,321 +67,217 @@ public class EditProfileController {
 
 	@RequestMapping(value = "/edit/general", method = RequestMethod.GET)
 	public String getEditGeneral(Model model) {
+		addAttributeForm(model, "general");
 		model.addAttribute("profile", findProfileService.findById(SecurityUtil.getCurrentProfileId()));
-		addAttributeSection(model, "General");
 		return "edit/general";
 	}
 
 	@RequestMapping(value = "/edit/general", method = RequestMethod.POST)
-	public String postEditGeneral(@Valid @ModelAttribute("profile") Profile form, BindingResult bindingResult, Model model) {
+	public String postEditGeneral(@Valid @ModelAttribute("form") Profile form, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
-			addAttributeSection(model, "General");
-			if (form.getPhoto() == null && form.getFile().isEmpty()) {
-				model.addAttribute("emptyPhoto", true);
-			}
-			else {
-				model.addAttribute("emptyPhoto", false);
-			}
 			return "edit/general";
 		}
-		if (form.getPhoto() == null && form.getFile().isEmpty()) {
-			model.addAttribute("emptyPhoto", true);
-			addAttributeSection(model, "General");
+		Profile preparedForm = FormUtil.setBlankItemsAsNulls(form);
+		editProfileService.updateGeneralInfo(SecurityUtil.getCurrentProfileId(), preparedForm);
+		if (!form.getFile().isEmpty()) {
+			return "redirect:/edit/general";
+		} else {
+			addAttributeMessage(model, "General information: updated!");
 			return "edit/general";
 		}
-		editProfileService.updateGeneralInfo(SecurityUtil.getCurrentProfileId(), form);
-		return "redirect:/edit/general";
 	}
 
 	@RequestMapping(value = "/edit/contact", method = RequestMethod.GET)
 	public String getEditContact(Model model) {
-		model.addAttribute("contactForm", findProfileDataService.findContact(SecurityUtil.getCurrentProfileId()));
-		addAttributeSection(model, "Contact");
+		addAttributeForm(model, "contact");
 		return "edit/contact";
 	}
 
 	@RequestMapping(value = "/edit/contact", method = RequestMethod.POST)
-	public String postEditContact(@Valid @ModelAttribute("contactForm") Contact form, BindingResult bindingResult, Model model) {
+	public String postEditContact(@Valid @ModelAttribute("form") Contact form, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
-			addAttributeSection(model, "Contact");
 			return "edit/contact";
 		}
-		editProfileService.updateContact(SecurityUtil.getCurrentProfileId(), form);
-		return "redirect:/edit/contact";
+		Contact preparedForm = FormUtil.setBlankItemsAsNulls(form);
+		editProfileService.updateContact(SecurityUtil.getCurrentProfileId(), preparedForm);
+		addAttributeMessage(model, "Contact information: updated!");
+		return "edit/contact";
 	}
 
 	@RequestMapping(value = "/edit/skill", method = RequestMethod.GET)
 	public String getEditSkill(Model model) {
-		model.addAttribute("skillForm", new SkillForm(findProfileDataService.findListSkill(SecurityUtil.getCurrentProfileId())));
-		model.addAttribute("skillCategories", staticDataService.getListSkillCategory());
-		addAttributeSection(model, "Skill");
+		addAttributeForm(model, "skill");
+		addAttributeSkillCategories(model);
 		return "edit/skill";
 	}
 
 	@RequestMapping(value = "/edit/skill", method = RequestMethod.POST)
-	public String postEditSkill(@Valid @ModelAttribute("skillForm") SkillForm form, BindingResult bindingResult, Model model) {
+	public String postEditSkill(@Valid @ModelAttribute("form") SkillForm form, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("skillCategories", staticDataService.getListSkillCategory());
-			addAttributeSection(model, "Skill");
+			addAttributeSkillCategories(model);
 			return "edit/skill";
 		}
 		editProfileService.updateSkill(SecurityUtil.getCurrentProfileId(), form.getItems());
-		return "redirect:/edit/skill";
-	}
-
-	@RequestMapping(value = "/add/skill", method = RequestMethod.GET)
-	public String getAddSkill(Model model) {
-		model.addAttribute("skillForm", new Skill());
-		model.addAttribute("skillCategories", staticDataService.getListSkillCategory());
-		addAttributeSection(model, "Skill");
-		return "add/skill";
-	}
-
-	@RequestMapping(value = "/add/skill", method = RequestMethod.POST)
-	public String postAddSkill(@Valid @ModelAttribute("skillForm") Skill form, BindingResult bindingResult, Model model) {
-		if (bindingResult.hasErrors()) {
-			model.addAttribute("skillCategories", staticDataService.getListSkillCategory());
-			addAttributeSection(model, "Skill");
-			return "add/skill";
-		}
-		editProfileService.addSkill(SecurityUtil.getCurrentProfileId(), form);
-		return "redirect:/edit/skill";
+		addAttributeSkillCategories(model);
+		addAttributeMessage(model, "Skills: updated!");
+		return "edit/skill";
 	}
 
 	@RequestMapping(value = "/edit/experience", method = RequestMethod.GET)
 	public String getEditExperience(Model model) {
-		model.addAttribute("experienceForm", new ExperienceForm(findProfileDataService.findListExperience(SecurityUtil.getCurrentProfileId())));
+		addAttributeForm(model, "experience");
 		addAttributesMinMaxYearForExperience(model);
 		addAttributeMonthName(model);
-		addAttributeSection(model, "Experience");
 		return "edit/experience";
 	}
 
 	@RequestMapping(value = "/edit/experience", method = RequestMethod.POST)
-	public String postEditExperience(@Valid @ModelAttribute("experienceForm") ExperienceForm form, BindingResult bindingResult, Model model) {
+	public String postEditExperience(@Valid @ModelAttribute("form") ExperienceForm form,
+			BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
 			addAttributesMinMaxYearForExperience(model);
 			addAttributeMonthName(model);
-			addAttributeSection(model, "Experience");
 			return "edit/experience";
 		}
 		editProfileService.updateExperience(SecurityUtil.getCurrentProfileId(), form.getItems());
-		return "redirect:/edit/experience";
-	}
-
-	@RequestMapping(value = "/add/experience", method = RequestMethod.GET)
-	public String getAddExperience(Model model) {
-		model.addAttribute("experienceForm", new Experience());
 		addAttributesMinMaxYearForExperience(model);
 		addAttributeMonthName(model);
-		addAttributeSection(model, "Experience");
-		return "add/experience";
-	}
-
-	@RequestMapping(value = "/add/experience", method = RequestMethod.POST)
-	public String postAddExperience(@Valid @ModelAttribute("experienceForm") Experience form, BindingResult bindingResult, Model model) {
-		if (bindingResult.hasErrors()) {
-			addAttributesMinMaxYearForExperience(model);
-			addAttributeMonthName(model);
-			addAttributeSection(model, "Experience");
-			return "add/experience";
-		}
-		editProfileService.addExperience(SecurityUtil.getCurrentProfileId(), form);
-		return "redirect:/edit/experience";
+		addAttributeMessage(model, "Experience: updated!");
+		return "edit/experience";
 	}
 
 	@RequestMapping(value = "/edit/certificate", method = RequestMethod.GET)
 	public String getEditCertificate(Model model) {
-		model.addAttribute("certificateForm", new CertificateForm(findProfileDataService.findListCertificate(SecurityUtil.getCurrentProfileId())));
-		addAttributeSection(model, "Certificate");
+		addAttributeForm(model, "certificate-edit");
 		return "edit/certificate";
 	}
 
 	@RequestMapping(value = "/edit/certificate", method = RequestMethod.POST)
-	public String postEditCertificate(@ModelAttribute("certificateForm") CertificateForm form, BindingResult bindingResult, Model model) {
+	public String postEditCertificate(@ModelAttribute("form") CertificateForm form, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
-			addAttributeSection(model, "Certificate");
 			return "edit/certificate";
 		}
 		editProfileService.updateCertificate(SecurityUtil.getCurrentProfileId(), form.getItems());
-		return "redirect:/edit/certificate";
+		addAttributeMessage(model, "Certificates: updated!");
+		return "edit/certificate";
 	}
 
 	@RequestMapping(value = "/add/certificate", method = RequestMethod.GET)
 	public String getAddCertificate(Model model) {
-		model.addAttribute("certificateForm", new Certificate());
-		addAttributeSection(model, "Certificate");
+		addAttributeForm(model, "certificate-add");
 		return "add/certificate";
 	}
 
 	@RequestMapping(value = "/add/certificate", method = RequestMethod.POST)
-	public String postAddCertificate(@Valid @ModelAttribute("certificateForm") Certificate form, BindingResult bindingResult, Model model) {
+	public String postAddCertificate(@Valid @ModelAttribute("form") Certificate form,
+			BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
-			addAttributeSection(model, "Certificate");
 			return "add/certificate";
 		}
 		editProfileService.addCertificate(SecurityUtil.getCurrentProfileId(), form);
-		return "redirect:/edit/certificate";
+		addAttributeForm(model, "certificate-add");
+		addAttributeMessage(model, "Certificate: added new record!");
+		return "add/certificate";
 	}
 
 	@RequestMapping(value = "/edit/course", method = RequestMethod.GET)
 	public String getEditCourse(Model model) {
-		model.addAttribute("courseForm", new CourseForm(findProfileDataService.findListCourse(SecurityUtil.getCurrentProfileId())));
+		addAttributeForm(model, "course");
 		addAttributesMinMaxYearForCourse(model);
 		addAttributeMonthName(model);
-		addAttributeSection(model, "Course");
 		return "edit/course";
 	}
 
 	@RequestMapping(value = "/edit/course", method = RequestMethod.POST)
-	public String postEditCourse(@Valid @ModelAttribute("courseForm") CourseForm form, BindingResult bindingResult, Model model) {
+	public String postEditCourse(@Valid @ModelAttribute("form") CourseForm form, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
 			addAttributesMinMaxYearForCourse(model);
 			addAttributeMonthName(model);
-			addAttributeSection(model, "Course");
 			return "edit/course";
 		}
 		editProfileService.updateCourse(SecurityUtil.getCurrentProfileId(), form.getItems());
-		return "redirect:/edit/course";
-	}
-
-	@RequestMapping(value = "/add/course", method = RequestMethod.GET)
-	public String getAddCourse(Model model) {
-		model.addAttribute("courseForm", new Course());
 		addAttributesMinMaxYearForCourse(model);
 		addAttributeMonthName(model);
-		addAttributeSection(model, "Course");
-		return "add/course";
-	}
-
-	@RequestMapping(value = "/add/course", method = RequestMethod.POST)
-	public String postAddCourse(@Valid @ModelAttribute("courseForm") Course form, BindingResult bindingResult, Model model) {
-		if (bindingResult.hasErrors()) {
-			addAttributesMinMaxYearForCourse(model);
-			addAttributeMonthName(model);
-			addAttributeSection(model, "Course");
-			return "add/course";
-		}
-		editProfileService.addCourse(SecurityUtil.getCurrentProfileId(), form);
-		return "redirect:/edit/course";
+		addAttributeMessage(model, "Courses: updated!");
+		return "edit/course";
 	}
 
 	@RequestMapping(value = "/edit/education", method = RequestMethod.GET)
 	public String getEditEducation(Model model) {
-		model.addAttribute("educationForm", new EducationForm(findProfileDataService.findListEducation(SecurityUtil.getCurrentProfileId())));
+		addAttributeForm(model, "education");
 		addAttributesMinMaxYearForEducation(model);
-		addAttributeSection(model, "Education");
 		return "edit/education";
 	}
 
 	@RequestMapping(value = "/edit/education", method = RequestMethod.POST)
-	public String postEditEducation(@Valid @ModelAttribute("educationForm") EducationForm form, BindingResult bindingResult, Model model) {
+	public String postEditEducation(@Valid @ModelAttribute("form") EducationForm form, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
 			addAttributesMinMaxYearForEducation(model);
-			addAttributeSection(model, "Education");
 			return "edit/education";
 		}
 		editProfileService.updateEducation(SecurityUtil.getCurrentProfileId(), form.getItems());
-		return "redirect:/edit/education";
-	}
-
-	@RequestMapping(value = "/add/education", method = RequestMethod.GET)
-	public String getAddEducation(Model model) {
-		model.addAttribute("educationForm", new Education());
 		addAttributesMinMaxYearForEducation(model);
-		addAttributeSection(model, "Education");
-		return "add/education";
-	}
-
-	@RequestMapping(value = "/add/education", method = RequestMethod.POST)
-	public String postAddEducation(@Valid @ModelAttribute("educationForm") Education form, BindingResult bindingResult, Model model) {
-		if (bindingResult.hasErrors()) {
-			addAttributesMinMaxYearForEducation(model);
-			addAttributeSection(model, "Education");
-			return "add/education";
-		}
-		editProfileService.addEducation(SecurityUtil.getCurrentProfileId(), form);
-		return "redirect:/edit/education";
+		addAttributeMessage(model, "Education: updated!");
+		return "edit/education";
 	}
 
 	@RequestMapping(value = "/edit/language", method = RequestMethod.GET)
 	public String getEditLanguage(Model model) {
-		model.addAttribute("languageForm", new LanguageForm(findProfileDataService.findListLanguage(SecurityUtil.getCurrentProfileId())));
-		addAttributeSection(model, "Language");
+		addAttributeForm(model, "language");
 		return "edit/language";
 	}
 
 	@RequestMapping(value = "/edit/language", method = RequestMethod.POST)
-	public String postEditLanguage(@Valid @ModelAttribute("languageForm") LanguageForm form, BindingResult bindingResult, Model model) {
+	public String postEditLanguage(@Valid @ModelAttribute("form") LanguageForm form, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
-			addAttributeSection(model, "Language");
 			return "edit/language";
 		}
 		editProfileService.updateLanguage(SecurityUtil.getCurrentProfileId(), form.getItems());
-		return "redirect:/edit/language";
-	}
-
-	@RequestMapping(value = "/add/language", method = RequestMethod.GET)
-	public String getAddLanguage(Model model) {
-		model.addAttribute("languageForm", new Language());
-		addAttributeSection(model, "Language");
-		return "add/language";
-	}
-
-	@RequestMapping(value = "/add/language", method = RequestMethod.POST)
-	public String postAddLanguage(@Valid @ModelAttribute("languageForm") Language form, BindingResult bindingResult, Model model) {
-		if (bindingResult.hasErrors()) {
-			addAttributeSection(model, "Language");
-			return "add/language";
-		}
-		editProfileService.addLanguage(SecurityUtil.getCurrentProfileId(), form);
-		return "redirect:/edit/language";
+		addAttributeMessage(model, "Languages: updated!");
+		return "edit/language";
 	}
 
 	@RequestMapping(value = "/edit/hobby", method = RequestMethod.GET)
 	public String getEditHobby(Model model) {
-		model.addAttribute("hobbyForm", new HobbyForm(findProfileDataService.findListHobby(SecurityUtil.getCurrentProfileId()), profileHobbiesMax));
-		model.addAttribute("hobbies", staticDataService.getListHobbyName());
-		addAttributeSection(model, "Hobby");
+		addAttributeForm(model, "hobby");
 		return "edit/hobby";
 	}
 
 	@RequestMapping(value = "/edit/hobby", method = RequestMethod.POST)
-	public String postEditHobby(@Valid @ModelAttribute("hobbyForm") HobbyForm form, BindingResult bindingResult, Model model) {
+	public String postEditHobby(@Valid @ModelAttribute("form") HobbyForm form, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("hobbies", staticDataService.getListHobbyName());
-			addAttributeSection(model, "Hobby");
 			return "edit/hobby";
 		}
-		editProfileService.updateHobby(SecurityUtil.getCurrentProfileId(), form.getCheckedItems());
-		return "redirect:/edit/hobby";
+		List<Hobby> preparedList = FormUtil.getCheckedItems(form.getItems());
+		editProfileService.updateHobby(SecurityUtil.getCurrentProfileId(), preparedList);
+		addAttributeMessage(model, "Hobbies: updated!");
+		return "edit/hobby";
 	}
 
 	@RequestMapping(value = "/edit/additional", method = RequestMethod.GET)
 	public String getEditInfo(Model model) {
-		model.addAttribute("profile", findProfileService.findById(SecurityUtil.getCurrentProfileId()));
-		addAttributeSection(model, "Additional");
+		addAttributeForm(model, "additional");
 		return "edit/additional";
 	}
 
 	@RequestMapping(value = "/edit/additional", method = RequestMethod.POST)
-	public String postEditInfo(@Valid @ModelAttribute("profile") Profile form, BindingResult bindingResult, Model model) {
-		if (bindingResult.hasErrors()) {
-			addAttributeSection(model, "Additional");
+	public String postEditInfo(@Valid @ModelAttribute("form") Profile form, BindingResult bindingResult, Model model) {
+		if (bindingResult.getFieldErrorCount() != 0) {
 			return "edit/additional";
 		}
 		editProfileService.updateAdditionalInfo(SecurityUtil.getCurrentProfileId(), form);
-		return "redirect:/edit/additional";
+		addAttributeMessage(model, "Additional information: updated!");
+		return "edit/additional";
 	}
 
 	@RequestMapping(value = "/edit/password", method = RequestMethod.GET)
 	public String getEditPassword(Model model) {
-		model.addAttribute("changePasswordForm", new ChangePasswordForm());
+		addAttributeForm(model, "password");
 		return "edit/password";
 	}
 
 	@RequestMapping(value = "/edit/password", method = RequestMethod.POST)
-	public String postEditPassword(@Valid @ModelAttribute("changePasswordForm") ChangePasswordForm form, BindingResult bindingResult, Model model) {
+	public String postEditPassword(@Valid @ModelAttribute("form") ChangePasswordForm form, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors())
 			return "edit/password";
 
@@ -414,11 +306,19 @@ public class EditProfileController {
 		model.addAttribute("minYear", DataUtil.getCurrentYear() - courseYearsAgo);
 	}
 
-	private void addAttributeSection(Model model, String section) {
-		model.addAttribute("section", section);
-	}
-
 	private void addAttributeMonthName(Model model) {
 		model.addAttribute("monthName", Constants.MONTH_NAMES);
+	}
+
+	private void addAttributeMessage(Model model, String message) {
+		model.addAttribute("message", message);
+	}
+
+	private void addAttributeSkillCategories(Model model) {
+		model.addAttribute("skillCategories", staticDataService.getListSkillData());
+	}
+
+	private void addAttributeForm(Model model, String formName) {
+		model.addAttribute("form", formService.produceForm(formName));
 	}
 }

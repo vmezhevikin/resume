@@ -30,6 +30,7 @@
 				</c:if>
 				<c:if test="${!profile.certificate.isEmpty()}">
 					<resume:resume-certificate />
+					<resume:modal-certificate />
 				</c:if>
 				<c:if test="${!profile.course.isEmpty()}">
 					<resume:resume-course />

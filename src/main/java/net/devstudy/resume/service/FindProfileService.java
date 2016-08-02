@@ -21,9 +21,11 @@ public interface FindProfileService {
 
 	@Nonnull Page<Profile> findAll(@Nonnull Pageable pageable);
 	
+	@Nonnull Page<Profile> findAllActive(@Nonnull Pageable pageable);
+	
 	@Nonnull Iterable<Profile> findAllForIndexing();
 	
-	@Nonnull Page<Profile> findBySearchQuery(@Nonnull String query, @Nonnull Pageable pageable);
+	/*@Nonnull Page<Profile> findBySearchQuery(@Nonnull String query, @Nonnull Pageable pageable);*/
 	
 	@Nullable Profile findByUniqueId(@Nonnull String anyUniqueId);
 	

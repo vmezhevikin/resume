@@ -6,11 +6,11 @@
 <%@ attribute name="education" required="false" type="net.devstudy.resume.entity.Education"%>
 <%@ attribute name="minYear" required="true" type="java.lang.Object"%>
 <%@ attribute name="maxYear" required="true" type="java.lang.Object"%>
-<tr>
+<tr id="item-${index}">
 	<td>
+		<input type="hidden" name="items[${index}].id" value="${education.id}" />
 		<div class="row">
 			<div class="panel panel-default">
-				<input type="hidden" name="items[${index}].id" value="${education.id}" />
 				<table class="table table-borderless">
 					<tr>
 						<td colspan="2">
@@ -19,13 +19,13 @@
 							<form:errors path="items[${index}].speciality" cssClass="alert alert-danger" role="alert" element="div" />
 						</td>
 						<td class="text-muted">
-							<button type="button" class="close" aria-label="Close" onclick="deleteRow(this);">
+							<button type="button" class="close remove-item-btn" aria-label="Close" id="close-btn-${index}" data-item="${index}">
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</td>
 					</tr>
 					<tr>
-						<td width="48%">
+						<td class="education-td-start-year">
 							<label>Starting year</label>
 							<select name="items[${index}].startingYear" class="form-control">
 								<c:forEach var="year" begin="${minYear}" end="${maxYear}">
@@ -34,7 +34,7 @@
 							</select>
 							<form:errors path="" cssClass="alert alert-danger" element="div"/>
 						</td>
-						<td width="48%">
+						<td class="education-td-compl-year">
 							<label>Completion year</label>
 							<select name="items[${index}].completionYear" class="form-control">
 								<option value="${null}">Not finished</option>
@@ -44,7 +44,7 @@
 							</select>
 							<form:errors path="items[${index}]" cssClass="alert alert-danger" element="div"/>
 						</td>
-						<td width="4%"></td>
+						<td class="td-close-btn"></td>
 					</tr>
 					<tr>
 						<td>

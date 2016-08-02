@@ -18,9 +18,9 @@ import net.devstudy.resume.validator.FieldMatchConstraintValidator;
 public @interface FieldMatch {
 	String message() default "FieldMatch";
 
-	String first();
+	String firstField();
 
-	String second();
+	String secondField();
 
 	Class<?>[] groups() default {};
 

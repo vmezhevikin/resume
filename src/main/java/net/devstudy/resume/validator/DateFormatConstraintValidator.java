@@ -27,18 +27,20 @@ public class DateFormatConstraintValidator implements ConstraintValidator<DateFo
 		if (!Pattern.matches("^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$", value))
 			return false;
 		try {
-			String[] part = value.split("-");
-			int year = Integer.parseInt(part[0]);
-			int month = Integer.parseInt(part[1]);
-			int day = Integer.parseInt(part[2]);
-
-			LocalDate date = new LocalDate(year, month, day);
+			LocalDate date = getLocalDateFromString(value);
 			LocalDate today = new LocalDate();
 			int years = Years.yearsBetween(date, today).getYears();
-
 			return years >= adulthoodAge;
 		} catch (Exception e) {
 			return false;
 		}
+	}
+	
+	private LocalDate getLocalDateFromString(String value) {
+		String[] part = value.split("-");
+		int year = Integer.parseInt(part[0]);
+		int month = Integer.parseInt(part[1]);
+		int day = Integer.parseInt(part[2]);
+		return new LocalDate(year, month, day);
 	}
 }

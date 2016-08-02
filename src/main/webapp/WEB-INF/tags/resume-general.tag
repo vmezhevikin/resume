@@ -3,10 +3,10 @@
 <div class="panel panel-primary">
 	<div class="panel-body">
 		<c:if test="${profile.photo != null}">
-			<img src="${profile.photo}" class="img-rounded img-responsive" width="100%" alt="Photo">
+			<img src="${profile.photo}" class="img-rounded img-responsive resume-general-img" alt="Photo">
 		</c:if>
 		<c:if test="${profile.photo == null}">
-			<img src="/static/img/blank-photo.jpg" class="img-rounded img-responsive" width="100%" alt="Photo">
+			<img src="/static/img/blank-photo.jpg" class="img-rounded img-responsive resume-general-img" alt="Photo">
 		</c:if>
 	</div>
 	<h3 class="text-center">${profile.fullName}</h3>
@@ -22,10 +22,10 @@
 		</p>
 		<table class="table">
 			<tr>
-				<td width="5%">
+				<td class="resume-contact-td-icon">
 					<i class="fa fa-phone" aria-hidden="true"></i>
 				</td>
-				<td width="95%">
+				<td class="resume-contact-td-value">
 					<a href="tel:${profile.phone}">${profile.phone}</a>
 				</td>
 			</tr>

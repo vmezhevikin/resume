@@ -1,13 +1,12 @@
 package net.devstudy.resume.form;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import net.devstudy.resume.annotation.constraints.FirstFieldLessThanSecond;
 import net.devstudy.resume.entity.Hobby;
 
-@FirstFieldLessThanSecond(first = "currSize", second = "maxSize")
+@FirstFieldLessThanSecond(firstField = "currSize", secondField = "maxSize")
 public class HobbyForm implements Serializable {
 	
 	private static final long serialVersionUID = 4518077336034434467L;
@@ -16,8 +15,7 @@ public class HobbyForm implements Serializable {
 
 	private Integer currSize;
 
-	// @Size(max = 5, message = "Select no more than 5 items")
-	private List<String> checkedItems = new ArrayList<>();
+	private List<Hobby> items;
 
 	public HobbyForm() {
 		super();
@@ -25,29 +23,22 @@ public class HobbyForm implements Serializable {
 
 	public HobbyForm(List<Hobby> items, int maxSize) {
 		super();
-		for (Hobby hobby : items)
-			checkedItems.add(hobby.getDescription());
+		this.items = items;
 		this.maxSize = maxSize;
-	}
-
-	public List<String> getCheckedItems() {
-		return checkedItems;
-	}
-
-	public void setCheckedItems(List<String> checkedItems) {
-		this.checkedItems = checkedItems;
-		this.currSize = checkedItems.size();
-	}
-
-	public List<Hobby> getSelecetedHobbies() {
-		List<Hobby> items = new ArrayList<>();
-		for (String checked : checkedItems) {
-			Hobby hobby = new Hobby();
-			hobby.setDescription(checked);
-			items.add(hobby);
+		this.currSize = 0;
+		for (Hobby hobby : items) {
+			if ("checked".equals(hobby.getChecked())) {
+				this.currSize++;
+			}
 		}
+	}
 
+	public List<Hobby> getItems() {
 		return items;
+	}
+
+	public void setItems(List<Hobby> items) {
+		this.items = items;
 	}
 
 	public Integer getMaxSize() {
